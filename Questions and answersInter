@@ -201,6 +201,34 @@ resides on server and run on server and output will be on the client page
 Servlets are used to create a dynamic contents.
 
 
+There are 2 ways to call a servlet from another servlet
+	1.Request Dispatcher- Client will not come to know if we go from one servlet to another(eg if we take our client from our website to paymentgateway like paypal they should know that they have been redirected)
+		RequestDispatcher dis=req.getRequestDispatcher("st");
+		dis.forward(req, res);
+	2.SendRedirect- Here Client will come to know
+		res.sendRedirect("sq");
+
+** Life Cycle of Servlet
+		The servlet is initialized by calling the init() method.
+
+		The servlet calls service() method to process a client's request.
+
+		The servlet is terminated by calling the destroy() method.
+
+		Finally, servlet is garbage collected by the garbage collector of the JVM.
+
+** Instead of adding all the servlets in web.xml we can also use a annotation known as @WebServlet("/addition") on top of the servlet class
+
+JSP-Java Server Pages
+	we can write java code inside html
+
+	Internally every jasp page is converted into a servlet with class name same as the jsp file name and what ever we have defined inside the sctipelt tag will go inside the service method(<%  java code %>)
+
+<%! variables if you wnat to use outside the service method %>- This is called declaration tag
+
+<%@ import="java.util.Date" %>- Directive tag
+
+
 
 SpringBootApplication.run(Currentclassname.class,args);
 The return type of above call is ConfigurableApplicationContext context
