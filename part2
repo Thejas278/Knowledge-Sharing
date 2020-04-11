@@ -1,0 +1,282 @@
+Finding the count of repeated characters
+
+  String text = "a r b k c d se f g a d f s s f d s ft gh f ws w f v x s g h d h j j k f sd j e wed a d f";
+ 
+        List<String> list = Arrays.asList(text.split(" "));
+ 
+        Set<String> uniqueWords = new HashSet<String>(list);
+        for (String word : uniqueWords) {
+            System.out.println(word + ": " + Collections.frequency(list, word));
+        }
+    }
+--------------------------------------------------------------------------------------------------------------------------------------------
+Creating angularjs project
+
+1.Create a dynamic web application in eclipse
+2.In the index.html we need to add the the angularjs library we need to download min.js version and keep it in the local lib folder
+3.WE need to create module and controller
+
+Module(is a container)=controller(is a function),service etc
+
+		<div ng-controller="demoCtrl">
+        <table border="1">
+            <tr>
+                <td>Book Name</td>
+                <td ng-bind="book"></td>
+            </tr>
+            <tr>
+                <td>Author</td>
+                <td ng-bind="author"></td>
+            </tr>
+        </table>
+    </div>
+
+	4.In html,To inject the module into HTML DOM we use ng-app directive. 
+	<html ng-app="demoApp">
+    Above code indicates that all the contents inside this html tag will bind to the module "demoApp".
+
+ **	TypeScript offers support for the latest JavaScript features and also has some additional features like static typing, object oriented 		programming and automatic assignment of constructor.
+
+**Angular vs angular js
+
+		AngularJS is based on MVC ( Model View Controller) architecture , on the other hand Angular2 is based on component structure.
+		AngularJS is built using JavaScript , on the other hand Angular2 is built using TypeScript (superset of JavaScript).
+		AngularJS was made for responsive UI but didn’t supported mobile development , on the other hand Angular2 is supports mobile development.
+
+
+
+**Angular
+
+**SetInterval(FunctionName,interval) is a javascript function which lets you to run a function at regular intervals.
+** Interpolation means {{message}} so the message field is dynamic
+
+https://www.youtube.com/watch?v=YYT5zIRBn8A
+
+Promise vs Observable
+
+1.Promise can handel one event , Observable can hande multiple events
+2.Promise are difficult to cancel, Observables can be cancelled
+3.Promises are not lazy, Observabes are lazy
+
+@Input-So to pass data from the parent component class to the child component class, use the  decorator.
+@Output()-We are using @Output with @EventEmitter to emit an event to AppComponent. So to emit an event from the child component class to the parent component class, use EventEmitter with the  decorator.
+
+Observable
+is a wrapper around stream of values, they are typically used for asynchronous calls
+ and the job of observer is to execute some code whenever we get a new value or a error or if the observable reports that it is done
+
+ usig subscribe method we are telling the observable that some body is listening to it, The observer has 3 methods
+ next();
+ error();
+ complete();
+After executing the error() or complete(); the observer will be done , if we run next(); after any of these commands den we will not get the output
+
+for example
+in the below example we are calling observer.next() in the checkAccountValidity() method
+						loadBOEDetails(userID, password) {
+						    const url = `${environment.url}backofficeemployee/detailsByBoeUserId/${userID}/version`;
+
+						    return new Observable(observer => {
+						      this.http.get(url).subscribe(
+						        (response: any) => {
+						          if (response && response.data) {
+						            const boe = response.data;
+						            this.checkAccountValidity(boe, password, observer);
+						          } else {
+						            observer.error('No account found');
+						          }
+						        },
+						        error => {
+						          if (error.status === 404) {
+						            // the user has not gotten updates (cached)
+						            observer.error('Refresh the browser to get latest updates');
+						          } else {
+						            observer.error('Employee service call failed');
+						          }
+						        }
+						      );
+						    });
+						  }
+
+Angular
+
+Metadata - Additional Information 
+
+Decorators are functions which give are used to configure the metadata to give special meaning for a component or module.
+
+Types of Decorators
+	1.Class decorators, e.g. @Component and @NgModule
+	2.Property decorators for properties inside classes, e.g. @Input and @Output
+	3.Method decorators for methods inside classes, e.g. @HostListener
+	4.Parameter decorators for parameters inside class constructors, e.g. @Inject
+
+
+Annotation vs Decorators
+
+Anotation are the metadata attached to a class or function
+Decorators are the functions which add metadata to a class
+
+Properties of
+
+@NgModule - used to declare a module
+
+imports- Modules are imported eg sharedModule, MaterialModule,FlexLayoutModule
+
+			It(Featue Modules other than appmodule.ts) must import CommonModule instead of BrowserModule
+
+			While BrowserModule must be imported in AppModule (it’s required in order to run the app in the browser), this module must not be imported elsewhere: instead, 
+
+			we must import CommonModule, which contains Angular’s common directives, such as ngIf, ngFor, ngClass, etc… 
+
+			The only module responsible for bootstrapping a component is, obviously, AppModule!
+
+			Shared Modules should not have
+			1.Providers
+			2.export or reimport the Modules that already have providers
+exports- 	This takes a component,in the component we should use this so that this component can be used outside the module also.
+
+			Modules are imported and components are exported
+
+declarations-A module must decalre all the Components,directives and pipes in requires.in order to use a component in a module, it must be 				declared in that specific module
+
+providers- Sevices are provided
+entryComponents-The entryComponents array is used to define only components that are not found in html and created dynamically .
+Bootstrap- Used to bootstrap a component
+
+**libraries
+
+	import { NgModule } from '@angular/core';
+	import { CommonModule } from '@angular/common';
+
+	These 2 are the commonly used libraries in most of the components
+
+**@Component decorator used to declare a component.
+
+	I has 3 properties
+	selector- tag name
+	templateUrl- Path to html file
+	styleURLS-path to css style file of the component
+
+**Services - They are the reusable functionality without view- We can make a class service using @Injectable() Annotation
+
+			All the services defined in the providers are created in the same shared service space
+
+Two-way data binding [(ngModel)]="movie.name"
+
+**Directives - Directives are the class which transform the DOM element according to the instructions give by the directive
+				*ngFor,*ngIf etc
+
+
+Dependency Injection in Angular @Injectable. Angular Injector takes care of dependency injection
+
+ when ever angular sees a service defined in a constructor it will search for @Injectable and it will create a instance of it so that the component can use
+
+
+ **Angular Life Cycle Hooks
+
+ Every Component has a life cycle which is managed by Angular,
+
+ Angular created it ,renders it ,created and renders its childrens and checks when its data bound properties change and destroys the component before it is removed from the dom
+
+ Life Cycle hooks provides visibility to these stages of a component life cycle
+
+ Using life cycle hooks we can fine tune the behaviour of our components during creation,updation and deletion
+ The hooks are executed in the below order
+
+Every phase has a interface without the ng eg there is a interface called OnInit,OnChanges etc
+
+ 	Constructor
+ 	ngOnChanges	Invoked when there is any change in the input component.We will come to know which input property has changed
+ 	ngOnInit - Invoked when the component is initialized, It is called only once unlike ngOnchange which is called every time we make change to input property
+ 	ngDoCheck
+ 	-------------------Phases Linked to children component
+ 	ngAfterContentInit
+ 	ngAfterContentChecked
+ 	ngAfterViewInit
+ 	ngAfterViewChecked
+ ------------------Phases Linked to children component stop
+ 	ngOnDestroy- Is the place where we place the cleanup logic
+
+
+**View Children vs Content Children
+
+
+
+
+**Error handling in Angular
+
+this.adminService.saveSubscriber(clientObject).subscribe(
+        (response: any) => {          
+          this.exitForm();
+          this.commonService.showSnackBar('Successfully saved');
+        },
+        error => {
+           this.commonService.showSnackBar('Save failed: ' + error.statusText);
+        }
+      );
+
+Using the catch operator of rxjs and we have to pass a method as a paramater which will handle the error.In Orion we did not do this.
+
+We can also create customer exception handlers in angular
+
+	import {ErrorHandler} from '@angular/core';
+
+@Injectable()
+export class CustomErrorHandler implements ErrorHandler {
+  constructor() {}
+  handleError(error) {
+    // your custom error handling logic
+    console.log(error);
+  }
+}
+
+To Handel TimeOut error
+
+this.http.post('myUrl', 
+        MyData, {headers: Myheaders})
+         .timeout(3000, new Error('timeout exceeded'))
+         .map(res => res.json())
+         .subscribe(
+           data => this.ret = data,
+           error => console.debug('ERROR', error),
+           () => console.log('END')
+         );
+
+**In Java controller we can handel exceptions using @ExceptionHandlers
+
+public class FooController{
+     
+    //...
+    @ExceptionHandler({ CustomException1.class, CustomException2.class })
+    public void handleException() {
+        //
+    }
+}
+
+The disadvantage of the above approach is we have to call this in every controller class. so we have to use @ControllerAdivce or @RestControllerAdvice
+
+To use @ControllerAdivce we have to create a Controllerclass with @ControllerAdivce annotation, 
+
+			@ControllerAdvice
+public class GlobalExceptionHandler {
+
+	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+	
+	@ExceptionHandler(SQLException.class)
+	public String handleSQLException(HttpServletRequest request, Exception ex){
+		logger.info("SQLException Occured:: URL="+request.getRequestURL());
+		return "database_error";
+	}
+	
+	@ResponseStatus(value=HttpStatus.NOT_FOUND, reason="IOException occured")
+	@ExceptionHandler(IOException.class)
+	public void handleIOException(){
+		logger.error("IOException handler executed");
+		//returning 404 error code
+	}
+}
+
+---------------------------------------------------------------------------------------------
+
+@Embedable
+https://www.youtube.com/watch?v=RmnrgocuivQ
