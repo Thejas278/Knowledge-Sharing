@@ -1,0 +1,736 @@
+
+
+Questions and answers
+
+Difference between web server and application server
+
+	Web Server is mostly designed to serve static content, though most Web Servers have plugins to support scripting languages like Perl, PHP, ASP, JSP etc. through which these servers can generate dynamic HTTP content.
+
+	Most of the application servers have Web Server as integral part of them, that means App Server can do whatever Web Server is capable of. Additionally App Server have components and features to support Application level services such as Connection Pooling, Object Pooling, Transaction Support, Messaging services etc.
+	
+	As web servers are well suited for static content and app servers for dynamic content, most of the production environments have web server acting as reverse proxy to app server. That means while servicing a page request, static contents (such as images/Static HTML) are served by web server that interprets the request. Using some kind of filtering technique (mostly extension of requested resource) web server identifies dynamic content request and transparently forwards to app server
+	Example of such configuration is Apache Tomcat HTTP Server and Oracle (formerly BEA) WebLogic Server. Apache Tomcat HTTP Server is Web Server and Oracle WebLogic is Application Server.
+
+What is a servlet
+Servlet stands for Server Component
+resides on server and run on server and output will be on the client page
+Servlets are used to create a dynamic contents.
+
+
+There are 2 ways to call a servlet from another servlet
+	1.Request Dispatcher- Client will not come to know if we go from one servlet to another(eg if we take our client from our website to paymentgateway like paypal they should know that they have been redirected)
+		RequestDispatcher dis=req.getRequestDispatcher("st");
+		dis.forward(req, res);
+	2.SendRedirect- Here Client will come to know
+		res.sendRedirect("sq");
+
+** Life Cycle of Servlet
+		The servlet is initialized by calling the init() method.
+
+		The servlet calls service() method to process a client's request.
+
+		The servlet is terminated by calling the destroy() method.
+
+		Finally, servlet is garbage collected by the garbage collector of the JVM.
+
+** Instead of adding all the servlets in web.xml we can also use a annotation known as @WebServlet("/addition") on top of the servlet class
+
+JSP-Java Server Pages
+	we can write java code inside html
+
+	Internally every jasp page is converted into a servlet with class name same as the jsp file name and what ever we have defined inside the sctipelt tag will go inside the service method(<%  java code %>)
+
+<%! variables if you wnat to use outside the service method %>- This is called declaration tag
+
+<%@ import="java.util.Date" %>- Directive tag
+
+
+
+SpringBootApplication.run(Currentclassname.class,args);
+The return type of above call is ConfigurableApplicationContext context
+we can do context.getbean(classname);- This is not used in practical but we can acess 
+
+
+@Component - Using this annotation on top of a class  will create a singleton object for this class in spring container.Spring will create by itself
+
+
+@Scope(value="prototype")- using this annotation along with @component will remove the singleton behaviour, The particular classes object ie bean inside spring container will only be created if we try to create it.
+
+@Autowire is used to connect the dependent objects- This is used while using the class. If we donot use this annotaion then we will get null pointer exception when we try to access the class or its methods
+
+We can change the name of the object created in the spring container, ie by using @Component("lap1")
+Now in spring container the name of object created will be lap1
+
+To use a class by its name we have to use 
+@Qualifier annotation 
+ie @Qualifier("lap1")
+Laptop laptop
+
+By default @Autowire searches by type
+@Qualifier searches by name;
+
+Springs IOC container is reposible for Instantiating,Configuring and managing the dependencies between the objects
+There are 2 type of IOC Containers
+1.BeanFactory Interface- Usually used for smaller applications(org.springframework.beans.factory.BeanFactory).
+Since these are interface we need to initialize it with its implementation
+ie for beanFactory
+Resource resource=new ClassPathResource("applicationContext.xml");  
+BeanFactory factory=new XmlBeanFactory(resource); 
+HelloWorld obj = (HelloWorld) factory.getBean("helloWorld");    
+      obj.getMessage();    
+We can have only one configuration file
+Usually, the implementations use lazy loading, which means that Beans are only instantiating when we directly calling them through the getBean() method.
+
+2.ApplocationContext Interface- ApplicationContext is a built of top of BeanFactory.For larger enterpirse applications we have to use ApplicatioContext (org.springframework.context.ApplicationContext).
+We can have multiple configuration files
+Uses eager loading, so every bean instantiate after the ApplicationContext started up.
+
+ApplicationContext context =   
+    new ClassPathXmlApplicationContext("applicationContext.xml"); applicationContext.xml- File name where we have define the file name
+
+
+    <import> tag is used to import bean definitions from other files
+    eg:
+    <beans>
+
+    <import resource="services.xml"/>
+    <import resource="resources/messageSource.xml"/>
+    <import resource="/resources/themeSource.xml"/>
+
+    <bean id="bean1" class="..."/>
+    <bean id="bean2" class="..."/>
+
+</beans>
+All location paths are considered relative to the definition file doing the importing, so services.xml in this case must be in the same directory or classpath location as the file doing the importing
+
+
+Bean life cycle in Spring Bean Factory Container
+		1.Bean Initialization
+		2.Bean properties will be loaded and using dependency injection they will be wired
+		3.WE will call the BeanNameAwares.setBeanName() and set the beanName
+		4.We will call the BeanFactoryAwares.setBeanFactory() and set the bean factory
+		5.WE will load the applicationcontext using ApplicationContextAwares
+		5.If there is any preprocessInitialization requred that isdone
+		6.Init meyhod get called specified for the bean will be called
+		5If there is any post processor initilization is required that wuill be done
+		6.Bean is ready to use
+		7.After usage the container is shutdown
+		8.destory method is called 
+
+
+1.For static factory method
+
+	When defining a bean which is to be created using a static factory method, along with the class attribute which specifies the class containing the static factory method, another attribute named factory-method is needed to specify the name of the factory method itself. Spring expects to be able to call this method (with an optional list of arguments as described later) and get back a live object, which from that point on is treated as if it had been created normally via a constructor. One use for such a bean definition is to call static factories in legacy code.
+
+	The following example shows a bean definition which specifies that the bean is to be created by calling a factory-method. Note that the definition does not specify the type (class) of the returned object, only the class containing the factory method. In this example, the createInstance() method must be a static method.
+
+Example
+
+<bean id="exampleBean"
+      class="examples.ExampleBean2"
+      factory-method="createInstance"/>
+
+
+2.For non static factory method
+
+	Instantiation using an instance factory method is where a non-static method of an existing bean from the container is invoked to create a new bean. To use this mechanism, the 'class' attribute must be left empty, and the 'factory-bean' attribute must specify the name of a bean in the current (or parent/ancestor) container that contains the instance method that is to be invoked to create the object. The name of the factory method itself must be set using the 'factory-method' attribute.
+
+Example
+
+<!-- the factory bean, which contains a method called createInstance() -->
+<bean id="serviceLocator" class="com.foo.DefaultServiceLocator">
+  <!-- inject any dependencies required by this locator bean -->
+</bean>
+
+<!-- the bean to be created via the factory bean -->
+<bean id="exampleBean"
+      factory-bean="serviceLocator"
+      factory-method="createInstance"/>
+
+
+We can use another name to a bean using the alias tag
+
+<alias name="fromName" alias="toName"/>
+
+In this case, a bean in the same container which is named 'fromName', may also after the use of this alias definition, be referred to as 'toName'.
+
+
+As a concrete example, consider the case where component A defines a DataSource bean called componentA-dataSource, in its XML fragment. Component B would however like to refer to the DataSource as componentB-dataSource in its XML fragment. And the main application, MyApp, defines its own XML fragment and assembles the final application context from all three fragments, and would like to refer to the DataSource as myApp-dataSource. This scenario can be easily handled by adding to the MyApp XML fragment the following standalone aliases:
+
+<alias name="componentA-dataSource" alias="componentB-dataSource"/>
+<alias name="componentA-dataSource" alias="myApp-dataSource" />
+Now each component and the main application can refer to the dataSource via a name that is unique and guaranteed not to clash with any other definition (effectively there is a namespace), yet they refer to the same bean.
+
+
+Constructor Injection
+
+package x.y;
+
+public class Foo {
+
+    public Foo(Bar bar, Baz baz) {
+        // ...
+    }
+}
+
+<beans>
+    <bean name="foo" class="x.y.Foo">
+        <constructor-arg>
+            <bean class="x.y.Bar"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="x.y.Baz"/>
+        </constructor-arg>
+    </bean>
+</beans>
+
+If there is ambiguity in the type, then use
+<bean id="exampleBean" class="examples.ExampleBean">
+  <constructor-arg type="int" value="7500000"/>
+  <constructor-arg type="java.lang.String" value="42"/>
+</bean>
+
+
+We can also use index
+
+<bean id="exampleBean" class="examples.ExampleBean">
+  <constructor-arg index="0" value="7500000"/>
+  <constructor-arg index="1" value="42"/>
+</bean>
+
+** Setter Injection vs Constructor Injection
+	Partial dependency: can be injected using setter injection but it is not possible by constructor. ... Overriding: Setter injection overrides the constructor injection. If we use both constructor and setter injection, IOC container will use the setter injection. Changes: We can easily change the value by setter injection
+
+Different ways of configuring the spring application
+Configuration definition and bean definition are two different things. There are three ways to define configuration, available in Spring 4 by default:
+
+xml-based configuration, when you describe configuration in xml file;
+java-based configuration, when configuration is Java class, marked with specific annotations;
+groovy-based configuration, when configuration is file with Groovy code;
+
+And there are two ways to add bean definition into application:
+
+1.Configuration inside bean definition, when you add beans manually by declaration right in configuration.
+
+In this case definition will be based on configuration type. For xml-config it will be <bean/> tag, for java-based config - method with @Bean annotation 
+
+2.Annotation based bean definition, when you mark bean classes with specific annotations (like @Component, @Service, @Controller etc). This type of config uses classpath scanning.
+
+In this case you have to specify directive for scanning classpath. For xml-config it will be <context:component-scan base-package="..."/>, for java-config -@Configuration and  @ComponentScan annotation, 
+
+Also If we want to to use anotation and spring xml then use
+<context:annotation-config/>
+
+1.	Context:component-scan (from spring2.5 version)
+
+This element in the spring configuration file would eliminate the need for declaring all the beans in the XML files,also there is no need to update the xml file if we are adding the new beans. Look at the below declaration in your spring configuration file.
+
+
+<context:component-scan base-package="org.controller"/>
+
+The above declaration in the spring application configuration file would scan the classes inside the specified package and create the beans instance. Note that it could create beans only if that class is annotated with correct annotations. The following are the annotations scanned by this element:
+
+@Component
+@Repository
+@Service
+@Controller
+One advantage of this element is that it also resolve @Autowired and @Qualifier annotations. Therefore if you declare <context:component-scan>, is not necessary anymore declare <context:annotation-config> too.
+
+2. mvc:annotation-driven
+
+If you dont include mvc:annotation-driven also your MVC application would work if you have used the context:component-scan for creating the beans or defined the beans in your XML file. Also it supports @NumberFormat,and we can also use @RestContoller in the place of @Controller 
+
+@RestController=@Controller+@ResponseBody
+
+When you use the @ResponseBody annotation on a method, Spring converts the return value and writes it to the http response automatically. Each method in the Controller class must be annotated with @ResponseBody.
+
+3. context:annotation-config
+This is used to activate annotation in beans already registered in application context.That means it will resolve @Autowired and @Qualifier annotations for the beans which are already created and stored in the spring container.
+
+**	The <context:annotation-config /> only works on beans registered within the application context. Because I removed the XML configuration for the three beans there is no bean created and <context:annotation-config /> has no "targets" to work on.
+
+context:component-scan can also do the same job, but context:component-scan will also scan the packages for registering the beans to application context. context:annotation-config will not search for the beans registration, this will only activate the already registered beans in the context.
+
+	**  <context:annotation-config /> can be omitted if <context:component-scan> is specified but Spring takes care of running them only once.
+So bottom line If we are using <context:component-scan> then we do not have to use <context:annotation-config>
+In orion we use <context:component-scan> and <context:annotation-driven>
+
+
+**	can we have multiple names for one bean definition
+Yes we can have multiple name for one bean , but there should be only one id for a bean deifinition and the names used for bean should be unique
+
+eg:- <bean id="petrolBean" name="shimba,mamu,radhe" class="com.marvel.java.Petrol">
+	<property name="price" value="10"></property></bean>
+	<bean id="petrolBean1" name="halva" class="com.marvel.java.Petrol">
+	<property name="price" value="11"></property></bean> 
+
+**	<context-param> is used to initialize something for the whole application
+<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext.xml</param-value>
+	</context-param>
+**	<init-param> will be used if you want to initialize some parameter for a particular servlet. When request come to servlet first its init method will be called then doGet/doPost
+<servlet>
+		<servlet-name>mvc-dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:/META-INF/spring/applicationContext-servlet.xml</param-value>
+		</init-param>
+
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+
+**	@Component – generic and can be used across application.
+**	@Service – annotate classes at service layer level.
+**	@Controller – annotate classes at presentation layers level, mainly used in Spring MVC.
+**	@Repository – annotate classes at persistence layer, which will act as database repository.
+
+** @Component vs @Bean
+
+		@Component is used for component scanning and automatic wiring
+
+
+		When should you use @Bean?
+
+		Sometimes automatic configuration is not an option. When? Let's imagine that you want to wire components from 3rd-party libraries (you don't have the source code so you can't annotate its classes with @Component), so automatic configuration is not possible.
+
+		The @Bean annotation returns an object that spring should register as bean in application context. The body of the method bears the logic responsible for creating the instance.
+
+		@Bean is used above the method and @Component is used in the class
+
+
+**	 @Autwired vs @Resource
+			1.@Autowired is a spring annotation and @Resource is specified by JSR-250 ie java annotation.
+			2.@Autowired + @Qualifier will work only with spring DI, if you want to use some other DI in future @Resource is good option
+
+
+		JSRs are Java Specification Requests, basically change requests for the Java language, libraries and other components.
+		It's all part of the Java Community Process, whereby interested parties can put forward their ideas for enhancements and (hopefully) have them taken up and acted upon
+
+
+	**	Dispacther Servlet (it extends HttpServlet )
+	DispatcherServlet acts as front controller  which receives the request and delegates in to the other component. The DispatcherServlet  provides a single entry point for a client request to Spring MVC web application and forwards request to Spring MVC controllers for processing.
+
+	The DispatcherServlet uses HandlerMapping implementations -  to route incoming requests to handler objects. By default, it uses BeanNameUrlHandlerMapping and DefaultAnnotationHandlerMapping, which is driven by @RequestMapping annotation.
+	DispatcherServlet scanes the class path.
+
+Read more: https://javarevisited.blogspot.com/2017/09/dispatcherservlet-of-spring-mvc-10-points-to-remember.html#ixzz5vmyB0kT8
+
+	 It is inherited from javax.servlet.http.HttpServlet, it is typically configured in the web.xml file.
+
+	A web application can define any number of DispatcherServlet instances. Each servlet will operate in its own namespace, loading its own application context with mappings, handlers, etc.In most cases, applications have only single DispatcherServlet with the context-root URL(/), that is, all requests coming to that domain will be handled by it.
+
+DispatcherServlet uses Spring configuration classes to discover the delegate components it needs for request mapping, view resolution, exception handling etc.
+
+A Front Controller is a common pattern in web application and used to receive request and delegate to other components in the application for actual processing. 
+eg:-
+<servlet>
+		<servlet-name>mvc-dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:/META-INF/spring/applicationContext-servlet.xml</param-value>
+		</init-param>
+
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>mvc-dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	In the above xml configuration we define a Dispatched servelt and <init-param> is used to initialize the applicationContext-servlet.xml file which has <compoment scan> for the defined base packages
+
+	ie <context:component-scan base-package="com.infomatics.orion.web" />
+	and Under servlet-mapping we give a url patter so that al the url will go through dispatecher servlet which is the front controller of spring application
+	
+
+	
+** What are Servlet Filters?
+	Servlet filters are, in general, a Java WebApp concept. You can have servlet filters in any webapp, whether or not you use Spring framework in your application.
+
+	These filters can intercept requests before they reach the target servlet. You can implement common functionality, like authorization, in servlet filters. Once implemented, you can configure the filter in your web.xml to be applied to a specific servlet, specific request url patterns or all url patterns.
+
+** Where servlet filters are used?
+	Modern web-apps can have dozens of such filters. Things like authorization, caching, ORM session management, and dependency injection are often implemented with the aid of servlet filter. All of these filters need to be registered in web.xml.
+
+** Instantiating Servlet Filters - without Spring Framework
+	Your servlet container creates instances of Filters declared in web.xml and calls them at appropriate times (i.e., when servicing servlet requests). Now if you are like most of the Dependency Injection (DI) fans, you would likely say that creation of instances is what my DI framework (Spring) does better. Can't I get my servlet filters created with Spring so they are amenable to all DI goodness?
+
+	DelegatingFilterProxy, so that Spring creates your filter instances,This is where DelegatingFilterProxy steps in.
+
+ 	DelegatingFilterProxy is an impelmentation of the javax.servlet.Filter interface provided by Spring Framework.
+
+  	Once you configure DelegatingFilterProxy in web.xml, you can declare the actual beans that do the filtering in your spring configuration. This way, Spring creates the instances of beans that do the actual filtering, and you can use DI to configure these beans.
+
+	Note that you need only a single DelegatingFilterProxy declaration in web.xml but you can have several filtering beans chained together in your application context.
+
+
+**Spring security
+
+	Spring security is based on servlet filters.
+
+	Servlet filters are the implementation of javax.servlet filter interface which you create and register in web.xml
+
+	once we write that in web.xml the servlet container will read those and will creat a filter
+	Servlet container is a part of web server eg for apache tomcat , 
+		apache is web server and tomcat is the servlet container.
+
+	Servlet contanier is responsible for managing the life cycle of the servlet.
+	
+	DelegatingFilterProxy is also a implementation of javax.servlet interface provided by spring framework
+	Delegating filterProxy is a bridge between servletcontainer and applicationContext
+
+Authentication 
+	means telling who am I ie by proving d the userId and Password and this type of authentication is called KNowledge Based 	Authentication
+
+	There is also posession Based Authentication- T A text message comes to a thing which is posessed by the actual user
+
+
+
+	MultiFactor Authentication = Knowledge+Posession
+
+Authorization 
+	Can this user do this
+
+Principal
+	In spring security contet it is the current Logged in user
+	ONce you authenticate , the application establishes the principal, this is the reason we only login to application once and the principal will be stored
+
+Authority means the permission given to the user to access something, Role based
+
+
+Spring security default behaviour
+
+1.Add Mandatory Authentication for all urs
+2.Adds a login Form
+3.Handles login error
+
+
+Spring security features
+1.Login and Logout functionality
+2.Allow or block users from acessing the url's
+3.Role access
+
+
+*OAuth is user for intra app authorization
+*Tokens can be used to micro service authorization
+*method leve security
+
+
+**	For login this is what we do
+
+	<beans:bean id="restUsernamePasswordAuthenticationFilter"
+		class="com.infomatics.orion.web.security.RestUsernamePasswordAuthenticationFilter">
+		<beans:property name="authenticationDetailsSource"  ref="customAuthenticationDetailsSource" />
+		<beans:property name="filterProcessesUrl" value="/login"/>
+ 		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="authenticationSuccessHandler" ref="restLoginSuccessHandler" />
+		<beans:property name="authenticationFailureHandler" ref="restAuthenticationFailureHandler" />
+	</beans:bean>
+
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref="userDetailsService" />
+	</authentication-manager>
+
+	In the above xml mapping RestUsernamePasswordAuthenticationFilter is a implementation of UsernamePasswordAuthenticationFilter.
+
+** UsernamePasswordAuthenticationFilter-https://howtodoinjava.com/spring-security/login-form-based-spring-3-security-example/
+
+
+
+RestUserNameAuthenticationFilter is a implementation of UsernamePasswordAuthenticationFilter  and we are configuring the authication manager which will authenticate the user by his name ( it has only one mthod loadbyUserName()) and then we set the roles for that user 
+
+
+
+
+** Cors- Cross Origin Resource Sharing 
+	This cross-origin sharing standard is used to enable cross-site HTTP requests.
+
+	Also, you can add information to instruct browser to allow only certain HTTP methods (GET/PUT/POST/DELETE etc) on those domain URLs.
+
+** Response Headers of CorsFilter
+		1.Access-Control-Allow-Origin:specifies the authorized domains to make cross-domain request. Use “*” as value if there is no restrictions.
+		2.Access-Control-Allow-Credentials : specifies if cross-domain requests can have authorization credentials or not.
+		Access-Control-Allow-Methods : indicates the methods allowed when accessing the resource.
+
+	 response.addHeader("Access-Control-Allow-Origin", "http://127.0.0.1:9000");
+		 response.addHeader("Access-Control-Allow-Credentials", "true");
+
+		 In Orion CorsFilter extends OncePerRequestFilter
+		
+   ** OncePerRequestFilter makes sure of it that this authentication process happens only once
+
+
+
+**Microservices
+
+	They are independent spring boot applications which run to achive a task
+
+	Using RestTemplate we can make a api call to another spring boot in order to achieve micro services.
+	In futhure RestTemplate will be depricated and we have to use webclient which is from Reactive web.
+
+	RestTemplate is thread safe
+	RestTemplate restTemplate = new RestTemplate();
+	Movie movie=restTemplate.getForObject("http://localhost:8081/movies"+movieId,Movies.class);
+
+	WebClient.Builder builder=WebClient.builder();
+	Movie movie=builder.build().get().uri("http://localhost:8081/movies"+movieId).retrieve().bodyToMono(Movie.class).block();
+
+	bodyToMono is like a promise , You will not get it now but u have to wait. It is a Reactive web concept.
+
+	we use block() because we are blocking the execution until the value is received.
+
+	For post request use post() 
+
+	** To change the port number if tomcat i spring boot 
+	go to application.properties of ser/resource folder and type server.port=8081
+
+** Spring core module
+
+		Difference between spring mvc and spring core
+
+		1.Spring core
+			The Core is the Ioc container is reposible for Instantiating,Configuring and managing the dependencies between the objects.
+			It give the features like dependency Injection and Inversion of Control.
+
+			The context module present in the spring core will make the object or beans created in the container available for our use.
+
+
+		2.Spring web- Spring we consists of servlets
+					Spring web has mvc framework,
+					It provides multipart file Upload functionality.
+
+
+		3.Data Access/Integration- Has JDBS and ORM -eg Hibernate.
+
+		4.Spring AOP- Aspect Oriented Programming
+
+		5.Spring Instrumentation
+
+		6.Spring test-The Test module contains the Test Framework that supports testing Spring components using JUnit or TestNG
+
+**Mongodb Configuration in applicationContext-dao.xml file
+
+<mongo:mongo-client id="mongoDB" host="${mongo.host}"
+		port="${mongo.port}" />
+	<mongo:db-factory id="mongoDbFactory" dbname="${mongo.dbname}"
+		mongo-ref="mongoDB" />
+	<mongo:mapping-converter id="converter" />
+	<bean name="gridFsTemplate"
+		class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
+		<constructor-arg ref="mongoDbFactory" />
+		<constructor-arg ref="converter" />
+	</bean>
+
+and we can perform curd operations using MongoRepository creating a interface that extends MongoRepository
+
+** Configuring datasource 
+
+In Tomcat context.xml
+<Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxActive="50" maxIdle="30" maxWait="10000" 
+name="jdbc/orionDataSource" password="orion123" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/orion_db" username="root"/>
+
+And in applicationContext.xml of orion_dao add
+
+<jee:jndi-lookup id="dataSource" jndi-name="jdbc/orionDataSource"
+		resource-ref="true" lookup-on-startup="true" />
+
+
+For using entityManager,WE had 
+<bean
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+		id="entityManagerFactory">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+<tx:annotation-driven transaction-manager="transactionManager" />
+
+Hence using
+@PersistanceContext
+EntityManager entityManager in BaseDao
+we where able to execute queries
+
+eg:
+@Override
+	public List<Backofficeemployee> getActiveBackofficeemployee() {
+		String activeBackofficeemployee = "SELECT boe FROM Backofficeemployee as boe where boe.boeallowLogin = true and boe.boeuserType = 1";
+		TypedQuery<Backofficeemployee> q1 = entityManager.createQuery(activeBackofficeemployee,
+				Backofficeemployee.class);
+
+		return q1.getResultList();
+	}
+
+**	Design Pattern
+
+	Proxy Design Pattern - Proxy means 'on behalf of' or 'representing'
+	Proxy is a object used by the client to access the real Object 
+	This is mainly done for security reasons
+	eg: 1.Role based Access
+		2.Proxy server are used to check block certain sites in companies.
+		3. @Transactional also creates Proxy object of Transaction
+
+	Type Of Proxy
+	1.Remote Proxy
+	2.Virtual Proxy
+
+
+**	@Transactional
+	Spring will create a transactionInterceptor which will invoke the actual function like begin transaction,When the call ends it will invoke the commit or role back of the actual bean.
+
+ 	Spring wraps your bean in the proxy, your bean has no knowledge of it. Only calls from "outside" your bean go through the proxy.
+	We are using in service layer on top of each method.
+	Spring will create a wrapper method and dat method will begina and commit the transaction
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+Spring boot
+In spring mvs we have to configurations like class path scan,dispatcher servlet,web jars etc
+
+eg if some one is using spring-mvc jar then they would need dispacteher servlet dependency or 
+how about autoconfiguring a data source if hibernate is in the class path
+
+Auto configuration in spring means depending on the jar files present in the classpath and the exisiting confuration spring-boot will provide its own default configuration
+
+
+WE have sprig initilizar is used to create ready to run projects provided by spring- start.spring.io is the link
+
+GroupId is the reverse domain name
+Artifact Id is the project name
+
+All the spring auto configure will be present in sprint-boot-autoconfigure.jar/META-INF/spring.factories
+
+INside this file there wil be some anotations like
+
+@Conditional.class {{DataSource.class}} -If will autoconfigure only if there is datasource.class in the class path
+
+@ConditionaOnMissingBean- It will autoconfigure of there is no other  bean matching this name
+
+
+SpringApplication.run(PecokApplication.class, args);
+
+is a static method , when we run this method, it will
+1.set up default configuration
+2.starts spring application context
+3.performs claapath scan
+4.starts tomcat server
+
+
+Hibernate
+
+**Dialect class is java class, which contains code to map between java language data type database data type.
+
+	In Hibernate-cfg.xml
+
+					<hibernate-configuration>
+		   <session-factory>
+		       <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		       <property name="hibernate.connection.password">orion123</property>
+		       <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/orion_db</property>
+		       <property name="hibernate.connection.username">root</property>
+		       <property name="hibernate.default_schema">orion_db</property>
+		       <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		   </session-factory>
+		</hibernate-configuration>
+
+States of Hibernate Objects
+
+1.Transcient State- It is a state of the object before its given to hibernate to save in the database .
+2.Persistant- This is state where the object is given to hibernate to handel or to save in the database
+3.Detached is a state similar to transcient , once the session is closed the object becomes detached
+
+when we do session.delete(user) object goes from persistant to transcient state
+
+To update a object only if any changes are made then we need to add @ori.hibernate.annotations.Entity(SelectBeforeUpdate=true) below the entity annotation of pojo class. This means we are telling hibernate to run a selcet to check the data in database before updating
+
+SessionFactory vs session
+
+SessionFactory is common for one application and it is thread Safe, it uses second leve caching
+
+Session is used to perform curd operations and it is not thread safe , it uses first leve caching
+
+
+Caching in hibernate
+we have 
+1st level caching
+2nd level caching eg ehcaching
+
+By default first leve caching is enabled by hibernate
+ to enable second leve cache we have to download the required second level cash through pom.xml
+ and set second leve cache to true and mention the provider in hibernate.cfg.xml file
+ and use @2 anotations in the entity class
+
+Get vs load
+
+load will not hit the database if we donot use the object and it gives ur proxy object it will only give the object when we use it
+load will throw object not found exception
+
+get will hit the database and it will give us real object and if there is not object it will give null
+
+**Transaction 
+	A transaction is a unit of work with few steps performed by a data base management systme against a database
+	They are all or nothing ie either all the steps should be completed or al the steps should be rolled back
+	A transaction should take care of Acid Properties
+	A- Atomicity- Ensure that all the steps are successful or all of them fail
+	C- Consistant-The system should be left in a consistent state if either on success or failure
+	I-Isolation- MUltiple users should be able to work without any issue ie concurent read or writes
+	D-After the sucessful operation the data shoudl be stored permentaly
+
+
+
+
+
+**	EntityManager
+	 is used to interact with Database we can add,update or delete a record in database
+	To use entitymaneger we have to use entitymanagerfactorybean to get the entitymanagerobject
+
+		In Orion we use 
+		<bean
+				class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+				id="entityManagerFactory">
+				<property name="dataSource" ref="dataSource" />
+			</bean>
+		as entityManagerFactory	 in applicationcontext.xml
+
+
+		Persist will save the data in database and also we can make future update if we are making any change
+		Merge wll save the data but If we want to update then again we have to call merge
+
+		MyEntity e = new MyEntity();
+
+		// scenario 1
+		// tran starts
+		em.persist(e); 
+		e.setSomeField(someValue); 
+		// tran ends, and the row for someField is updated in the database
+
+		// scenario 2
+		// tran starts
+		e = new MyEntity();
+		em.merge(e);
+		e.setSomeField(anotherValue); 
+		// tran ends but the row for someField is not updated in the database
+		// (you made the changes *after* merging)
+
+**EntityManager vs Session
+		EntityManager is a standardized api of jpa
+		Session is a hibernate specific api
+
+		EntityManager is a adopter class which wraps a session
+
+			We can get seesion object from entityManager
+
+			Session session = entityManager.unwrap(Session.class);
+
+JPA is a specification it is not a implementation 
+
+
