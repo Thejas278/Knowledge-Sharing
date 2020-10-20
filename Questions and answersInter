@@ -15,6 +15,7 @@ JVM is a virtul machine which is a interpretor and it is responsible for line by
  WE need to have different jvm for different operating system
 
  1-No, declaring the constructor as final is not possible.
+ Final means you cannot override it. Since Constructor declarations are not members. They are never inherited and therefore are not subject to hiding or overriding
 
  *Garbage Collection
 
