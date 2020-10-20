@@ -1,0 +1,249 @@
+Class
+1.Outer classs can be declared public or  package-private(default)
+
+default means it is visible only inside a package
+
+
+
+
+**An instance of InnerClass can exist only within an instance of OuterClass and has direct access to the methods and fields of its
+		enclosing instance.
+
+	If a class is defined inside a class then 
+		 Vehicle.Bike b = v.new Bike();
+
+		to access the inner class members
+
+	If a class is defined inside a block or method of a outer class then it is visible only inside that block or method.
+
+NESTED classes 2 types
+
+1.STATIC NESTED CLASS
+
+	a static nested class is behaviorally a top-level class that has been nested in another top-level class for packaging convenience.
+
+	Static Nested class is a regular class it can be acessed outisde the outer class also
+
+2.NON STATIC CLASS OR INNER CLASS
+	
+	Starting in Java SE 8, if you declare the local class in a method, it can access the method's parameters
+
+	Inner class cannot have static declarations because inner class is always associated with the instance.
+
+	can have static members provided that they are constant variables
+
+	Inner class have access to all the fields of enclosing class even if they are declared private,
+
+	Inner class cannot have any static members(declare of define)
+
+	Nested class can be declared private,protected,Default(package private),public
+
+	To Access the inner class , we must first create instance of outer class
+
+			There are two special kinds of inner classes: local classes and anonymous classes.
+
+			1. Local classes are the classes that are defined inside the block, typically inside the body of the method or a for loop or if condition
+				A local class has access to the members of its enclosing class,
+				The local class can only access local variables which are declard final or effectively final
+
+				For global variables there is no such restriction .
+
+				(effective final- a varibale whose value did ot change afte the initialization)
+
+						Starting in Java SE 8, if you declare the local class in a method, it can access the method's parameters.
+
+
+						Shadowing 
+
+						1.To refer to the member variable of the inner class FirstLevel, use the keyword this to represent the enclosing scope:
+								System.out.println("this.x = " + this.x);
+						2.Refer to member variables that enclose larger scopes by the class name to which they belong
+								System.out.println("ShadowTest.this.x = " + ShadowTest.this.x);
+
+
+						Serialization of inner classes, including local and anonymous classes, is strongly discouraged.
+
+						When the Java compiler compiles certain constructs, such as inner classes, it creates synthetic constructs; these are classes, methods, fields, and other constructs that do not have a corresponding construct in the source code. 
+						 synthetic constructs can vary among different Java compiler implementations, which means that .class files can vary among different implementations as well. Consequently, you may have compatibility issues if you serialize an inner class and then deserialize it with a different JRE implementation.
+
+
+						*You cannot have interface inside the block as they are inherently static
+
+						*A local class can have static members provided that they are constant variables. (A constant variable is a variable of primitive type or 	type String that is declared final and initialized with a compile-time constant expression
+
+			2.Anonymous class- it is an expression
+					Class which are declared and instantiated in the same time which do not have name
+					Create a anonymous class if you want to use a class only once
+
+					Anonymous class can access only those local variables which are decaled final or effective final.
+
+					You cannot declare static initializers or member interfaces in an anonymous class.
+
+					An anonymous class can have static members provided that they are constant variables.
+
+
+
+LAMBDA EXPRESSIONS
+
+	Functional Interface cannot have a inner class as well
+	 you do not have to enclose a void method invocation in braces
+
+	 the JDK defines several standard functional interfaces, which you can find in the package java.util.function
+
+	 A return statement is not an expression; in a lambda expression, you must enclose statements in braces ({}). However, you do not have to enclose a void method invocation in braces. 
+
+	
+
+	 PREDICATE<T>: has a method test(T t) which returns a boolean value
+
+	 CONSUMER<T>: has a method accept(T t) which has void return type
+
+	  FUNCTION<T,R>: interface contains the method R apply(T t)
+
+	 SUPPLIER:		The functional interface Supplier contains one method get that takes no arguments and returns an object(use can use it 					to return a new object)
+	 				eg:	() -> { return new HashSet<>(); }
+
+	Like local and anonymous classes, lambda expressions can capture variables; they have the same access to local variables of the enclosing scope. However, unlike local and anonymous classes, lambda expressions do not have any shadowing issues 
+
+	Lambda expressions are lexically scoped. This means that they do not inherit any names from a supertype or introduce a new level of scoping
+
+
+	when to use
+
+			Local Classes-
+					If you need to create more than once instance of a class 
+					Invoke additional methods later or access its constructor(Similar to normal class).
+					
+
+			Anonymous class
+					If you need to add additional fields or methods , (you cannot have parametrized constructors here)
+
+			Lambda Expressions
+					If you need to implement a functional interface,or
+					 donot want to access the constructor
+					  or you dont want to add additional fields etc
+
+
+METHOD REFERENCE
+	If you are using lambda expressions to call a method then use method reference
+
+	Are easy to read lambda expressions for methods that already have a name. 
+
+	Reference to a static method	ContainingClass::staticMethodName
+
+	Reference to an instance method of a particular object	containingObject::instanceMethodName
+
+	Reference to an instance method of an arbitrary object of a particular type	ContainingType::methodName
+		eg:Arrays.sort(stringArray, String::compareToIgnoreCase);
+
+	Reference to a constructor	ClassName::new
+
+
+	eg for constructor reference
+
+		You can use a constructor reference in place of the lambda expression as follows:
+
+		Set<Person> rosterSet = transferElements(roster, HashSet::new);
+			The Java compiler infers that you want to create a HashSet collection that contains elements of type Person. Alternatively, you can specify this as follows:
+
+Streams
+
+	Stream is not a data structure that holds the data, its a carries values from a source through a pipeline
+
+	Stream has a source
+
+	Stream has zero or more intermediate operations which return a stream of its predicate type eg filter,mapInt etc method of stream
+
+	Stream has Terminal operation which does not return a stream eg forEach,avegare method of stream
+
+
+			 list.stream().
+                mapToInt(s->Integer.parseInt(s)).
+                filter(e-> e%2==0).
+                forEach((m)->System.out.println(m));
+
+ Reduction Operations
+
+ 	eg:average,getAsDouble() etc
+
+
+ Differences Between Aggregate Operations and Iterators
+
+
+They use internal iteration: Aggregate operations do not contain a method like next to instruct them to process the next element of the 	 							collection. With internal delegation, your application determines what collection it iterates, but the JDK 									determines how to iterate the collection. With external iteration, your application determines both what 									collection it iterates and how it iterates it. However, external iteration can only iterate over the elements 								of a collection sequentially. Internal iteration does not have this limitation. It can more easily take 									advantage of parallel computing.
+
+They process elements from a stream: Aggregate operations process elements from a stream, not directly from a collection. Consequently, 										they are also called stream operations.
+
+They support behavior as parameters: You can specify lambda expressions as parameters for most aggregate operations. This enables you to 										customize the behavior of a particular aggregate operation.
+
+
+Streams vs normal iterators
+
+			Collection.forEach() uses the collection iterator and the processing order is defined
+
+			Collection.stream().forEach() ignores the iretaror and take the element one by one hence the processing order is not defined.
+
+For-each loop
+
+		This is a methods of Iterable interface. All the Collection interfaces extends Iterable Interface
+
+		The for-each construct is also applicable to arrays, where it hides the index variable rather than the iterator. The following method returns the sum of the values in an int array:
+
+		The for-each loop hides the iterator, so you cannot call remove. Therefore, the for-each loop is not usable for filtering. Similarly it is not usable for loops where you need to replace elements in a list or array as you traverse it. Finally, it is not usable for loops that must iterate over multiple collections in parallel. These shortcomings were known by the designers, who made a conscious decision to go with a clean, simple construct that would cover the great majority of cases.
+
+
+Using Core Java we can develop only stand alone applications.
+2 types of stand alone applications
+	1.GUI-Graphica User Interface- eg desktop applications or calculator
+	2.CUI-Character User Inerface - Applicatios which are run using the command prompt also knows as console based applications
+
+Advanced Java There are 3 things
+
+1.JDBC
+2.Servlets
+3.JSp's
+
+There are 3 editions of Java according to Sun Micro or Oracle
+
+	1. Java Standard Edition(J2SE)-JDBC
+	2.Java Enterprise Edition(J2EE)-Servlets and Jsp's,EJB,JPA etc
+	3.Java Micro Edition(J2ME)-Used for mobile,embeded applications like tv remote
+
+
+Interface
+
+		Interface allows static methods,default methods,constants and method signatures.
+		Interface can be either public or default(package private)
+
+		All the components in the interface are public( we dont have to explicitly declare it)
+
+		All the constants are by default public static final( we dont have to explicitly declare it)
+
+		Default methods enable you to add new functionality to existing interfaces and ensure binary compatibility with code written for older versions of those interfaces
+
+Iterable Interface
+
+		public interface Iterable<T>
+		Implementing this interface allows an object to be the target of the "for-each loop" statement.
+
+		Iterable
+		https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html
+
+		comparator
+		https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html
+
+Java Collection
+
+https://docs.oracle.com/javase/tutorial/collections/intro/index.html
+https://docs.oracle.com/javase/8/docs/technotes/guides/collections/index.html
+
+https://docs.oracle.com/javase/tutorial/collections/streams/index.html
+
+Time complexity
+https://www.bigocheatsheet.com/
+
+
+https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html#approach8
+
+Animal a =new Animal();
+Animal.Cat c=a.new Cat();
