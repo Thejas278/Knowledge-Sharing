@@ -1,5 +1,7 @@
 Important topics and Explanation
 
+Java is platform independent but jdk,jre,jvm are all platform dependent.
+
 JDK- Java developemt kit 
 it is use to develop and run java application, JDK is platform independent
 
@@ -14,7 +16,7 @@ JVM is a virtul machine which is a interpretor and it is responsible for line by
  JVM is also platform dependent and provides core java functions like memory management, garbage collection, security etc.
  WE need to have different jvm for different operating system
 
- 1-No, declaring the constructor as final is not possible.
+ 1-No, declaring the constructor as final is not possible.We will get complitation error saying  final modifier not allowed.
  Final means you cannot override it. Since Constructor declarations are not members. They are never inherited and therefore are not subject to hiding or overriding. A parent class constructor can be invoked.
 
  *Garbage Collection
