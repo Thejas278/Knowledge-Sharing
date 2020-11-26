@@ -3,7 +3,7 @@ Important topics and Explanation
 Java is platform independent but jdk,jre,jvm are all platform dependent.
 
 JDK- Java developemt kit 
-it is use to develop and run java application, JDK is platform independent
+it is use to develop and run java application, JDK is platform dependent
 
 JDK=JRE+developement tools
 
@@ -26,6 +26,8 @@ JVM is a virtul machine which is a interpretor and it is responsible for line by
 
 Stack is used to method execution, Heap is used for storing objects
 
+Object class is the only class that does not extend any othe rclass,every class is implicitly a subclass of Object.
+
 Static members,private,constructors cannot be over rided and access specifiers can be changed but cannot be reduced.
 Visibility in the child can be more than Parent class but cannot be less than the parent class.
 
@@ -41,9 +43,14 @@ but String s3=new String("thejas")// Object is created in heap so s1!=s3
 		Method			Yes					Yes				Yes		Yes
 		Field			Yes					Yes				Yes		Yes
 
-		A class can only be default,public and  Inner class can be privet,default,proetcted,public
+		A class can only be default,public and  Inner class can be privet,default,protected,public
+
+		Default is also called as package private
+		Protected =Can be acessed by subclass or package private
 
 		For overriding the return type does not matter only methodname and argumentlist matter
+
+Constructor is a block with no resturn type, It has same name as the class, It is not a member of a class so its not inherited,It can only be invoked.
 
 A subclass inherits all of the public and protected members of its parent, if the subclass is present in the same packge , then it can access the package private members also.
 Private members cannot be accessed directly in the subclasss, they are not inherited, but if we create public getters and setters then we can access.
@@ -56,12 +63,44 @@ static methods are inherited but not overridden, if you try to override then the
  final methods are inherited but are not overridden
  final keyword cannot be used to constructor because constructors are not inherited
  We cannot create a final interface
- we cannot use abstract and static keywords together
+ we cannot use abstract and static keywords together(y.... think monkey ??..think!!)
  Serializable is a marker interface
 
+Casting of Objects
+	MountainBike is descended from Bicycle and Object. Therefore, a MountainBike is a Bicycle and is also an Object, and it can be used wherever Bicycle or Object objects are called for.
+
+	The reverse is not necessarily true: a Bicycle may be a MountainBike, but it isn't necessarily. Similarly, an Object may be a Bicycle or a MountainBike, but it isn't necessarily.
+
+	Casting shows the use of an object of one type in place of another type, among the objects permitted by inheritance and implementations. For example, if we write
+
+	Object obj = new MountainBike();
+	then obj is both an Object and a MountainBike (until such time as obj is assigned another object that is not a MountainBike). This is called implicit casting.
+
+	If, on the other hand, we write
+
+	MountainBike myBike = obj;
+	we would get a compile-time error because obj is not known to the compiler to be a MountainBike. However, we can tell the compiler that we promise to assign a MountainBike to obj by explicit casting:
+
+	MountainBike myBike = (MountainBike)obj;
+	This cast inserts a runtime check that obj is assigned a MountainBike so that the compiler can safely assume that obj is a MountainBike. If obj is not a MountainBike at runtime, an exception will be thrown.
+
+	we can user instanceOf method to avoid the run time error
+		eg
+			if (obj instanceof MountainBike) {
+    		MountainBike myBike = (MountainBike)obj;
+		}
 
 **Creating custom Annotation
 1.WE need to use @interface annotation 
+
+
+eg 1
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.Type)
+	public @interface JsonSerializable {
+	}
+
+	Above example is a marker interface which does not have any methods,has runtime visibility, and we can apply it to types (classes)
 
 eg @interface smartPhone{
 	
@@ -90,7 +129,7 @@ call by reference means calling the function with paramater as reference
 Association
 	It is a relation between 2 independent classes establised through their objects
 
-	Composition and Aggregation are the 2 forms of Association.
+	Composition(has a) and Aggregation(Is a) are the 2 forms of Association.
 
 	Aggregation is a has a relationship(Inheritance - method overriding)
 
@@ -98,14 +137,27 @@ Association
 
 		In Aggregation, both the entries can survive individually which means ending one entity will not effect the other entity
 
-Composition is a restricted form of Aggregation in which two entities are highly dependent on each other.
-It represent parts of relationship
+Composition		 is a restricted form of Aggregation in which two entities are highly dependent on each other.
+				It represent parts of relationship, when one is destroyed the dependent object is also destroyed
 
 Composition is a strong Association whereas Aggregation is a weak Association.
 
 
 Volatile is used to solve the visiblity problem
-Whenever we use volatile for a variable , and we change the value the value will be changed in the main memory and then it will be refreshed in all the threads in which this value is used
+	Whenever we use volatile for a variable , and we change the value the value will be changed in the main memory and then it will be refreshed in all the threads in which this value is used
+
+		class Test  
+		{  
+		static int var=5;  
+		}  
+		In the above example, assume that two threads are working on the same class. Both threads run on different processors where each thread has its local copy of var. If any thread modifies its value, the change will not reflect in the original one in the main memory. It leads to data inconsistency because the other thread is not aware of the modified value.
+
+		class Test  
+		{  
+		static volatile int var =5;  
+		}  
+
+		In the above example, static variables are class members that are shared among all objects. There is only one copy in the main memory. The value of a volatile variable will never be stored in the cache. All read and write will be done from and to the main memory.
 
 For Synchronization we use Atmoic Variable
 eg value++
