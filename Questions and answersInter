@@ -90,6 +90,27 @@ Casting of Objects
     		MountainBike myBike = (MountainBike)obj;
 		}
 
+Custom Annotations
+
+Need for creating custom annotations
+
+1.For documentation purpose- Annotations will not have any functionality in this case
+
+2.Input for a java code processor
+
+3.Input for java library that access our annotation at runtime via java reflection
+
+Annotations can be used in class,method,constructors,fields , parameters(See @Target(ElementType.Type) options)
+
+		@Retention(RetentionPolicy.RUNTIME)
+		@Target(ElementType.Type)
+		@Inherited can be used in a annotation to indicate it can be inherited
+		@Documented will document the annotation in java doc
+
+1.Annotations without any fields are called as Marker Annotations
+2. If the annotation has one field then it is called Single value annotaion
+#There is a  interface called Annotation, all the annotations created are subclass of this Interface
+
 **Creating custom Annotation
 1.WE need to use @interface annotation 
 
