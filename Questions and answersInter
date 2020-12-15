@@ -16,6 +16,21 @@ JVM is a virtul machine which is a interpretor and it is responsible for line by
  JVM is also platform dependent and provides core java functions like memory management, garbage collection, security etc.
  WE need to have different jvm for different operating system
 
+ Members of the class-fields,methods and inner classes
+
+ variables decalred using final keyword can only be initialized in a constructor.
+ static final variables can be  initialized inside only inside a static block.
+
+ final methods are inherited but are not overridden
+
+ final keyword cannot be used to constructor because constructors are not inherited.
+
+ We cannot create a final interface(eg String class)
+ we cannot use abstract and static keywords together(y.... think monkey ??..think!!)
+
+ A final class cannot be extended, we should use the final class if we do not want inheritance,
+ If we want to promote composition over inheritance.
+
  1-No, declaring the constructor as final is not possible.We will get complitation error saying  final modifier not allowed.
  Final means you cannot override it. Since Constructor declarations are not members. They are never inherited and therefore are not subject to hiding or overriding. A parent class constructor can be invoked.
 
@@ -26,7 +41,7 @@ JVM is a virtul machine which is a interpretor and it is responsible for line by
 
 Stack is used to method execution, Heap is used for storing objects
 
-Object class is the only class that does not extend any othe rclass,every class is implicitly a subclass of Object.
+Object class is the only class that does not extend any other class,every class is implicitly a subclass of Object.
 
 Static members,private,constructors cannot be over rided and access specifiers can be changed but cannot be reduced.
 Visibility in the child can be more than Parent class but cannot be less than the parent class.
@@ -36,34 +51,30 @@ String s2="thejas"// String pool does not allow duplicated objects so only one o
 
 but String s3=new String("thejas")// Object is created in heap so s1!=s3
 
-		** 				private		     default      		protected	public
+		** 			private		     			default     			protected	public
 		Class			No					Yes				No		Yes
-		Nested Class	Yes					Yes				Yes		Yes
+		Nested Class		Yes					Yes				Yes		Yes
 		Constructor		Yes					Yes				Yes		Yes
 		Method			Yes					Yes				Yes		Yes
 		Field			Yes					Yes				Yes		Yes
 
-		A class can only be default,public and  Inner class can be privet,default,protected,public
+		A class can only be default,public and  Inner class can be private,default,protected,public
 
 		Default is also called as package private
 		Protected =Can be acessed by subclass or package private
 
 		For overriding the return type does not matter only methodname and argumentlist matter
 
-Constructor is a block with no resturn type, It has same name as the class, It is not a member of a class so its not inherited,It can only be invoked.
+Constructor is a block with no return type, It has same name as the class, It is not a member of a class so its not inherited,It can only be invoked.
 
-A subclass inherits all of the public and protected members of its parent, if the subclass is present in the same packge , then it can access the package private members also.
+A subclass inherits all of the public and protected members of its parent, if the subclass is present in the same packge , then it can access the package private or default members also.
 Private members cannot be accessed directly in the subclasss, they are not inherited, but if we create public getters and setters then we can access.
 A nested class has access to all the private members of its enclosing class—both fields and methods. Therefore, a public or protected nested class inherited by a subclass has indirect access to all of the private members of the superclass.
 
 static methods are inherited but not overridden, if you try to override then the static method in the parent class will be hidden
  variables declared using static final needs to be initialized
 
- variables decalred using final keyword can only be initialized in a constructor
- final methods are inherited but are not overridden
- final keyword cannot be used to constructor because constructors are not inherited
- We cannot create a final interface
- we cannot use abstract and static keywords together(y.... think monkey ??..think!!)
+ 
  Serializable is a marker interface
 
 Casting of Objects
@@ -103,6 +114,11 @@ Need for creating custom annotations
 Annotations can be used in class,method,constructors,fields , parameters(See @Target(ElementType.Type) options)
 
 		@Retention(RetentionPolicy.RUNTIME)
+
+			RetentionPolicy.Source-It will only be present in the source code
+			RetentionPolicy.Class- It will be present both in source code and class file(Compiled file)
+			RetentionPolicy.Runtime- It will be availabe in runtime as well
+
 		@Target(ElementType.Type)
 		@Inherited can be used in a annotation to indicate it can be inherited
 		@Documented will document the annotation in java doc
@@ -135,6 +151,25 @@ we can now use @smartPhone(os="symbian",version="1") as annotation
 	If it has one value then single value annotation
 
 	Using ReflectionApi we can get the value or features of the object
+
+	eg
+		 if(new GreenApple().getClass().isAnnotationPresent(Barcode.class)){
+            System.out.println(new GreenApple().getClass().getAnnotation(Barcode.class));
+        }
+
+        for the above code to work the retentionpolicy should be runtime
+
+        @Target(ElementType.TYPE)*/
+		@Inherited
+		@Documented
+		@Retention(RetentionPolicy.RUNTIME)
+		public @interface Barcode {
+
+	    public String type() default "Main Type";
+
+	    public int price() default 100;
+
+		}
 
 
 
