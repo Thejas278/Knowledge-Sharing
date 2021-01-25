@@ -198,6 +198,241 @@ Composition		 is a restricted form of Aggregation in which two entities are high
 
 Composition is a strong Association whereas Aggregation is a weak Association.
 
+Inheritance
+
+	Inheritance will make the sub classes unique by putting the commmon implementations in the super class.
+
+	A subclass inherits all the members (fields, methods, and nested classes) from its superclass. Constructors are not members, so they are not inherited by subclasses, but the constructor of the superclass can be invoked from the subclass.
+
+Object class in the super most class in java
+
+	The Object class is the top of the class hierarchy. All classes are descendants from this class and inherit methods from it. Useful methods inherited from Object include toString(), equals(), clone(), and getClass().
+
+	
+
+Interface
+	In the Java programming language, an interface is a reference type, similar to a class, that can contain only constants, method signatures, default methods, static methods, and nested types
+
+	For Non static methods if the name child method has the same name , then it will be overrided in the child class(This happens at runtime).
+	For static methods,static fields,non static fields the parent method will be hidden not over ridden(this happens at compile time)
+
+	Foo f = new Bar();
+        f.instanceMethod();//child method gets executed
+        f.classMethod();//parent method gets executed
+
+while
+
+**Comparator vs comparable
+
+	Comparator has compare method
+	comparable has compareTo method
+
+	Comparator is used to compare more than one field
+	comparable is used to  one field
+
+
+	Comparator- Actual class is not effected, Implemented in the seperate class
+	comparable- Actual class is effected
+
+InnerWorking of HashMap
+
+	HashMap uses a technique called hashing,If 2 objects are equal then they must have same hashcode
+	Every object will have a hascode method which gives the hashcode of that object eg 231245 ,hashcode is a set of integer numbers.
+
+HasMap internally has a array of Node (each Node is a linked list)
+Node will have ie Node<k,v> will have
+
+				int hashcode;
+				 key;
+		 		value;
+				 Node<k,v> next;
+
+the lenght of the array is by default 16(index will be 0-15)
+When we try to insert a value to hashmap using put method, the hashcode of the key will be calculated and
+uisng the formula
+ie index=hashcode & (n-1) (& means modulus operation and n=16)
+whatever index we get we will insert the keyvalue pair in that node.If there are 2 keys with the same index then the first inserted record in that node, the  "next" poniter will be pointing to this ne record.
+
+HashMap will allow us to store a "Null" key, "Null" has a hashcode =0 so index of null key will be always 0
+
+To get the value of the key we use the same index calculation and once we get the index we compare the hashcode value stored in the index with the hashcode of the Key value and the string key will also be compared using equals method. If both will match then the particular key will be retuned
+
+
+In java 8
+ If the number of duplicated index reaches more than the threshold ie TreeIFY_Threshold=8 then node switches from a linked list to a balanced tree  or binary tree to improve the performance
+
+ Balanced tree means the heavier hashcode will be moved to the right side of the tree and the lighter one will be moved to the left.
+ If the hascodes are equal then we compare the keys
+
+ A binary search tree is a * sorted binary tree, where value of a node is greater than or equal to its * left the child and less than or equal to its right child.
+
+ Read bst-https://www.youtube.com/watch?v=81PpYQ0AN_w
+
+
+ ConcurrentHashMap vs SynchronizedHashMap-Both are used to achieve thread safe
+
+
+ *SynchronizedHashMap 	maintains the lock at object level , to perform put or get we need to acquire the lock
+
+ *ConcurrentHashMap 	mainitains the lock at bucket level
+ 						read operation doesn't require a lock. So any number of threads can perform a get operation on it.
+
+						If thread1 wants to perform put operation in segment 2 and thread2 wants to perform put operation on segment 4 then it is allowed here
+
+Difference btw HashMap and HashTable
+
+Hashmap is not thread safe and it is not synchronized
+HashTable is threads safe and it is synchnonized
+
+HashMap is fast
+HashTable is slow
+
+HashMap can allow one null key
+HashTable does not allow null key
+
+
+In hasMap and hashTable the insertion hashMap is not fixed, but in linked HashMap the isertion order is fixed.
+
+
+ConcurrentHashMap vs Hashtable vs Synchronized Map- All the 3 are threadSafe
+
+		The only difference between Hashtable and Synchronized Map is that later is not a legacy and you can wrap any Map to create it's synchronized version by using Collections.synchronizedMap() method.
+
+		
+
+Read more: https://javarevisited.blogspot.com/2011/04/difference-between-concurrenthashmap.html#ixzz5yjFPtYkJ
+
+
+
+HasSet vs HashMap
+HashSet allows one null value HashMap allows one null key and any number of null values
+HaShSet is a implemention of Set Interface, HashMap is a implemention of Map Interface
+HashSet we have add , HaspMap we have put
+
+
+TreeHashMap is a sorted HashMap
+
+
+** TreeMap
+	Some of the important points to remember about TreeMap in java are;
+
+	Apart from implementing Map interface, Java TreeMap also implements NavigableMap and indirectly implements SortedMap interface. TreeMap also extends AbstractMap class.
+
+	TreeMap entries are sorted in the natural ordering of its keys. It also provides a constructor to provide Comparator to be used for ordering. So if you are using any class as key, make sure it’s implementing Comparable interface for natural ordering. Check out java collections interview questions to understand the importance of these methods.
+
+	Java TreeMap implementation provides guaranteed log(n) time cost for the containsKey, get, put and remove operations.
+
+	TreeMap is not synchronized and hence not thread-safe. For multithreaded environments, you can get a wrapped synchronized using Collections.synchronizedSortedMap method.
+
+	TreeMap methods to get keyset and values return Iterator that are fail-fast in nature, so any concurrent modification will throw ConcurrentModificationException.
+	
+	TreeMap in java doesn’t allow null keys, however you can have multiple null values associated with different keys.
+
+
+**Set Collection
+
+	Set is a collection which doesnot allow duplicate values
+
+	HashSet,LinkedHashset,TreeSet etc
+	TreeSet is used for sorting
+
+	HashSet INternally uses has map to insert the data 
+
+	eg in the documentation
+		public boolean add(E e) {
+   return map.put(e, PRESENT)==null;
+}
+
+
+to get the value from hasSet , the iterator method will return
+	public Iterator<E> iterator() {
+        return map.keySet().iterator();
+    }
+
+Advantages of Data Structure
+	Reusability
+	Efficiency
+	Abstraction
+
+    **Stack-LIFO
+     Stack is a linear list in which insertion and deletions are allowed only at one end, called top.
+	Stack is a abstract datatype. I uses LIFO-Last In First Out,
+	It has features like 
+	push - to add a element
+	pop- to delete a element
+	peek-to view a element
+	In stack we have only one entry point
+	If we are adding more value to the fixed size stack then we get overflow error
+	Underflow error is when you try to get value from a empty stack
+
+**Queue-FIFO
+	Queue is a linear list in which elements can be inserted only at one end called rear and deleted only at the other end called front.
+	Queue used FIFO and it has enqueue for insertion and dequeue for deletion
+	WE need to create enque,dequeue isEmpty,isFull,getSize methods with normal logic
+
+**Linked List
+	LinkedList is an implementation of both a queue and a stack
+
+	Poll vs Pop
+	Poll will return null if the list is empty and Poll is also used to remove the head element
+	Pop will throw java.util.NoSuchElementException and Pop is used to remove and return the head element
+	
+
+	Other methods are 
+	peek()
+	peekFirst()
+	peekLast()
+
+	3 types of linkedList
+	1.Single linked list
+	2.doublylinkeedList
+	3.CircularLinkedList
+
+Array vs LinkedList
+
+Array size if fixed, LinkedList size is dynamic
+Array is faster for adding,deleting, Linked list is slower for these operations
+Array consumes more memory, In linked List the memory can be redumped to heap
+
+
+
+*Tree
+	
+	This data structure uses a concept of Node
+
+	TopNode is root node
+	lines which connect each node is edge
+	Nodes which donot have any child are called Leaf Node
+
+**Binary Tree
+
+	Binary tree is a Tree which does not have more than 2 nodes, all the nodes can have 0,1 not more than 2 node
+
+	Types in Binary Tree
+
+	1.Strict Binary Tree- Either 0 or 2 nodes or childrens
+	2.Full Binary Tree - Where all the childrens are on same level( they will have same right and left nodes)
+	3.Complete Binary tree where the level of child nodes are l and l-1
+
+	Depth- Distance btw Root Node
+	Height-Height till last child node
+
+	Height of the tree = height of root node
+
+
+
+
+Read more: https://javarevisited.blogspot.com/2015/10/how-to-implement-binary-search-tree-in-java-example.html#ixzz5vtwsQjZh
+
+**ArrayList vs Linked List
+
+	ArrayList is fast for gettig the data
+	LinkedList is fast for manupulating the data
+
+	ArrayList uses dynamice resiazable array
+	LinkedList uses doubly linked List
+
+
 
 Volatile is used to solve the visiblity problem
 	Whenever we use volatile for a variable , and we change the value the value will be changed in the main memory and then it will be refreshed in all the threads in which this value is used
@@ -556,217 +791,6 @@ solution is to maintain the order
 }
 
 
-while
-
-**Comparator vs comparable
-
-	Comparator has compare method
-	comparable has compareTo method
-
-	Comparator is used to compare more than one field
-	comparable is used to  one field
-
-
-	Comparator- Actual class is not effected, Implemented in the seperate class
-	comparable- Actual class is effected
-
-InnerWorking of HashMap
-
-	HashMap uses a technique called hashing,If 2 objects are equal then they must have same hashcode
-	Every object will have a hascode method which gives the hashcode of that object eg 231245 ,hashcode is a set of integer numbers.
-
-HasMap internally has a array of Node (each Node is a linked list)
-Node will have ie Node<k,v> will have
-
-				int hashcode;
-				 key;
-		 		value;
-				 Node<k,v> next;
-
-the lenght of the array is by default 16(index will be 0-15)
-When we try to insert a value to hashmap using put method, the hashcode of the key will be calculated and
-uisng the formula
-ie index=hashcode & (n-1) (& means modulus operation and n=16)
-whatever index we get we will insert the keyvalue pair in that node.If there are 2 keys with the same index then the first inserted record in that node, the  "next" poniter will be pointing to this ne record.
-
-HashMap will allow us to store a "Null" key, "Null" has a hashcode =0 so index of null key will be always 0
-
-To get the value of the key we use the same index calculation and once we get the index we compare the hashcode value stored in the index with the hashcode of the Key value and the string key will also be compared using equals method. If both will match then the particular key will be retuned
-
-
-In java 8
- If the number of duplicated index reaches more than the threshold ie TreeIFY_Threshold=8 then node switches from a linked list to a balanced tree  or binary tree to improve the performance
-
- Balanced tree means the heavier hashcode will be moved to the right side of the tree and the lighter one will be moved to the left.
- If the hascodes are equal then we compare the keys
-
- A binary search tree is a * sorted binary tree, where value of a node is greater than or equal to its * left the child and less than or equal to its right child.
-
- Read bst-https://www.youtube.com/watch?v=81PpYQ0AN_w
-
-
- ConcurrentHashMap vs SynchronizedHashMap-Both are used to achieve thread safe
-
-
- *SynchronizedHashMap 	maintains the lock at object level , to perform put or get we need to acquire the lock
-
- *ConcurrentHashMap 	mainitains the lock at bucket level
- 						read operation doesn't require a lock. So any number of threads can perform a get operation on it.
-
-						If thread1 wants to perform put operation in segment 2 and thread2 wants to perform put operation on segment 4 then it is allowed here
-
-Difference btw HashMap and HashTable
-
-Hashmap is not thread safe and it is not synchronized
-HashTable is threads safe and it is synchnonized
-
-HashMap is fast
-HashTable is slow
-
-HashMap can allow one null key
-HashTable does not allow null key
-
-
-In hasMap and hashTable the insertion hashMap is not fixed, but in linked HashMap the isertion order is fixed.
-
-
-ConcurrentHashMap vs Hashtable vs Synchronized Map- All the 3 are threadSafe
-
-		The only difference between Hashtable and Synchronized Map is that later is not a legacy and you can wrap any Map to create it's synchronized version by using Collections.synchronizedMap() method.
-
-		
-
-Read more: https://javarevisited.blogspot.com/2011/04/difference-between-concurrenthashmap.html#ixzz5yjFPtYkJ
-
-
-
-HasSet vs HashMap
-HashSet allows one null value HashMap allows one null key and any number of null values
-HaShSet is a implemention of Set Interface, HashMap is a implemention of Map Interface
-HashSet we have add , HaspMap we have put
-
-
-TreeHashMap is a sorted HashMap
-
-
-** TreeMap
-	Some of the important points to remember about TreeMap in java are;
-
-	Apart from implementing Map interface, Java TreeMap also implements NavigableMap and indirectly implements SortedMap interface. TreeMap also extends AbstractMap class.
-
-	TreeMap entries are sorted in the natural ordering of its keys. It also provides a constructor to provide Comparator to be used for ordering. So if you are using any class as key, make sure it’s implementing Comparable interface for natural ordering. Check out java collections interview questions to understand the importance of these methods.
-
-	Java TreeMap implementation provides guaranteed log(n) time cost for the containsKey, get, put and remove operations.
-
-	TreeMap is not synchronized and hence not thread-safe. For multithreaded environments, you can get a wrapped synchronized using Collections.synchronizedSortedMap method.
-
-	TreeMap methods to get keyset and values return Iterator that are fail-fast in nature, so any concurrent modification will throw ConcurrentModificationException.
-	
-	TreeMap in java doesn’t allow null keys, however you can have multiple null values associated with different keys.
-
-
-**Set Collection
-
-	Set is a collection which doesnot allow duplicate values
-
-	HashSet,LinkedHashset,TreeSet etc
-	TreeSet is used for sorting
-
-	HashSet INternally uses has map to insert the data 
-
-	eg in the documentation
-		public boolean add(E e) {
-   return map.put(e, PRESENT)==null;
-}
-
-
-to get the value from hasSet , the iterator method will return
-	public Iterator<E> iterator() {
-        return map.keySet().iterator();
-    }
-
-Advantages of Data Structure
-	Reusability
-	Efficiency
-	Abstraction
-
-    **Stack-LIFO
-     Stack is a linear list in which insertion and deletions are allowed only at one end, called top.
-	Stack is a abstract datatype. I uses LIFO-Last In First Out,
-	It has features like 
-	push - to add a element
-	pop- to delete a element
-	peek-to view a element
-	In stack we have only one entry point
-	If we are adding more value to the fixed size stack then we get overflow error
-	Underflow error is when you try to get value from a empty stack
-
-**Queue-FIFO
-	Queue is a linear list in which elements can be inserted only at one end called rear and deleted only at the other end called front.
-	Queue used FIFO and it has enqueue for insertion and dequeue for deletion
-	WE need to create enque,dequeue isEmpty,isFull,getSize methods with normal logic
-
-**Linked List
-	LinkedList is an implementation of both a queue and a stack
-
-	Poll vs Pop
-	Poll will return null if the list is empty and Poll is also used to remove the head element
-	Pop will throw java.util.NoSuchElementException and Pop is used to remove and return the head element
-	
-
-	Other methods are 
-	peek()
-	peekFirst()
-	peekLast()
-
-	3 types of linkedList
-	1.Single linked list
-	2.doublylinkeedList
-	3.CircularLinkedList
-
-Array vs LinkedList
-
-Array size if fixed, LinkedList size is dynamic
-Array is faster for adding,deleting, Linked list is slower for these operations
-Array consumes more memory, In linked List the memory can be redumped to heap
-
-
-
-*Tree
-	
-	This data structure uses a concept of Node
-
-	TopNode is root node
-	lines which connect each node is edge
-	Nodes which donot have any child are called Leaf Node
-
-**Binary Tree
-
-	Binary tree is a Tree which does not have more than 2 nodes, all the nodes can have 0,1 not more than 2 node
-
-	Types in Binary Tree
-
-	1.Strict Binary Tree- Either 0 or 2 nodes or childrens
-	2.Full Binary Tree - Where all the childrens are on same level( they will have same right and left nodes)
-	3.Complete Binary tree where the level of child nodes are l and l-1
-
-	Depth- Distance btw Root Node
-	Height-Height till last child node
-
-	Height of the tree = height of root node
-
-
-
-
-Read more: https://javarevisited.blogspot.com/2015/10/how-to-implement-binary-search-tree-in-java-example.html#ixzz5vtwsQjZh
-
-**ArrayList vs Linked List
-
-	ArrayList is fast for gettig the data
-	LinkedList is fast for manupulating the data
-
-	ArrayList uses dynamice resiazable array
-	LinkedList uses doubly linked List
 
 
 
