@@ -220,9 +220,7 @@ Interface
         f.instanceMethod();//child method gets executed
         f.classMethod();//parent method gets executed
 
-while
-
-**Comparator vs comparable
+        **Comparator vs comparable
 
 	Comparator has compare method
 	comparable has compareTo method
@@ -233,6 +231,60 @@ while
 
 	Comparator- Actual class is not effected, Implemented in the seperate class
 	comparable- Actual class is effected
+
+	Comparablr is used to default sorting,Comparator is used for custom sorting
+
+
+        **Collection
+
+       **List
+       		It is a ordered collection which allows duplicate
+
+
+        **Set Collection
+
+
+		Duplicates are not allowed, It has only those methods from collection interface
+
+		HashSet -Stores elements in hashtable, insertion order is not maintained(performance is good)
+		TreeSet- Stores elements in red-black tree,insertion order is not maintained,It is a sorted set, It is a impementatio of
+		set Interface->Sortedset Interface->Navigable Interface
+		LinkedHashSet- elements re stored in hashtable, insertion order is maintaned
+
+	HashSet INternally uses has map to insert the data 
+
+	eg in the documentation
+		public boolean add(E e) {
+   return map.put(e, PRESENT)==null;
+}
+
+
+to get the value from hashSet , the iterator method will return
+	public Iterator<E> iterator() {
+        return map.keySet().iterator();
+    }
+
+
+        Map provides
+        To change the value use entrySet
+        for(Map.Entry<Integer, String> i:m.entrySet()){
+			i.setValue("Shimuli");
+			}
+
+        To remove the value use iterator
+
+        Iterator itr1=m.keySet().iterator();
+		while(itr1.hasNext()){
+			
+			itr.remove();
+		}
+
+		HashMap-Insertion order is not maintained,they are not synchronized
+		Linked HashMap -Insertion order is maintained,they are not synchronized
+
+		TreeMap is a sorted Map
+
+
 
 InnerWorking of HashMap
 
@@ -329,25 +381,18 @@ TreeHashMap is a sorted HashMap
 	TreeMap in java doesn’t allow null keys, however you can have multiple null values associated with different keys.
 
 
-**Set Collection
 
-	Set is a collection which doesnot allow duplicate values
+ ***Cursors
+ 	To get individual values from collection we have
 
-	HashSet,LinkedHashset,TreeSet etc
-	TreeSet is used for sorting
+ 		1.Enumeration
+ 		2.Iteration
+ 		3.ListIteration
 
-	HashSet INternally uses has map to insert the data 
+ 	Utility classes which have some utility methods for collection
 
-	eg in the documentation
-		public boolean add(E e) {
-   return map.put(e, PRESENT)==null;
-}
-
-
-to get the value from hasSet , the iterator method will return
-	public Iterator<E> iterator() {
-        return map.keySet().iterator();
-    }
+ 		1.Collections
+ 		2.Arrays
 
 Advantages of Data Structure
 	Reusability
