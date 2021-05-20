@@ -3,18 +3,20 @@ Class
 
 default means it is visible only inside a package
 
+There are 2 types of nested classed,
+	1.Static Nested class
+	2.Inner classes(Non static nested classes)
+		Inner classes are of 2 more types whcih are defined inside the method body
+				1.Local classes
+				2.Annonymous Class
 
 
+	Need for Nested Class
 
-**An instance of InnerClass can exist only within an instance of OuterClass and has direct access to the methods and fields of its
-		enclosing instance.
+	1.If a class is used only in one place den we can create a inner class,
+	2.It increases encapsulation-If we want to create a private vaiable and also to provide access to other class 
 
-	If a class is defined inside a class then 
-		 Vehicle.Bike b = v.new Bike();
 
-		to access the inner class members
-
-	If a class is defined inside a block or method of a outer class then it is visible only inside that block or method.
 
 NESTED classes 2 types
 
@@ -24,9 +26,11 @@ NESTED classes 2 types
 
 	Static Nested class is a regular class it can be acessed outisde the outer class also
 
+	Static Nested class do not have access to members of the outer class.
+
 2.NON STATIC CLASS OR INNER CLASS
 	
-	Starting in Java SE 8, if you declare the local class in a method, it can access the method's parameters
+	
 
 	Inner class cannot have static declarations because inner class is always associated with the instance.
 
@@ -38,20 +42,31 @@ NESTED classes 2 types
 
 	Nested class can be declared private,protected,Default(package private),public
 
-	To Access the inner class , we must first create instance of outer class
+**An instance of InnerClass can exist only within an instance of OuterClass and has direct access to the methods and fields of its
+		enclosing instance.
+
+	If a class is defined inside a class then 
+	Vehicle v =new Vehicle();
+		 Vehicle.Bike b = v.new Bike();
+
+		to access the inner class members
 
 			There are two special kinds of inner classes: local classes and anonymous classes.
 
 			1. Local classes are the classes that are defined inside the block, typically inside the body of the method or a for loop or if condition
+
 				A local class has access to the members of its enclosing class,
 				The local class can only access local variables which are declard final or effectively final
+
+				Starting in Java SE 8, if you declare the local class in a method, it can access the method's parameters
 
 				For global variables there is no such restriction .
 
 				(effective final- a varibale whose value did ot change afte the initialization)
 
-						Starting in Java SE 8, if you declare the local class in a method, it can access the method's parameters.
+						*A local class can have static members provided that they are constant variables. (A constant variable is a variable of primitive type or 	type String that is declared final and initialized with a compile-time constant expression
 
+			*You cannot have interface inside the block as they are inherently static
 
 						Shadowing 
 
@@ -67,10 +82,9 @@ NESTED classes 2 types
 						 synthetic constructs can vary among different Java compiler implementations, which means that .class files can vary among different implementations as well. Consequently, you may have compatibility issues if you serialize an inner class and then deserialize it with a different JRE implementation.
 
 
-						*You cannot have interface inside the block as they are inherently static
+						
 
-						*A local class can have static members provided that they are constant variables. (A constant variable is a variable of primitive type or 	type String that is declared final and initialized with a compile-time constant expression
-
+						
 			2.Anonymous class- it is an expression
 					Class which are declared and instantiated in the same time which do not have name
 					Create a anonymous class if you want to use a class only once
@@ -81,14 +95,24 @@ NESTED classes 2 types
 
 					An anonymous class can have static members provided that they are constant variables.
 
-
+**Inner classes may inherit static members that are not compile-time constants even though they may not declare them. Nested classes that are not inner classes may declare static members freely, in accordance with the usual rules of the Java programming language.
 
 LAMBDA EXPRESSIONS
 
 	Functional Interface cannot have a inner class as well
-	 you do not have to enclose a void method invocation in braces
+	
+
+	Unlike local classes and annonymous classes , Lambda expressions can only access members of enclosing scope which are final or effective final
+	
+	Like local and anonymous classes, lambda expressions can capture variables; they have the same access to local variables of the enclosing scope. However, unlike local and anonymous classes, lambda expressions do not have any shadowing issues 
+
+	Lambda expressions are lexically scoped. This means that they do not inherit any names from a supertype or introduce a new level of scoping
 
 	 the JDK defines several standard functional interfaces, which you can find in the package java.util.function
+
+ 	you do not have to enclose a void method invocation in braces
+
+	 If there is single expression then we do not need to use flower brackets {}, also 	Java runtime evaluates the expression and return the value.
 
 	 A return statement is not an expression; in a lambda expression, you must enclose statements in braces ({}). However, you do not have to enclose a void method invocation in braces. 
 
@@ -103,12 +127,15 @@ LAMBDA EXPRESSIONS
 	 SUPPLIER:		The functional interface Supplier contains one method get that takes no arguments and returns an object(use can use it 					to return a new object)
 	 				eg:	() -> { return new HashSet<>(); }
 
-	Like local and anonymous classes, lambda expressions can capture variables; they have the same access to local variables of the enclosing scope. However, unlike local and anonymous classes, lambda expressions do not have any shadowing issues 
-
-	Lambda expressions are lexically scoped. This means that they do not inherit any names from a supertype or introduce a new level of scoping
+	 BiFunction<T, T, T> merger is a function interface which accepts 2 arguments and produce result, has method apply
+	
 
 
 	when to use
+
+	Nested class: Use it if your requirements are similar to those of a local class, you want to make the type more widely available, and you don't require access to local variables or method parameters.
+
+	Use a non-static nested class (or inner class) if you require access to an enclosing instance's non-public fields and methods. Use a static nested class if you don't require this access.
 
 			Local Classes-
 					If you need to create more than once instance of a class 
@@ -120,7 +147,7 @@ LAMBDA EXPRESSIONS
 
 			Lambda Expressions
 					If you need to implement a functional interface,or
-					 donot want to access the constructor
+					 do not want to access the constructor
 					  or you dont want to add additional fields etc
 
 
@@ -148,6 +175,8 @@ METHOD REFERENCE
 
 Streams
 
+	Pipeline is a sequence of aggregate operations
+
 	Stream is not a data structure that holds the data, its a carries values from a source through a pipeline
 
 	Stream has a source
@@ -162,19 +191,53 @@ Streams
                 filter(e-> e%2==0).
                 forEach((m)->System.out.println(m));
 
- Reduction Operations
+ Reduction Operations:The JDK contains many terminal operations such as average that return one value by combining the contents of a stream.
 
  	eg:average,getAsDouble() etc
 
 
+ For general purpose reduction use stream.reduce method
+
+ reduce is used for immutable reduction  and collect is used as mutable reduction
+
+			 		eg
+			 			Integer totalAgeReduce = roster
+			   .stream()
+			   .map(Person::getAge)
+			   .reduce(
+			       0,
+			       (a, b) -> a + b);
+
+
+						       	The reduce operation in this example takes two arguments:
+
+						identity: The identity element is both the initial value of the reduction and the default result if there are no elements in the stream. In this example, the identity element is 0; this is the initial value of the sum of ages and the default value if no members exist in the collection roster.
+
+						accumulator: The accumulator function takes two parameters: a partial result of the reduction (in this example, the sum of all processed integers so far) and the next element of the stream (in this example, an integer). It returns a new partial result. In this example, the accumulator function is a lambda expression that adds two Integer values and returns an Integer value:
+
+						(a, b) -> a + b
+
+
+						The reduce operation always returns a new value. However, the accumulator function also returns a new value every time it processes an element of a stream
+
+		
+collect is reduction operation for mutuable objects
+		Collector is a interface and Collectors is a implementation for Collector which has methods like Collectors.toList etc.
+
+		
+
  Differences Between Aggregate Operations and Iterators
 
 
-They use internal iteration: Aggregate operations do not contain a method like next to instruct them to process the next element of the 	 							collection. With internal delegation, your application determines what collection it iterates, but the JDK 									determines how to iterate the collection. With external iteration, your application determines both what 									collection it iterates and how it iterates it. However, external iteration can only iterate over the elements 								of a collection sequentially. Internal iteration does not have this limitation. It can more easily take 									advantage of parallel computing.
+ Aggregate operations use internal Iteration,they do not contain a method like next to instruct them to process the next element of the collection. With internal delegation, your application determines what collection it iterates, but the JDK determines how to iterate the collection. 
+With external iteration, your application determines both what collection it iterates and how it iterates it. 
 
-They process elements from a stream: Aggregate operations process elements from a stream, not directly from a collection. Consequently, 										they are also called stream operations.
+However, external iteration can only iterate over the elements of a collection sequentially. 
+Internal iteration does not have this limitation. It can more easily take advantage of parallel computing.
 
-They support behavior as parameters: You can specify lambda expressions as parameters for most aggregate operations. This enables you to 										customize the behavior of a particular aggregate operation.
+They process elements from a stream: Aggregate operations process elements from a stream, not directly from a collection. Consequently, they are also called stream operations.
+
+They support behavior as parameters: You can specify lambda expressions as parameters for most aggregate operations. This enables you to customize the behavior of a particular aggregate operation.
 
 
 Streams vs normal iterators
@@ -190,6 +253,8 @@ For-each loop
 		The for-each construct is also applicable to arrays, where it hides the index variable rather than the iterator. The following method returns the sum of the values in an int array:
 
 		The for-each loop hides the iterator, so you cannot call remove. Therefore, the for-each loop is not usable for filtering. Similarly it is not usable for loops where you need to replace elements in a list or array as you traverse it. Finally, it is not usable for loops that must iterate over multiple collections in parallel. These shortcomings were known by the designers, who made a conscious decision to go with a clean, simple construct that would cover the great majority of cases.
+
+
 
 
 Using Core Java we can develop only stand alone applications.
