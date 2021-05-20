@@ -34,6 +34,11 @@ JVM is a virtul machine which is a interpretor and it is responsible for line by
  1-No, declaring the constructor as final is not possible.We will get complitation error saying  final modifier not allowed.
  Final means you cannot override it. Since Constructor declarations are not members. They are never inherited and therefore are not subject to hiding or overriding. A parent class constructor can be invoked.
 
+ *If we use string1+strng2+....
+
+ then java compiler will complie the code by replacing + with StringBuilder.append
+ but if there is only 2 string concatination , then complier will keep it as it is
+
  *Garbage Collection
 
  Garbage collector is best example of Daemon thread as it is always running in background.
@@ -213,14 +218,54 @@ Object class in the super most class in java
 Interface
 	In the Java programming language, an interface is a reference type, similar to a class, that can contain only constants, method signatures, default methods, static methods, and nested types
 
-	For Non static methods if the name child method has the same name , then it will be overrided in the child class(This happens at runtime).
+	Interface can be public or default(Package Private)
+
+	All methods are by default public
+	All the constants are by default public static final so you can omit these modifiers.
+
+	For Non static methods if the  child method has the same name , then it will be overrided in the child class(This happens at runtime).
 	For static methods,static fields,non static fields the parent method will be hidden not over ridden(this happens at compile time)
 
 	Foo f = new Bar();
         f.instanceMethod();//child method gets executed
         f.classMethod();//parent method gets executed
 
-        **Comparator vs comparable
+        If u create a abstract method (Y) in the parent and if u declare the same metohod(Y) as abstratc in ur child interface then the clas which will implement the child will have to implement the abstract method (Y) , the paretn default implementation will not be available to it
+
+        Default methods can be overridden
+
+        https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html
+
+
+  **Comparator vs comparable
+
+
+      * Comparable - compareTo(Object o)
+
+	        If any custom class wants to use Arrays.sort or Collections.sort den it should implement Comparable.
+
+	        In Comparable we modify the pojo class,Sometimes we might not be able to modify the class
+	        Comparable can be used only for natural ordering or default sorting.
+
+	        NullPointerException - if the specified object is null
+		ClassCastException - if the specified object's type prevents it from being compared to this object.
+
+
+      * Comparator- compare(Object o1,Object o2)
+
+
+
+         It is a good practise to Seralize the comparator as they may be used as ordering methods in serializable data structures (like TreeSet, TreeMap). In order for the data structure to serialize successfully
+
+         Arrays.sort or Collections.sort will take one more argument which take Comparator as argument.
+
+         NullPointerException - if the specified object is null
+		ClassCastException - if the specified object's type prevents it from being compared to this object.
+
+			First object with Second object will be ascending
+			reverse will be descending
+
+
 
 	Comparator has compare method
 	comparable has compareTo method
@@ -232,16 +277,35 @@ Interface
 	Comparator- Actual class is not effected, Implemented in the seperate class
 	comparable- Actual class is effected
 
-	Comparablr is used to default sorting,Comparator is used for custom sorting
+	Comparable is used to default sorting,Comparator is used for custom sorting
+
+	Useful methods of Comparator
+
+	Comparator<Chair> cmp=Comparator.comparing(Chair :: getName);
+		Collections.sort(cl,  cmp);
 
 
-        **Collection
+		Comparator ch4=	Comparator.comparing(Chair::getName).thenComparing(Chair::getSize);
+		Collections.sort( cl,ch4);
 
-       **List
-       		It is a ordered collection which allows duplicate
+		Comparator ch4=	Comparator.comparing(Chair::getName).reversed();
+		Collections.sort( cl,ch4);
 
 
-        **Set Collection
+
+**Collection
+
+ **List
+       		It is a ordered collection which allows duplicate.
+
+       	You can convert any collection to any other collection( set collection into arraylist and vice versa) by using a constructor.
+
+	**Iterator is unidirectional, has 3 methods- hasNext();next();remove();
+	**ListIterator is bidirectional, It has hasPrevious() and previous(), nextIndex(),previousIndex() methods as well
+
+		List interface has 2 forms of list iterator , the one with the int argument will point the iterator from the integer index passed, the one without the argument will start the iterator from the begining of the list.
+
+**Set Collection
 
 
 		Duplicates are not allowed, It has only those methods from collection interface
@@ -251,21 +315,86 @@ Interface
 		set Interface->Sortedset Interface->Navigable Interface
 		LinkedHashSet- elements re stored in hashtable, insertion order is maintaned
 
-	HashSet INternally uses has map to insert the data 
+	HashSet Internally uses has map to insert the data 
 
 	eg in the documentation
 		public boolean add(E e) {
    return map.put(e, PRESENT)==null;
-}
+				}
 
 
-to get the value from hashSet , the iterator method will return
-	public Iterator<E> iterator() {
-        return map.keySet().iterator();
-    }
+			to get the value from hashSet , the iterator method will return
+			public Iterator<E> iterator() {
+		        return map.keySet().iterator();
+		    }
+
+**Queue
+
+		It is used to hold the elements before processing, It has additional methods like
 
 
-        Map provides
+				public interface Queue<E> extends Collection<E> {
+				    E element();
+				    boolean offer(E e);
+				    E peek();
+				    E poll();
+				    E remove();
+				}
+
+				Each Queue method exists in two forms: 
+				(1) one throws an exception if the operation fails.
+
+				(2) the other returns a special value if the operation fails (either null or false, depending on the operation). The regular structure of the interface is illustrated in the following table.
+
+				Queue Interface Structure
+
+				Type of Operation	Throws exception	Returns special value
+				Insert				add(e)				offer(e)
+				Remove				remove()			poll()
+				Examine				element()			peek()
+
+
+				The add method, which Queue inherits from Collection, inserts an element unless it would violate the queue's capacity restrictions, in which case it throws IllegalStateException. The offer method, which is intended solely for use on bounded queues, differs from add only in that it indicates failure to insert an element by returning false.
+
+				The remove and poll methods differ in their behavior only when the queue is empty. Under these circumstances, remove throws NoSuchElementException, while poll returns null.
+
+				The element and peek methods return, but do not remove, the head of the queue.
+				 If the queue is empty, element throws NoSuchElementException, while peek returns null.
+
+				 Queue implementations generally do not allow insertion of null elements. The LinkedList implementation, which was retrofitted to implement Queue, is an exception. For historical reasons, it permits null elements, but you should refrain from taking advantage of this, because null is used as a special return value by the poll and peek methods.
+
+**dequeue    Is a linear collection of elements which supports adding and removal of elements in both the ends.
+			It implememnts both stack and queue
+				 ArrayDeque and LinkedList implement the Deque interface.
+
+				 Note that the Deque interface can be used both as last-in-first-out stacks and first-in-first-out queues
+
+
+			Deque Methods
+
+			Type of Operation	First Element (Beginning of the Deque instance)		Last Element (End of the Deque instance)
+			Insert				addFirst(e)											offerFirst(e)
+								addLast(e)											offerLast(e)
+												
+			Remove				removeFirst()										removeLast()
+								pollFirst()											pollLast()
+											
+			Examine				getFirst()											peekFirst()
+								getLast()											peekLast()
+								
+
+
+******			A list is an ordered list of objects, where the same object may well appear more than once. For example: [1, 7, 1					, 3, 1, 1, 1, 5]. It makes sense to talk about the "third element" in a list. You can add an element anywhere 					in the list, change an element anywhere in the list, or remove an element from any position in the list.
+
+				A queue is also ordered, but you'll only ever touch elements at one end. All elements get inserted at the "end" and removed from the "beginning" (or head) of the queue. You can find out how many elements are in the queue, but you can't find out what, say, the "third" element is. You'll see it when you get there.
+
+				A set is not ordered and cannot contain duplicates. You again can't ask for the "third" element or even the "first" element, since they are not in any particular order. You can add or remove elements, and you can find out if a certain element exists (e.g., "is 7 in this set?")
+
+
+		
+
+
+ ** Map provides
         To change the value use entrySet
         for(Map.Entry<Integer, String> i:m.entrySet()){
 			i.setValue("Shimuli");
@@ -401,7 +530,7 @@ Advantages of Data Structure
 
     **Stack-LIFO
      Stack is a linear list in which insertion and deletions are allowed only at one end, called top.
-	Stack is a abstract datatype. I uses LIFO-Last In First Out,
+	Stack is a abstract datatype. It uses LIFO-Last In First Out,
 	It has features like 
 	push - to add a element
 	pop- to delete a element
@@ -476,6 +605,45 @@ Read more: https://javarevisited.blogspot.com/2015/10/how-to-implement-binary-se
 
 	ArrayList uses dynamice resiazable array
 	LinkedList uses doubly linked List
+
+
+
+	Seralization and Deserialization
+
+	Is the process of converting the object into byte array so that it can be transferred into a file or over a network
+
+		Using FileOutPutStream for file and ObjectOutPutStream for Object we can achieve this -Serializzation
+
+
+		Is the process of converting the Bytearray back to java object so that it can be transferred into a file or over a network
+
+		Using FileInputPutStream for file and ObjectInputPutStream for Object we can achieve this -Serializzation
+
+
+	Transcient is a keyword which is only used for variables
+	Transcient will not serialize the object value it will send the default value of the field
+
+	transcient  int i=10;  //o/p will be 0
+
+	transcient final int i=10;  //o/p will be 10 ( because for final variables value will be assigned at compile time)
+		if final variable is initilized inside constructor then transcient will work, op will be 0
+
+	transcient static int i=10;  //o/p will be 10 (only non static variables participate in serialization)
+
+	for serialzation the order in which we serialize , the same order we have to deserialze. 
+	if we do not know the order then we can use instanceOf operator for find the instance
+
+	*Object Graph- When we serialze a objetc , set of all objects which are reachable to that object will be srialized
+
+	while adding customized Serialization we have 
+	implement
+	private void WriteObject(OOS oos);
+	private void readObject(OIS ois);
+	*these 2 methods are called automatically by jvm hence they are called call back methods
+
+	continue from here https://www.youtube.com/watch?v=p-98X_1mMIY
+
+
 
 
 
@@ -581,11 +749,24 @@ A request can be handled by a chain of objects , The request is not coupled to a
 eg catchblock
 
 
+
 **Light weight process vs Heavyweight process
 
 	Light weight process will have multiple thread  sharing the same address space.
 	
 	Heavy weight Process- There will be different process created to work parally and each process has its own address space.
+
+Process and Threads
+
+
+	Process has its own self contained execution environment,it will have its own memory space
+
+	Threads are light weight processes which requires few resource for creation compared to process,
+
+		Threads exist within a process, every process will have alreast one thread.
+
+		But from programers point of view we create one thread called main thread which has the ability to create multiple threads.
+
 
 **Difference between Thread and Process
 
@@ -597,28 +778,65 @@ Threads
 Threads is a unit of a process
 They are used for parallel execution and very java program creates at least one thread [ main() thread ].
 
-t1.join() method will make other threads to stops until the current thread completes the execution.
+Interrupt-
+
+		Interrupt tells the thread to stop what it is doing now and do something else.
+
+		For methods which thrown InterruptException like sleep and wait, when we use t.interrupt(),If there is Thread.sleep or wait method then InterruptedExceptionis thrown and execution is returned from the run method
+
+		If a thread goes a long time without calling the method like sleep(which throws Interrupt Exception), then calling Thread.interrupted will tell if a thread has received a interrupt.
+
+		Internally there ia a flag called interrupt status flag which will be set when a thread is interrupted,
+		Thread.interrupted() will return true if the thread is interrupted and it will clear the interrupt status flag
+
+		(if we call static method Thread.interrupted() twice den the second call will return false because the flag will be cleared by the first call)
+
+		There is a non static method called isInterrupted which will only check if the thread is interrupted, it will not change the Interrupt flag.
+
+		any method that exits by throwing an InterruptedException clears interrupt status when it does so
+
+t1.join() method will make other threads to stops until the current thread completes the execution.(call only after starting the 			thread or else it wont work)
+
+			Join method will only throw interrupted exception if the current thread that is calling the t.join() gets interrupted
+
+			Thread t=new Thread(new ThreadM());
+		
+				t.start();
+				t.interrupt()// will not throw Interrupted Exception
+				Thread.currentThread().interrupt()//will throw the exception
+					t.join()
+
+
 isAlive() is used to check whether a thread is alive or not. after join method isAlive will return false.
+
 t1.getPriority() will give the priority of thread, the raneg of priority ranges from 1 to 10.
-We can also use inbuilt constants of thread for fixing priority
-	eg t1.setPriority(Thread.MIN_PRIORITY);//this is bulit in constant
+		We can also use inbuilt constants of thread for fixing priority
+		eg t1.setPriority(Thread.MIN_PRIORITY);//this is bulit in constant
+		Setting priority will only hint the OS but if will not guarentee the execution, If there is any constariant in the cpu memory den the thread with higher priority will run first.
+
 t1.setName("thejas")- will set the name of thread as thejas
 
-Thread t2=new Thread(()->{ 
-			 for(int i=0;i<=5;i++){
-				 System.out.println("Apple of i"+i);
-			 }
-		});
-		t2.start();
+		Thread t2=new Thread(()->{ 
+					 for(int i=0;i<=5;i++){
+						 System.out.println("Apple of i"+i);
+					 }
+				});
+				t2.start();
 
-	adding "synchronized" will make a block or method thread safe, multiple threadsa cannot acces the same resource at a time
+Synchronized
 
-	t1.sleep(100) vs t1.wait()
+		Happens before relationship-Memory rights from one statement will be visible to another statement.
 
-	wait() method releases the lock   -  sleep() method doesn't release the lock.
-	wait is the method of Object class -  sleep is the method of Thread clas
-	wait is non static Method 			- sleep is static method
-	
+		https://stackoverflow.com/questions/12611366/constructor-synchronization-in-java
+		https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html
+			adding "synchronized" will make a block or method thread safe, multiple threadsa cannot acces the same resource at a time
+
+			t1.sleep(100) vs t1.wait()
+
+			wait() method releases the lock   -  sleep() method doesn't release the lock.
+			wait is the method of Object class -  sleep is the method of Thread clas
+			wait is non static Method 			- sleep is static method
+			
 	
 
 	wheneever we use wait() and notify() inside the method,the method needs to be synchronized
@@ -658,7 +876,7 @@ Threads can be implemented in 2 ways.
 **Extends Thread class vs Implements Runnable Interface?
 
 	Extending the Thread class will make your class unable to extend other classes, because of the single inheritance feature in  JAVA. However, this will give you a simpler code structure. If you implement Runnable, you can gain better object-oriented design and consistency and also avoid the single inheritance problems.
-	If you just want to achieve basic functionality of a thread you can simply implement Runnable interface and override run() method. But if you want to do something serious with thread object as it has other methods like suspend(), resume(), ..etc which are not available in Runnable interface then you may prefer to extend the Thread class.
+	
 
 
 **Thread Life cycle in Java
