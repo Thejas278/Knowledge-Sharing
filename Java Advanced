@@ -1,5 +1,5 @@
 Class
-1.Outer classs can be declared public or  package-private(default)
+1.Outer classs can be declared public or package-private(default)
 
 default means it is visible only inside a package
 
@@ -17,7 +17,6 @@ There are 2 types of nested classed,
 	2.It increases encapsulation-If we want to create a private vaiable and also to provide access to other class 
 
 
-
 NESTED classes 2 types
 
 1.STATIC NESTED CLASS
@@ -28,9 +27,7 @@ NESTED classes 2 types
 
 	Static Nested class do not have access to members of the outer class.
 
-2.NON STATIC CLASS OR INNER CLASS
-	
-	
+2.NON STATIC CLASS OR INNER CLASS		
 
 	Inner class cannot have static declarations because inner class is always associated with the instance.
 
@@ -62,11 +59,11 @@ NESTED classes 2 types
 
 				For global variables there is no such restriction .
 
-				(effective final- a varibale whose value did ot change afte the initialization)
+				(effective final- a varibale whose value did not change afte the initialization)
 
 						*A local class can have static members provided that they are constant variables. (A constant variable is a variable of primitive type or 	type String that is declared final and initialized with a compile-time constant expression
 
-			*You cannot have interface inside the block as they are inherently static
+		*You cannot have interface inside the block as they are inherently static
 
 						Shadowing 
 
@@ -80,8 +77,6 @@ NESTED classes 2 types
 
 						When the Java compiler compiles certain constructs, such as inner classes, it creates synthetic constructs; these are classes, methods, fields, and other constructs that do not have a corresponding construct in the source code. 
 						 synthetic constructs can vary among different Java compiler implementations, which means that .class files can vary among different implementations as well. Consequently, you may have compatibility issues if you serialize an inner class and then deserialize it with a different JRE implementation.
-
-
 						
 
 						
@@ -200,6 +195,9 @@ Streams
 
  reduce is used for immutable reduction  and collect is used as mutable reduction
 
+ 	Keep in mind that streams implementation for reduce are same for reduce and collect so we are providing intial value
+ 	For parallel streams they perform fork joint source will be split into individual sub tasks(roughly 4* numbe rof cores).
+
 			 		eg
 			 			Integer totalAgeReduce = roster
 			   .stream()
@@ -220,8 +218,14 @@ Streams
 
 						The reduce operation always returns a new value. However, the accumulator function also returns a new value every time it processes an element of a stream
 
+
+			There is one more reduce operation with 3 arguments- It has a intial value,accumulator function and Combiner funtion
+				The combiner function is usually used for parallel streams, for combining the results of each streams running in parallel
+				Even if we are using sequential stream we cannot pass null as third argument.we will get null pointer exception
+
+Java complier internally wih replace string contacination(s1+s2+s3+s4) wih StringBuilder if there are more than 2 concatination
 		
-collect is reduction operation for mutuable objects
+collect is reduction operation for mutuable objects,eg if we use reduce on the string which is immutable , a new string gets created which will effect the performace so we are usig collect.
 		Collector is a interface and Collectors is a implementation for Collector which has methods like Collectors.toList etc.
 
 		
@@ -254,7 +258,29 @@ For-each loop
 
 		The for-each loop hides the iterator, so you cannot call remove. Therefore, the for-each loop is not usable for filtering. Similarly it is not usable for loops where you need to replace elements in a list or array as you traverse it. Finally, it is not usable for loops that must iterate over multiple collections in parallel. These shortcomings were known by the designers, who made a conscious decision to go with a clean, simple construct that would cover the great majority of cases.
 
+Iterable Interface
 
+		public interface Iterable<T>
+		Implementing this interface allows an object to be the target of the "for-each loop" statement.
+
+		Iterable
+		https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html
+
+		comparator
+		https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html
+
+
+
+Interface
+
+		Interface allows static methods,default methods,constants and method signatures.
+		Interface can be either public or default(package private)
+
+		All the components in the interface are public( we dont have to explicitly declare it)
+
+		All the constants are by default public static final( we dont have to explicitly declare it)
+
+		Default methods enable you to add new functionality to existing interfaces and ensure binary compatibility with code written for older versions of those interfaces.
 
 
 Using Core Java we can develop only stand alone applications.
@@ -273,29 +299,6 @@ There are 3 editions of Java according to Sun Micro or Oracle
 	1. Java Standard Edition(J2SE)-JDBC
 	2.Java Enterprise Edition(J2EE)-Servlets and Jsp's,EJB,JPA etc
 	3.Java Micro Edition(J2ME)-Used for mobile,embeded applications like tv remote
-
-
-Interface
-
-		Interface allows static methods,default methods,constants and method signatures.
-		Interface can be either public or default(package private)
-
-		All the components in the interface are public( we dont have to explicitly declare it)
-
-		All the constants are by default public static final( we dont have to explicitly declare it)
-
-		Default methods enable you to add new functionality to existing interfaces and ensure binary compatibility with code written for older versions of those interfaces
-
-Iterable Interface
-
-		public interface Iterable<T>
-		Implementing this interface allows an object to be the target of the "for-each loop" statement.
-
-		Iterable
-		https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html
-
-		comparator
-		https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html
 
 Java Collection
 
