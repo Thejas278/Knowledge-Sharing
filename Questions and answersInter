@@ -755,146 +755,18 @@ Threads
 Threads is a unit of a process
 They are used for parallel execution and very java program creates at least one thread [ main() thread ].
 
-Interrupt-
-
-		Interrupt tells the thread to stop what it is doing now and do something else.
-
-		For methods which thrown InterruptException like sleep and wait, when we use t.interrupt(),If there is Thread.sleep or wait method then InterruptedExceptionis thrown and execution is returned from the run method
-
-		If a thread goes a long time without calling the method like sleep(which throws Interrupt Exception), then calling Thread.interrupted will tell if a thread has received a interrupt.
-
-		Internally there ia a flag called interrupt status flag which will be set when a thread is interrupted,
-		Thread.interrupted() will return true if the thread is interrupted and it will clear the interrupt status flag
-
-		(if we call static method Thread.interrupted() twice den the second call will return false because the flag will be cleared by the first call)
-
-		There is a non static method called isInterrupted which will only check if the thread is interrupted, it will not change the Interrupt flag.
-
-		any method that exits by throwing an InterruptedException clears interrupt status when it does so
-
-t1.join() method will make other threads to stops until the current thread completes the execution.(call only after starting the 			thread or else it wont work)
-
-			Join method will only throw interrupted exception if the current thread that is calling the t.join() gets interrupted
-
-			Thread t=new Thread(new ThreadM());
-		
-				t.start();
-				t.interrupt()// will not throw Interrupted Exception
-				Thread.currentThread().interrupt()//will throw the exception
-					t.join()
-
-
-isAlive() is used to check whether a thread is alive or not. after join method isAlive will return false.
-
-t1.getPriority() will give the priority of thread, the raneg of priority ranges from 1 to 10.
-		We can also use inbuilt constants of thread for fixing priority
-		eg t1.setPriority(Thread.MIN_PRIORITY);//this is bulit in constant
-		Setting priority will only hint the OS but if will not guarentee the execution, If there is any constariant in the cpu memory den the thread with higher priority will run first.
-
-t1.setName("thejas")- will set the name of thread as thejas
-
-		Thread t2=new Thread(()->{ 
-					 for(int i=0;i<=5;i++){
-						 System.out.println("Apple of i"+i);
-					 }
-				});
-				t2.start();
-
-Synchronized
-
-		Happens before relationship-Memory rights from one statement will be visible to another statement.
-
-	
-			adding "synchronized" will make a block or method thread safe, multiple threadsa cannot acces the same resource at a time
-
-			Constructors are not synchronized, it will give a syntax error.
-
-
-			Every objetc has a intrinsic lock associated with it , if any thread wants any exclusive acess for a objetc then it needs to acquire the lock for the object.
-
-			Intrinsic lock is also called as monitor
-
-			If one thread has a intrinsic lock another thread cannot have the lock
-
-			When we use synchronized keyword will make sure that the method or statement wil acquire the lock and while returning it will release the lock, even during run time exception the lock will be returned.
-
-			When a thread releases an intrinsic lock, a happens-before relationship is established between that action and any subsequent acquisition of the same lock.
-
-Reentrant Synchronization- Allowing the thread to access the same lock , in a situation if a synchronized method is calling another synchronized method.Without this the thread itself would block
-
-
-	For static methods there will be class level intrinsic lock(test.class)
-	For Non static methods there will be object level lock(this)
-
-	When a thread is acessing a non synchronized method, other threads cannot access other non static methods of that object, but thy can access the static synchronized methods because for static methods it is class level lock.
-
-Class level locking-If there are 100 instance of a class den any thread is acessing a static synchronized method den other 							Threads cannot access the static synchronized methods of that class, but can access non static synchronized 					methods.	
-
-			If we use synchronize as a statement then  other threads can use other synchronized methods only the statments within the block will be synchronized
-
-Atomic Operations
-	These are the operations which cannot stop in the middle, either they suceed or they fail,there is no in between.
-
-	Read and write for reference variables and for primitive types (other than float and long) are atomic
-
-	Atomic operations will protect from thread interferance but memory inconsistency is still possible 
-
-	If you use volatile keyword then all variables including long and float
-
-	Volatile established happends before relationship for all the read operation for the variables also when the thread sees the volatile keyword, it will not just see the latest value, it will also see the side effect that led to the value change.
-
-	Using Atomis operation is more efficient then acessing the variables in sychronized code but we need to take special care to avoid memory inconsitency,Whether the extra effort is worthwhile depends on the size and complexity of the application
-
-For Synchronization we use Atmoic Variable
-eg value++
-AtomicInteger value=new AtomicINteger(1);
-		value.incrementAndGet();
-
-
-Volatile is used to solve the visiblity problem
-	Whenever we use volatile for a variable , and we change the value the value will be changed in the main memory and then it will be refreshed in all the threads in which this value is used
-
-		class Test  
-		{  
-		static int var=5;  
-		}  
-		In the above example, assume that two threads are working on the same class. Both threads run on different processors where each thread has its local copy of var. If any thread modifies its value, the change will not reflect in the original one in the main memory. It leads to data inconsistency because the other thread is not aware of the modified value.
-
-		class Test  
-		{  
-		static volatile int var =5;  
-		}  
-
-		In the above example, static variables are class members that are shared among all objects. There is only one copy in the main memory. The value of a volatile variable will never be stored in the cache. All read and write will be done from and to the main memory.
-
-
-
-t1.sleep(100) vs t1.wait()
-
-			wait() method releases the lock   -  sleep() method doesn't release the lock.
-			wait is the method of Object class -  sleep is the method of Thread clas
-			wait is non static Method 			- sleep is static method
-			
-	
-
-	wheneever we use wait() and notify() inside the method,the method needs to be synchronized
-
-**wait() and notify()
-wait() will causes the current thread to wait untill another thread invokes notify() or notifyAll() method
-notify() wakes up a single thread that is waiting to accept to use the resource (should be the first thread which used wait())
-notifyAll() will wake up that are waiting to access the resource
 
 Threads can be implemented in 2 ways. 
 1. By extending Thread class
 		
 			public class MyThread extends Thread {
-		   public void run(){  
-		    System.out.println("thread is running...");  
-		  } 
-		   public static void main(String[] args) {
-		     MyThread obj = new MyThread();
-		     obj.start();
-			}
+				   public void run(){  
+				    System.out.println("thread is running...");  
+				  } 
+				   public static void main(String[] args) {
+				     MyThread obj = new MyThread();
+				     obj.start();
+					}
 
 			Since multiple inheritance is not possible we can use a Runnable interface to create a thread
 		** 1000 millisecond is 1 second
@@ -902,19 +774,19 @@ Threads can be implemented in 2 ways.
 2. By implementing Runnable Interface
 
 			public class MyThread implements Runnable {
-   public void run(){  
-     System.out.println("thread is running..");  
-   }  
-   public static void main(String[] args) {
-     Thread t = new Thread(new MyThread());
-     t.start();
-}
+  				 public void run(){  
+				     System.out.println("thread is running..");  
+				   }  
+				   public static void main(String[] args) {
+				     Thread t = new Thread(new MyThread());
+				     t.start();
+				}
 
 
 **Extends Thread class vs Implements Runnable Interface?
 
 	Extending the Thread class will make your class unable to extend other classes, because of the single inheritance feature in  JAVA. However, this will give you a simpler code structure. If you implement Runnable, you can gain better object-oriented design and consistency and also avoid the single inheritance problems.
-	
+	Creating an implementation of Runnable and passing it to the Thread class utilizes composition and not inheritance – which is more flexible
 
 
 **Thread Life cycle in Java
@@ -924,6 +796,7 @@ Threads can be implemented in 2 ways.
 	If sleep method is invoked.
 	The thread calls the wait method.
 	The thread is blocking on I/O.
+	
 	A thread dies naturally when the run method exits.
 
 **Thread.join()-The join() method waits for a thread to die
@@ -981,23 +854,212 @@ For example lets have a look at the following code:
 
 	method isAlive(): Determine if a thread is still running.
 
+
+Interrupt-
+
+		Interrupt tells the thread to stop what it is doing now and do something else.
+
+		For methods which thrown InterruptException like sleep and wait, when we use t.interrupt(),If there is Thread.sleep or wait method then InterruptedExceptionis thrown and execution is returned from the run method
+
+		If a thread goes a long time without calling the method like sleep(which throws Interrupt Exception), then calling Thread.interrupted will tell if a thread has received a interrupt.
+
+		Internally there ia a flag called interrupt status flag which will be set when a thread is interrupted,
+		Thread.interrupted() will return true if the thread is interrupted and it will clear the interrupt status flag
+
+		(if we call static method Thread.interrupted() twice den the second call will return false because the flag will be cleared by the first call)
+
+		There is a non static method called isInterrupted which will only check if the thread is interrupted, it will not change the Interrupt flag.
+
+	*Any method that exits by throwing an InterruptedException clears interrupt status when it does so
+
+t1.join() method will make other threads to stops until the current thread completes the execution.(call only after starting the 			thread or else it wont work)
+
+			Join method will only throw interrupted exception if the current thread that is calling the t.join() gets interrupted
+
+			Thread t=new Thread(new ThreadM());
+		
+				t.start();
+				t.interrupt()// will not throw Interrupted Exception
+				Thread.currentThread().interrupt()//will throw the exception
+					t.join()
+
+
+isAlive() is used to check whether a thread is alive or not. after join method isAlive will return false.
+
+t1.getPriority() will give the priority of thread, the raneg of priority ranges from 1 to 10.
+		We can also use inbuilt constants of thread for fixing priority
+		eg t1.setPriority(Thread.MIN_PRIORITY);//this is bulit in constant
+		Setting priority will only hint the OS but if will not guarentee the execution, If there is any constariant in the cpu memory den the thread with higher priority will run first.
+
+t1.setName("thejas")- will set the name of thread as thejas
+
+		Thread t2=new Thread(()->{ 
+					 for(int i=0;i<=5;i++){
+						 System.out.println("Apple of i"+i);
+					 }
+				});
+				t2.start();
+
+Synchronized- can be used only on methods or code block
+
+		Happens before relationship-Memory rights and other changes from one statement will be visible to another statement.
+
+	
+			adding "synchronized" will make a block or method thread safe, multiple threadsa cannot acces the same resource at a time
+
+			Constructors are not synchronized, it will give a syntax error.The JVM ensures that only one thread can invoke a constructor call at a given point in time.
+
+
+			Every objetc has a intrinsic lock associated with it , if any thread wants any exclusive acess for a objetc then it needs to acquire the lock for the object.
+
+			Intrinsic lock is also called as monitor
+
+			If one thread has a intrinsic lock another thread cannot have the lock
+
+			When we use synchronized keyword will make sure that the method or statement will acquire the lock and while returning it will release the lock, even during run time exception the lock will be returned.
+
+			When a thread releases an intrinsic lock, a happens-before relationship is established between that action and any subsequent acquisition of the same lock.
+
+Reentrant Synchronization- Allowing the thread to access the same lock , in a situation if a synchronized method is calling another synchronized method.
+	Without Reentrant Synchronizatio the thread itself would block
+
+
+	For static methods there will be class level intrinsic lock(test.class)
+	For Non static methods there will be object level lock(this)
+
+	When a thread is acessing a non synchronized method, other threads cannot access other non static methods of that object, but they can access the static synchronized methods because for static methods it is class level lock.
+
+Class level locking-If there are 100 instance of a class then any thread that is acessing a static synchronized method then other 							Threads cannot access the static synchronized methods of that class, but can access non static Synchronized methods.
+
+			If we use synchronize as a statement then  other threads can use other synchronized methods only the statments within the block will be synchronized
+
+Atomic Operations
+	These are the operations which cannot stop in the middle, either they suceed or they fail,there is no in between.
+
+	Read and write for reference variables and for primitive types (other than float and long) are atomic
+
+	Atomic operations will protect from thread interferance but memory inconsistency is still possible 
+
+	If you use volatile keyword then all variables including long and float
+
+	Volatile established happens before relationship for all the read operation for the variables also when the thread sees the volatile keyword, it will not just see the latest value, it will also see the side effect that led to the value change.
+
+	Using Atomis operation is more efficient then acessing the variables in sychronized code but we need to take special care to avoid memory inconsitency,Whether the extra effort is worthwhile depends on the size and complexity of the application
+
+For Synchronization we use Atmoic Variable
+eg value++
+AtomicInteger value=new AtomicINteger(1);
+		value.incrementAndGet();
+
+
+		class Test  
+		{  
+		static int var=5;  
+		}  
+		In the above example, assume that two threads are working on the same class. Both threads run on different processors where each thread has its local copy of var. If any thread modifies its value, the change will not reflect in the original one in the main memory. It leads to data inconsistency because the other thread is not aware of the modified value.
+
+		class Test  
+		{  
+		static volatile int var =5;  
+		}  
+
+		In the above example, static variables are class members that are shared among all objects. There is only one copy in the main memory. The value of a volatile variable will never be stored in the cache. All read and write will be done from and to the main memory.
+
+Dead Lock,Starvation and Live Lock
+
+		Dead Lock is a situation where One thread(A) is waiting for another thread(B) to complete but that thread(B) is waiting for the thread (A) to complete.
+			In Dead Lock both the threads will be blocked because of each other.
+
+				For example, consider two processes, P1 and P2, and two resources, R1 and R2. Suppose that each process needs access to both resources to perform part of its function. Then it is possible to have the following situation: the OS assigns R1 to P2, and R2 to P1. Each process is waiting for one of the two resources. Neither will release the resource that it already owns until it has acquired the other resource and performed the function requiring both resources. The two processes are deadlocked
+
+
+		Starvation-Siutation in which a thread is not able to make progress because other threads are consuming the resoures required for this thread to complete.
+
+
+		Live Lock is a situation in which threads are not blocked but they are busy responding to each other or changing their states because of change in other thread, they are not doing anything useful .
+
+
+	wait()
+
+						public synchronized void guardedJoy() {
+						    // This guard only loops once for each special event, which may not
+						    // be the event we're waiting for.
+						    while(!joy) {
+						        try {
+						            wait();
+						        } catch (InterruptedException e) {}
+						    }
+						    System.out.println("Joy and efficiency have been achieved!");
+						}
+
+			It is a guarded block, suppose u want to execute something after a condition is satisfied , instead of looping and checking for the condition you can use wait().
+
+			Wait will suspend the thread untill another thread has issued a notification that some special event has ocured, it might not be a notificatio which this thread is waiting, now the thread will execute one to check  the condition.
+
+			 Always invoke wait inside a loop that tests for the condition being waited for. Don't assume that the interrupt was for the particular condition you were waiting for, or that the condition is still true
+
+			Why is this version of guardedJoy synchronized? Suppose d is the object we're using to invoke wait. When a thread invokes d.wait, it must own the intrinsic lock for d — otherwise an error is thrown. Invoking wait inside a synchronized method is a simple way to acquire the intrinsic lock.
+
+						public synchronized void guardedJoy() {
+			    // This guard only loops once for each special event, which may not
+			    // be the event we're waiting for.
+			    while(!joy) {
+			        try {
+			            wait();
+			        } catch (InterruptedException e) {}
+			    }
+			    System.out.println("Joy and efficiency have been achieved!");
+			}
+
+			Wait can also throw InterruptedException
+			when wait is invokd it will release the lock and suspend exectution.At some future time, another thread will acquire the same lock and invoke Object.notifyAll, informing all threads waiting on that lock that something important has happened:
+
+			There is a second notification method, notify, which wakes up a single thread
+
+t1.sleep(100) vs t1.wait()
+
+			wait() method releases the lock   -  sleep() method doesn't release the lock.
+			wait is the method of Object class -  sleep is the method of Thread class
+			wait is non static Method 			- sleep is static method
+			
+	
+
+	whenever we use wait() and notify() inside the method,the method needs to be synchronized
+
+**wait() and notify()
+wait() will causes the current thread to wait untill another thread invokes notify() or notifyAll() method
+notify() wakes up a single thread that is waiting to accept to use the resource (should be the first thread which used wait())
+notifyAll() will wake up that are waiting to access the resource
+
+
+Immutable design
+
+		Dont provide setters which modify the fields
+		Make all fields private and final
+
+		Don't allow subclasses to override methods. The simplest way to do this is to declare the class as final. A more sophisticated approach is to make the constructor private and construct instances in factory methods.
+
+		If the instance fields include references to mutable objects, don't allow those objects to be changed:
+			Don't provide methods that modify the mutable objects.
+			Don't share references to the mutable objects. Never store references to external, mutable objects passed to the constructor; if necessary, create copies, and store references to the copies. Similarly, create copies of your internal mutable objects when necessary to avoid returning the originals in your methods.
+
 ** How to achieve Thread Safe
 
 
 
 1. Using the stateless Implementation
 
-		public class StateLess{
+				public class StateLess{
 
-		public static int addValue(Integer value){
-		value=value+1;
-		return value;
-		}
-		}		
-IN the above example
-The method neither relies on external state nor maintains state at all. Hence, it’s considered to be thread-safe and can be safely called by multiple threads at the same time.
+				public static int addValue(Integer value){
+				value=value+1;
+				return value;
+				}
+				}		
+		IN the above example
+		The method neither relies on external state nor maintains state at all. Hence, it’s considered to be thread-safe and can be safely called by multiple threads at the same time.
 
-Therefore, stateless implementations are the simplest way to achieve thread-safety.
+		Therefore, stateless implementations are the simplest way to achieve thread-safety.
 
 
 2.Making a class Immutable-
@@ -1018,13 +1080,13 @@ Therefore, stateless implementations are the simplest way to achieve thread-safe
 
 3. Synchronized Method
 
-	public synchronized void incrementCounter() {
-	    counter += 1;
-	}
+			public synchronized void incrementCounter() {
+		    counter += 1;
+		}
 
-	We’ve created a synchronized method by prefixing the method signature with the synchronized keyword.
+		We’ve created a synchronized method by prefixing the method signature with the synchronized keyword.
 
-	Since one thread at a time can access a synchronized method, one thread will execute the incrementCounter() method, and in turn, others will do the same. No overlapping execution will occur whatsoever.
+		Since one thread at a time can access a synchronized method, one thread will execute the incrementCounter() method, and in turn, others will do the same. No overlapping execution will occur whatsoever.
 
 Synchronized Collection
 
@@ -1036,7 +1098,7 @@ Synchronized Collection
 	thread2.start();
 
 MultiThreading
- Multithreading is main done to increase the execution speed, One thread will access one core so multi threads will access multiplt cores in cpu
+ Multithreading is main done to increase the execution speed, One thread will access one core so multi threads will access multiple cores in cpu
 
  2.Synchronous tasks
 To take heap dum kill-3
@@ -1090,6 +1152,45 @@ solution is to maintain the order
         }
     }
 }
+Runnable vs collable
+
+
+	A Callable needs to implement call() method while a Runnable needs to implement run() method.
+	A Callable can return a value but a Runnable cannot.
+	A Callable can throw checked exception but a Runnable cannot.
+	A Callable can be used with Thread class and ExecutorService (there is a method invoke which takes Collable Object as parameter #invokeXXX(Collection<? extends Callable<T>> tasks) methods but a Runnable can be used only with Thread .
+
+
+Advanced Thread Concepts
+
+	1.Lock Objects
+		Synchronized blocks use re entrant locks, this kind of lock is easy to use but has limitations.
+		More sophisticated locking idioms are supported by the java.util.concurrent.locks package
+		Similar to implicit locks, only one thread can own a lock object at a time,they also support wait/notify mechanism throught their associated condition mechanism.
+
+		The biggest advantage of Lock objects over implicit locks is their ability to back out of an attempt to acquire a lock. The tryLock method backs out if the lock is not available immediately or before a timeout expires (if specified). The lockInterruptibly method backs out if another thread sends an interrupt before the lock is acquired.
+
+	2.Executors
+		For small applications there is a conectin between task being done by the new thread as defined by it's runnable object and the thread itself as defined by the Thread Object
+		For bigger application, it makes sense to sepetate the thread management and creation from the rest of the application.
+		Objects that encapsulates these functions are known as executors
+
+
+		There are 3 interfaces for executors
+
+		1.Executor Interface
+
+				This has a method called execute whihc takes a runnable object of thread.
+
+				you can replace
+
+				(new Thread(r)).start();
+				with
+
+				e.execute(r);
+
+
+				
 
 
 
