@@ -1,3 +1,41 @@
+Using core java we can develp desktop applications or standalone applications
+Using advanced java we can develop web applications- applications which provide service in web
+
+Advanced Java has
+
+	JDBC
+	Servlet
+	JSP
+
+
+	JDBC- Is used to connect to database
+
+		JDBC is a specification defined by java vendor, it is implemented by database vendors
+
+			Driver are the implementations of JDBC
+
+		JDBC Driver(Transalator)- Converts the JDBC native calls to native database calls(Converts java calls into database specifc calls and vice versa)
+
+		Connector- Provides the connection to database(DriverManager.getConnection or DataSource.getConnection)
+
+
+		DiverManger.getConnection will return a new connection everytime we call it
+
+		DatSource.getConnection- WE will get connection Object from  connection poll
+
+		StatmentObject- Which will send the query to database and bring the resut from database.
+
+		Resultset - Is the result which the database gives
+
+
+		Steps for JDBC
+
+		1.Load and register the driver( eg Class.forName(ClassName)- this method can be used to load any java class)
+		2.Establish the connection.
+		3.Use statement object
+		4.Retrive the resultset
+		5.Close the connection
+
 
 
 Questions and answers
@@ -6,10 +44,22 @@ Difference between web server and application server
 
 	Web Server is mostly designed to serve static content, though most Web Servers have plugins to support scripting languages like Perl, PHP, ASP, JSP etc. through which these servers can generate dynamic HTTP content.
 
+	TCP-Transport Control Protool is like a telephone line and germen and french are the protcols like HTTP,FTP
+	Webserver and webclients use HTTP protocol
+
+	Webservers will be listening to a port which is assgned to them by the operating system, when ever tht port gets any request , it will be redirected to that web server
+
 	Most of the application servers have Web Server as integral part of them, that means App Server can do whatever Web Server is capable of. Additionally App Server have components and features to support Application level services such as Connection Pooling, Object Pooling, Transaction Support, Messaging services etc.
 	
 	As web servers are well suited for static content and app servers for dynamic content, most of the production environments have web server acting as reverse proxy to app server. That means while servicing a page request, static contents (such as images/Static HTML) are served by web server that interprets the request. Using some kind of filtering technique (mostly extension of requested resource) web server identifies dynamic content request and transparently forwards to app server
 	Example of such configuration is Apache Tomcat HTTP Server and Oracle (formerly BEA) WebLogic Server. Apache Tomcat HTTP Server is Web Server and Oracle WebLogic is Application Server.
+
+Webserver support web applications
+Application server supports enterprise level application.
+
+	WebServers support static contents like Servlets,JSP,HTML it does not support EJB's
+
+	Every Application server will have webserver but if the provided web server is not enough then we need application server.
 
 What is a servlet
 Servlet stands for Server Component
@@ -528,6 +578,9 @@ RestUserNameAuthenticationFilter is a implementation of UsernamePasswordAuthenti
 	</bean>
 
 and we can perform curd operations using MongoRepository creating a interface that extends MongoRepository
+
+
+
 
 ** Configuring datasource 
 
