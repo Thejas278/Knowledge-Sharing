@@ -118,26 +118,43 @@ Laptop laptop
 
 By default @Autowire searches by type
 @Qualifier searches by name;
+-----------------------------------------------------------------------------------------------------------------------------------
+***THE IOC CONTAINER
 
-Springs IOC container is reposible for Instantiating,Configuring and managing the dependencies between the objects
-There are 2 type of IOC Containers
-1.BeanFactory Interface- Usually used for smaller applications(org.springframework.beans.factory.BeanFactory).
-Since these are interface we need to initialize it with its implementation
-ie for beanFactory
-Resource resource=new ClassPathResource("applicationContext.xml");  
-BeanFactory factory=new XmlBeanFactory(resource); 
-HelloWorld obj = (HelloWorld) factory.getBean("helloWorld");    
-      obj.getMessage();    
-We can have only one configuration file
-Usually, the implementations use lazy loading, which means that Beans are only instantiating when we directly calling them through the getBean() method.
+		
+		Springs IOC container is reposible for Instantiating,Configuring and managing the dependencies between the objects
 
-2.ApplocationContext Interface- ApplicationContext is a built of top of BeanFactory.For larger enterpirse applications we have to use ApplicatioContext (org.springframework.context.ApplicationContext).
-We can have multiple configuration files
-Uses eager loading, so every bean instantiate after the ApplicationContext started up.
+		The org.springframework.beans and org.springframework.context packages provide the basis for the Spring Framework's IoC container
 
-ApplicationContext context =   
-    new ClassPathXmlApplicationContext("applicationContext.xml"); applicationContext.xml- File name where we have define the file name
 
+	The BeanFactory interface is the central IoC container interface in Spring
+
+		BeanFactory interface- Usually used for smaller applications(org.springframework.beans.factory.BeanFactory).
+			Since these are interface we need to initialize it with its implementation
+			ie for beanFactory
+			Resource resource=new ClassPathResource("applicationContext.xml");  
+			BeanFactory factory=new XmlBeanFactory(resource); 
+			HelloWorld obj = (HelloWorld) factory.getBean("helloWorld");    
+			      obj.getMessage();    
+			We can have only one configuration file
+			Usually, the implementations use lazy loading, which means that Beans are only instantiating when we directly calling them through the getBean() method.
+
+		ApplocationContext Interface- ApplicationContext is a built of top of BeanFactory.For larger enterpirse applications we 	have to use ApplicatioContext (org.springframework.context.ApplicationContext).
+			We can have multiple configuration files
+			Uses eager loading, so every bean instantiate after the ApplicationContext started up.
+
+			ApplicationContext context =   
+			    new ClassPathXmlApplicationContext("applicationContext.xml"); applicationContext.xml- File name where we have define the file name
+
+A BeanFactory pretty much just instantiates and configures beans. An ApplicationContext also does that, and it provides the supporting infrastructure to enable lots of enterprise-specific features such as transactions and AOP.
+
+In short, the BeanFactory provides the configuration framework and basic functionality, while the ApplicationContext adds more enterprise-centric functionality to it.
+
+
+		Resource res = new FileSystemResource("beans.xml");
+		BeanFactory factory = new XmlBeanFactory(res);
+
+		Basically that is all there is to it. Using getBean(String) you can retrieve instances of your beans; the client-side view of the BeanFactory is simple. The BeanFactory interface has just a few other methods, but ideally your application code should never use them... indeed, your application code should have no calls to the getBean(String) method at all, and thus no dependency on Spring APIs at all.
 
     <import> tag is used to import bean definitions from other files
     eg:
@@ -151,24 +168,28 @@ ApplicationContext context =
     <bean id="bean2" class="..."/>
 
 </beans>
-All location paths are considered relative to the definition file doing the importing, so services.xml in this case must be in the same directory or classpath location as the file doing the importing
+All location paths are considered relative to the definition file doing the importing, so services.xml in this case must be in the same directory or classpath location as the file doing the importingBean life cycle in Spring Bean Factory Container
 
 
-Bean life cycle in Spring Bean Factory Container
 		1.Bean Initialization
 		2.Bean properties will be loaded and using dependency injection they will be wired
 		3.WE will call the BeanNameAwares.setBeanName() and set the beanName
 		4.We will call the BeanFactoryAwares.setBeanFactory() and set the bean factory
 		5.WE will load the applicationcontext using ApplicationContextAwares
 		5.If there is any preprocessInitialization requred that isdone
-		6.Init meyhod get called specified for the bean will be called
-		5If there is any post processor initilization is required that wuill be done
+		6.Init method get called specified for the bean will be called
+		5 If there is any post processor initilization is required that wuill be done
 		6.Bean is ready to use
 		7.After usage the container is shutdown
 		8.destory method is called 
 
+Instantiating Beans
 
-1.For static factory method
+1.Constructor
+
+
+
+2.For static factory method
 
 	When defining a bean which is to be created using a static factory method, along with the class attribute which specifies the class containing the static factory method, another attribute named factory-method is needed to specify the name of the factory method itself. Spring expects to be able to call this method (with an optional list of arguments as described later) and get back a live object, which from that point on is treated as if it had been created normally via a constructor. One use for such a bean definition is to call static factories in legacy code.
 
@@ -181,7 +202,7 @@ Example
       factory-method="createInstance"/>
 
 
-2.For non static factory method
+3.For non static factory method
 
 	Instantiation using an instance factory method is where a non-static method of an existing bean from the container is invoked to create a new bean. To use this mechanism, the 'class' attribute must be left empty, and the 'factory-bean' attribute must specify the name of a bean in the current (or parent/ancestor) container that contains the instance method that is to be invoked to create the object. The name of the factory method itself must be set using the 'factory-method' attribute.
 
@@ -196,6 +217,18 @@ Example
 <bean id="exampleBean"
       factory-bean="serviceLocator"
       factory-method="createInstance"/>
+
+By default the scope of Bean created in application context is singleton but the below configuration will create 2 beans
+      <bean id="customer" class="jp.ne.goo.beans.Customer"> 
+    <property name="custno" value="100"></property>
+    <property name="custName" value="rajasekhar"> </property>
+</bean>
+<bean id="customer2" class="jp.ne.goo.beans.Customer"> 
+    <property name="custno" value="200"></property> 
+    <property name="custName" value="siva"></property> 
+</bean>
+
+	because Only one shared instance of a singleton bean is managed, and all requests for beans with an id or ids matching that bean definition result in that one specific bean instance being returned by the Spring container.
 
 
 We can use another name to a bean using the alias tag
@@ -248,15 +281,82 @@ We can also use index
   <constructor-arg index="1" value="42"/>
 </bean>
 
+Injecting dependencies
+
+	The basic principle behind Dependency Injection (DI) is that objects define their dependencies (that is to say the other objects they work with) only through constructor arguments, arguments to a factory method, or properties which are set on the object instance after it has been constructed or returned from a factory method. Then, it is the job of the container to actually inject those dependencies when it creates the bean. 
+	This is fundamentally the inverse, hence the name Inversion of Control (IoC), of the bean itself being in control of instantiating or locating its dependencies on its own using direct construction of classes, or something like the Service Locator pattern.
+
 ** Setter Injection vs Constructor Injection
 	Partial dependency: can be injected using setter injection but it is not possible by constructor. ... Overriding: Setter injection overrides the constructor injection. If we use both constructor and setter injection, IOC container will use the setter injection. Changes: We can easily change the value by setter injection
 
-Different ways of configuring the spring application
-Configuration definition and bean definition are two different things. There are three ways to define configuration, available in Spring 4 by default:
+	Using constructor injection we cannot reconfigure a object.
+	Also setter injection is also a solution for circular depedency issue.
 
-xml-based configuration, when you describe configuration in xml file;
-java-based configuration, when configuration is Java class, marked with specific annotations;
-groovy-based configuration, when configuration is file with Groovy code;
+
+			Bean dependency resolution generally happens as follows:
+
+			The BeanFactory is created and initialized with a configuration which describes all the beans. (Most Spring users use a BeanFactory or ApplicationContext implementation that supports XML format configuration files.)
+
+			Each bean has dependencies expressed in the form of properties, constructor arguments, or arguments to the static-factory method when that is used instead of a normal constructor. These dependencies will be provided to the bean, when the bean is actually created.
+
+			Each property or constructor argument is either an actual definition of the value to set, or a reference to another bean in the container.
+
+			Each property or constructor argument which is a value must be able to be converted from whatever format it was specified in, to the actual type of that property or constructor argument. By default Spring can convert a value supplied in string format to all built-in types, such as int, long, String, boolean, etc.
+
+ *For those beans that are singleton-scoped and set to be pre-instantiated (such as singleton beans in an ApplicationContext), creation happens at the time that the container is created, but otherwise this is only when the bean is requested
+
+ *Configuration issues like circular dependencies,reference to non existant bean will be identifed by the spring during the container loading.	This means that a Spring container which has loaded correctly can later generate an exception when you request a bean if there is a problem creating that bean or one of its dependencies. This could happen if the bean throws an exception as a result of a missing or invalid property, for example. This potentially delayed visibility of some configuration issues is why ApplicationContext implementations by default pre-instantiate singleton beans
+
+ Cirular dependencies occur in constructor injection
+ 	It can be handeled or eliminated by using setter injection.
+
+
+Using idref will validate the bean reference at Container deployment time
+
+		<bean id="theTargetBean" class="..."/>
+
+		<bean id="theClientBean" class="...">
+		    <property name="targetName">
+		        <idref bean="theTargetBean" />
+		    </property>
+		</bean>
+		The above bean definition snippet is exactly equivalent (at runtime) to the following snippet:
+
+		<bean id="theTargetBean" class="..." />
+
+		<bean id="client" class="...">
+		    <property name="targetName" value="theTargetBean" />
+		</bean>
+
+		The main reason the first form is preferable to the second is that using the idref tag allows the container to validate at deployment time that the referenced, named bean actually exists. In the second variation, no validation is performed on the value that is passed to the 'targetName' property of the 'client' bean. Any typo will only be discovered (with most likely fatal results) when the 'client' bean is actually instantiated. If the 'client' bean is a prototype bean, this typo (and the resulting exception) may only be discovered long after the container is actually deployed.
+
+			<property name="targetName">
+		   <!-- a bean with an id of 'theTargetBean' must exist; otherwise an XML exception will be thrown -->
+		   <idref local="theTargetBean"/>
+		</property>
+
+Also using will  "local" Validate the bean at XML document parse time.
+
+
+Using Parent will indicate that the reference Bean is in the parent context
+			
+			<bean id="accountService"  <-- notice that the name of this bean is the same as the name of the 'parent' bean
+      class="org.springframework.aop.framework.ProxyFactoryBean">
+      <property name="target">
+          <ref parent="accountService"/>  <-- notice how we refer to the parent bean
+      </property>
+    <!-- insert other configuration and dependencies as required as here -->
+</bean>
+
+4.3.2.3 Inner beans
+https://docs.spring.io/spring-framework/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-servlet
+
+Different ways of configuring the spring application
+		Configuration definition and bean definition are two different things. There are three ways to define configuration, available in Spring 4 by default:
+
+		xml-based configuration, when you describe configuration in xml file;
+		java-based configuration, when configuration is Java class, marked with specific annotations;
+		groovy-based configuration, when configuration is file with Groovy code;
 
 And there are two ways to add bean definition into application:
 
