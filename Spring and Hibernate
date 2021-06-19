@@ -461,11 +461,55 @@ eg:- <bean id="petrolBean" name="shimba,mamu,radhe" class="com.marvel.java.Petro
 		It's all part of the Java Community Process, whereby interested parties can put forward their ideas for enhancements and (hopefully) have them taken up and acted upon
 
 
-	**	Dispacther Servlet (it extends HttpServlet )
+	*********************************	Dispacther Servlet (it extends HttpServlet )   *************************************
+
 	DispatcherServlet acts as front controller  which receives the request and delegates in to the other component. The DispatcherServlet  provides a single entry point for a client request to Spring MVC web application and forwards request to Spring MVC controllers for processing.
+
+		Each DispatcherServlet has its own WebApplicationContext, which inherits all the beans already defined in the root WebApplicationContext. These inherited beans defined can be overridden in the servlet-specific scope, and you can define new scope-specific beans local to a given servlet instance.
+
+		WebApplicationnContext is an extension of APPlicationContext.
+		It has some additional features which are required for web applications.
+		It knows which servlet it is linked with because of servletcontext
 
 	The DispatcherServlet uses HandlerMapping implementations -  to route incoming requests to handler objects. By default, it uses BeanNameUrlHandlerMapping and DefaultAnnotationHandlerMapping, which is driven by @RequestMapping annotation.
 	DispatcherServlet scanes the class path.
+
+	DispatcherServlet uses special beans to processRequests and render appropriate views
+	 These beans are part of Spring Framework. You can configure them in the WebApplicationContext, just as you configure any other bean
+
+These are the beans.
+
+	 controllers-						Form the C part of the MVC.
+
+	handler mappings-				Handle the execution of a list of pre-processors and post-processors and controllers that will 									be executed if they match certain criteria (for example, a matching URL specified with the 									controller).
+
+	view resolvers-			Resolves view names to views.
+
+	locale resolver-		A locale resolver is a component capable of resolving the locale a client is using, in order to be 							able to offer internationalized views
+
+	Theme resolver-			A theme resolver is capable of resolving themes your web application can use, for example, to offer 							personalized layouts
+
+	multipart file resolver-	Contains functionality to process file uploads from HTML forms.
+
+	handler exception resolvers-	Contains functionality to map exceptions to views or implement other more complex exception 								handling code.
+
+
+When a request comes to a DispatcherServlet
+
+			1.The webapplicationContext is searched and bound to the request as a attribute so that controllers and other elements can use it.
+			It is bound by default under the key DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE.
+
+			2.The locale resolver is bound to the request to enable elements in the process to resolve the locale to use when processing the request (rendering the view, preparing data, and so on). If you do not need locale resolving, you do not need it.
+
+			3.The theme resolver is bound to the request to let elements such as views determine which theme to use. If you do not use themes, you can ignore it.
+
+			4.If you specify a multipart file resolver, the request is inspected for multiparts; if multiparts are found, the request is wrapped in a MultipartHttpServletRequest for further processing by other elements in the process. (See Section 15.8.2, “Using the MultipartResolver” for further information about multipart handling)
+
+			5.An appropriate handler is searched for. If a handler is found, the execution chain associated with the handler (preprocessors, postprocessors, and controllers) is executed in order to prepare a model or rendering.
+
+			6.If a model is returned, the view is rendered. If no model is returned, (may be due to a preprocessor or postprocessor intercepting the request, perhaps for security reasons), no view is rendered, because the request could already have been fulfilled.
+
+
 
 Read more: https://javarevisited.blogspot.com/2017/09/dispatcherservlet-of-spring-mvc-10-points-to-remember.html#ixzz5vmyB0kT8
 
