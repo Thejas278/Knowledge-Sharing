@@ -1,12 +1,335 @@
 AOP
 
-If the target object to be proxied implements at least one interface then a JDK dynamic proxy will be used. All of the interfaces implemented by the target type will be proxied. If the target object does not implement any interfaces then a CGLIB proxy will be created.
+
+
+Key Concepts
+
+		Cross cutting concern- Something which is across multiple objects
+
+		Aspect- It is a modularization of a cross cutting concern eg Transaction
+
+		Join Point- Method execution or handling a exception.In Spring AOP, a join point always represents a method execution.
+					
+
+		Adivce-Action taken by a aspect at a particular joint point.
+				Different types of advice include "around," "before" and "after" advice
+
+		Pointcut-Advice is associated with the point cut expression, Advice will run when join point matches the Pointcut.
+
+
+
+		Introduction:Declaring additional methods or fields on behalf of a  type.
+					Spring APO allows us to introduce a new interface and its implementation for any advised object.
+
+
+		Target object: object being advised by one or more aspects. Also referred to as the advised object. Since Spring AOP is 				implemented using runtime proxies, this object will always be a proxied object.
+
+
+		AOP proxy: an object created by the AOP framework in order to implement the aspect contracts (advise method executions and 				so on). In the Spring Framework, an AOP proxy will be a JDK dynamic proxy or a CGLIB proxy.
+
+		Weaving: Process of linking a aspect into the application code. 
+
+		This can be done at compile time (using the AspectJ compiler, for example), load time, or at runtime. Spring AOP, like other pure Java AOP frameworks, performs weaving at runtime.
+		
+
+
+	Types of advice:
+
+			1.Before advice: Advice that executes before a join point, but which does not have the ability to prevent execution flow proceeding to the join point (unless it throws an exception).
+
+					@Before("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
+												or
+					 @Before("execution(* com.xyz.myapp.dao.*.*(..))")
+
+			2.After returning advice: Advice to be executed after a join point completes normally: for example, if a method 		returns without throwing an exception.
+
+									@AfterReturning("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
+
+								Sometimes you need access in the advice body to the actual value that was returned. You can use the form of @AfterReturning that binds the return value for this:
+
+										@AfterReturning(
+									    pointcut="com.xyz.myapp.SystemArchitecture.dataAccessOperation()",
+									    returning="retVal")
+									  public void doAccessCheck(Object retVal) {
+									    // ...
+									  }
+
+
+									  The name used in the returning attribute must correspond to the name of a parameter in the advice method. When a method execution returns, the return value will be passed to the advice method as the corresponding argument value. A returning clause also restricts matching to only those method executions that return a value of the specified type (Object in this case, which will match any return value).
+
+			3.After throwing advice: Advice to be executed if a method exits by throwing an exception.
+
+									@AfterThrowing("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
+
+			4.After (finally) advice: Advice to be executed regardless of the means by which a join point exits (normal or 									exceptional return).
+
+									After (finally) advice runs however a matched method execution exits. It is declared using the @After annotation. 
+
+									After advice must be prepared to handle both normal and exception return conditions. It is typically used for releasing resources, etc
+
+											@After("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
+
+	**		5.Around advice: Advice that surrounds a join point such as a method invocation. This is the most powerful kind of 					advice. Around advice can perform custom behavior before and after the method invocation. It is also 							responsible for choosing whether to proceed to the join point or to shortcut the advised method 						execution by returning its own return value or throwing an exception.
+
+
+					Around advice runs "around" a matched method execution. It has the opportunity to do work both before and after the method executes, and to determine when, how, and even if, the method actually gets to execute at all. Around advice is often used if you need to share state before and after a method execution in a thread-safe manner (starting and stopping a timer for example). 
+
+
+
+											@Around("com.xyz.myapp.SystemArchitecture.businessService()")
+				  						public Object doBasicProfiling(ProceedingJoinPoint pjp) throws Throwable {
+				    					// start stopwatch
+				    					Object retVal = pjp.proceed();
+				    						// stop stopwatch
+				   						 return retVal;
+				 						 }
+
+				 			* The first parameter of the advice method must be of type ProceedingJoinPoint.
+
+				 			 *Within the body of the advice, calling proceed() on the ProceedingJoinPoint causes the underlying method to execute.
+
+				 			 *The proceed method may also be called passing in an Object[] - the values in the array will be used as the arguments to the method execution when it proceeds
+
+				 			 The value returned by the adivce will be the value which the caller of the method receives.
+
+				 			 A simple caching aspect for example could return a value from a cache if it has one, and invoke proceed() if it does not.
+
+				 			 Note that proceed may be invoked once, many times, or not at all within the body of the around advice, all of these are quite legal.
+
+
+*It is recomended to use the least powerful advice which satisfy our requirement.
+
+Spring AOP currently supports only method execution join points (advising the execution of methods on Spring beans). 
+
+
+@AspectJ Support
+			
+		@AspectJ refers to a style of declaring aspects as regular Java classes annotated with Java 5 annotations.
+
+		  Spring 2.0 interprets the same annotations as AspectJ 5, using a library supplied by AspectJ for pointcut parsing and matching. 
+
+		  The AOP runtime is still pure Spring AOP though, and there is no dependency on the AspectJ compiler or weaver.
+
+
+		*@AspectJ support is enabled by including the following element inside your spring configuration 
+			<aop:aspectj-autoproxy/> 
+
+
+		*If you are using the DTD, it is still possible to enable @AspectJ support by adding the following definition to your 		application context:
+
+			<bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator" />
+
+			You will also need two AspectJ libraries on the classpath of your application: aspectjweaver.jar and aspectjrt.jar. These libraries are available in the 'lib' directory of an AspectJ installation (version 1.5.1 or later required), or in the 'lib/aspectj' directory of the Spring-with-dependencies distribution.
+
+
+Declaring a aspect
+
+			With @AspectJ support enabled any bean defined in the application context will become a aspect if it has @Aspect annotation.
+
+			Spring will automatically detect this annotation and will use it to configure spring AOP.
+
+
+	**	In Spring AOP, it is not possible to have aspects themselves be the target of advice from other aspects.Because  @Aspect 			annotation on a class marks it as an aspect, and hence excludes it from auto-proxying.
+
+	Declaring a Pointcut
+
+			A pointcut has 2 parts
+
+					1.PointCut signature- method signature and it should have a void return type
+					2.Pointcut expression-pointcut expression that determines exactly which method executions we are interested in.
+
+					eg
+					@Pointcut("execution(* transfer(..))")// the pointcut expression
+					private void anyOldTransfer() {}// the pointcut signature
+
+					we can use pointcut expression on a method and that can be passed inside annotations like execution,before etc
+
+
+								eg
+									@Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
+								    public void requestMapping() {}
+
+								    @Pointcut("within(blah.blah.controller.*) || within(blah.blah.aspect.*)")
+								    public void myController() {}
+
+								    @Around("requestMapping() && myController()")
+								    public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
+								      ...............
+								   }  
+
+Supported Pointcut Designators
+
+		1.execution - for matching method execution join points, this is the primary pointcut designator you will use when working 				with Spring AOP.(it matches all the methods)
+
+		2.within - limits matching to join points within certain types (simply the execution of a method declared within a 					matching type when using Spring AOP).(it is used to match a type)
+
+		3.this - limits matching to join points (the execution of methods when using Spring AOP) where the bean reference (Spring 			AOP proxy) is an instance of the given type.
+
+		4.target - limits matching to join points (the execution of methods when using Spring AOP) where the target object (				application object being proxied) is an instance of the given type
+
+		5.args - limits matching to join points (the execution of methods when using Spring AOP) where the arguments are instances 			of the given types
+
+		6.@target - limits matching to join points (the execution of methods when using Spring AOP) where the class of the 					executing object has an annotation of the given type
+
+		7.@args - limits matching to join points (the execution of methods when using Spring AOP) where the runtime type of the 			actual arguments passed have annotations of the given type(s)
+
+		8.@within - limits matching to join points within types that have the given annotation (the execution of methods declared 			in types with the given annotation when using Spring AOP)
+
+		9.@annotation - limits matching to join points where the subject of the join point (method being executed in Spring AOP) 				has the given annotation.
+
+		10.bean(idOrNameOfBean)-Spring AOP also supports an additional PCD named 'bean'. This PCD allows you to limit the matching 							of join points to a particular named Spring bean, or to a set of named Spring beans (when using 					wildcards). The 'bean' PCD has the following form:
+
+			*Please note that the 'bean' PCD is only supported in Spring AOP - and not in native AspectJ weaving. It is a Spring-specific extension to the standard PCDs that AspectJ defines
+
+
+	* Visiblity rules like private,default,pretected,public are same as java and they do not effect the matching
+
+
+*Since Spring AOP is proxy based , the given pointcut will be only matched to a joint point which is public(only public methods)
+
+
+Field interception is not implemented, although support for field interception could be added without breaking the core Spring AOP APIs. If you need to advise field access and update join points, consider a language such as AspectJ.
+
+
+If the target object to be proxied implements at least one interface then a JDK dynamic proxy will be used. All of the interfaces implemented by the target type will be proxied. 
+
+If the target object does not implement any interfaces then a CGLIB proxy will be created.
 
 If you want to force the use of CGLIB proxying (for example, to proxy every method defined for the target object, not just those implemented by its interfaces) you can do so. However, there are some issues to consider:
 
 
+			1.Final methods cannot be advised as they cannot be overriden.
+			2.We need GGLIB 2 binaries(GGLIB and GGLIB libraries) but JDK dynamic proxy are available in  the jdk itself
+			3.The constructor of the proxied object will be called twice,This is how the GGLIB proxy mechanism works.
+			A subclass is generated for each proxied objects. There will be 2 objects created one for the proxied object and another for the generated subclass.(there is no issue in calling a constructor twice though)
 
-Transaction Management
+
+
+		**To force the use of CGLIB proxies set the value of the proxy-target-class attribute of the <aop:config> element to true:
+
+			<aop:config proxy-target-class="true">
+			    <!-- other beans defined here... -->
+			</aop:config>
+			To force CGLIB proxying when using the @AspectJ autoproxy support, set the 'proxy-target-class' attribute of the <aop:aspectj-autoproxy> element to true:
+
+			<aop:aspectj-autoproxy proxy-target-class="true"/>
+
+
+	Using 'proxy-target-class="true"' on <tx:annotation-driven/>, <aop:aspectj-autoproxy/> or <aop:config/> elements will force the use of CGLIB proxies for all three of them
+
+
+Order of Aspects
+
+		"on the way in" (so given two pieces of before advice, the one with highest precedence runs first).
+
+		"On the way out" from a join point, the highest precedence advice runs last (so given two pieces of after advice, the one with the highest precedence will run second).
+
+		When two pieces of advice defined in different aspects both need to run at the same join point,WE can specify the order by using @Ordered Anotation , the one with the lowest value is considered as the highest precedance.
+
+		When two pieces of advice defined in the same aspect both need to run at the same join point, the ordering is undefined (since there is no way to retrieve the declaration order via reflection for javac-compiled classes). Consider collapsing such advice methods into one advice method per join point in each aspect class, or refactor the pieces of advice into separate aspect classes - which can be ordered at the aspect level.
+
+
+
+Introductions
+
+		Introductions enable a aspect to make a advised objetc impleemnt an interface, it also provides the implementation for the interface.
+
+						 @DeclareParents(value="com.xzy.myapp.service.*+",
+				                  defaultImpl=DefaultUsageTracked.class)
+				  public static UsageTracked mixin;
+				  
+				  @Before("com.xyz.myapp.SystemArchitecture.businessService() &&" +
+				          "this(usageTracked)")
+				  public void recordUsage(UsageTracked usageTracked) {
+				    usageTracked.incrementUseCount();
+				  }
+
+
+				@DeclareParent will say that all the implementors in the implementors in the service package should implement UsageTracked interface
+
+				DefaultUsageTracked is the implementation of UsageTracked Interface
+
+	*By default there will be a single instance of each aspect within the application context
+
+
+
+
+	When to Use Spring AOP vs AspectJ
+
+Use Spring AOP if we want only method execution joint points and if we want to apply aspects to beans managed by spring container.
+
+		Also there is no additional need to introduce additional weaver or complier unlike for AspectJ.
+
+Use AspectJ if we want to advice  join points other than simple method executions (for example, field get or set join points, and so on)
+
+
+
+Spring AOP using XML schema based or Annotations
+
+Spring 2 suports AspectJ for java 5+ annotations , if you are running below java 5 then cannot use annotaion based approach.
+
+XML based support only singleton aspects whereas Spring supports AspectJ's perthis and pertarget instantiation models 
+
+ You cannot combine the pointcuts declared in xml
+
+
+
+										@Pointcut(execution(* get*()))
+								  public void propertyAccess() {}
+
+								  @Pointcut(execution(org.xyz.Account+ *(..))
+								  public void operationReturningAnAccount() {}
+
+								  @Pointcut(propertyAccess() && operationReturningAnAccount())
+								  public void accountPropertyAccess() {}
+
+
+
+								  In the XML style I can declare the first two pointcuts:
+
+									  <aop:pointcut id="propertyAccess"
+									      expression="execution(* get*())"/>
+
+									  <aop:pointcut id="operationReturningAnAccount"
+									      expression="execution(org.xyz.Account+ *(..))"/>
+
+The downside of the XML approach is that you cannot define the 'accountPropertyAccess' pointcut by combining these definitions.
+
+
+AspectJ Style can be understood by both spring AOP and AspectJ
+
+
+@Configurable
+
+		Spring will instantiate and configure the beans defined in the applcation context, WE can also ask spring to manage the beans which are already instantiated , This is used for objects which are craeted beyond the spring container.
+
+		 @Configurable annotation marks a class as eligible for Spring-driven configuration
+
+		 	This is a marker interface
+		 	Spring will create new instance for this Class with ProtoType Scoped
+		 	Name of the bean will be default ie fully classified class name
+
+		 	you can also specify names
+
+		 	eg
+		 		@Configurable("account")
+			public class Account {
+   			// ...
+			
+				}
+
+
+				Spring will look for the bean defition name account to configure the Account bean.
+
+	 *To avoid having to specify a prototype-scoped bean definition use 
+	 @Configurable(autowire=Autowire.BY_TYPE) by type or
+	 @Configurable(autowire=Autowire.BY_NAME for autowiring  or by name
+
+
+
+***********************************************************	Transaction Management ***********************************************
+
+
 
 		Different transaction APIs such as JTA, JDBC, Hibernate, JPA, and JDO.
 
@@ -43,7 +366,12 @@ While the EJB default behavior is for the EJB container to automatically roll ba
 				Note however that the Spring Framework's transaction infrastructure code will, by default, only mark a transaction for rollback in the case of runtime, unchecked exceptions; that is, when the thrown exception is an instance or subclass of RuntimeException. (Errors will also - by default - result in a rollback.) Checked exceptions that are thrown from a transactional method will not result in the transaction being rolled back.
 
 
-		Transaction Setting can be appied to the entire service layer or we can exclude certain classes or even add different Transaction rules to different Sevices
+		Transaction Setting can be applied to the entire service layer or we can exclude certain classes or even add different Transaction rules to different Sevices
+
+
+		Inside Spring generic configuration, we have used  <tx:annotation-driven /> . It means that all @Transactional annotations should be scanned at startup time and the targeted methods should become transactional
+
+		Before startup nothing no proxy will be added but during startup a proxy will be added which will add the transactional behaviour.
 
 
 		@Transactional
@@ -120,6 +448,10 @@ Using Annotation @Transactional
 
 	Spring 3.1 introduces the @EnableTransactionManagement annotation that we can use in a @Configuration class to enable transactional support
 
+	ASPECTJ
+
+		A @Transactional annotation on a method within the class overrides the default transaction semantics given by the class annotation (if present). Methods with public, protected, and default visibility may all be annotated. Annotating protected and default visibility methods directly is the only way to get transaction demarcation for the execution of such methods.
+
 
 Rolling Back
 
@@ -151,6 +483,59 @@ Rolling Back
 Note that <tx:annotation-driven/> only looks for @Transactional on beans in the same application context it is defined in. This means that, if you put <tx:annotation-driven/> in a WebApplicationContext for a DispatcherServlet, it only checks for @Transactional beans in your controllers, and not your services. See Section 13.2, “The DispatcherServlet” for more information.
 
 
+Example on How to add transaction and make certain db calls read-only
+
+
+										<!-- from the file 'context.xml' -->
+						<?xml version="1.0" encoding="UTF-8"?>
+						<beans xmlns="http://www.springframework.org/schema/beans"
+						     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+						     xmlns:aop="http://www.springframework.org/schema/aop"
+						     xmlns:tx="http://www.springframework.org/schema/tx"
+						     xsi:schemaLocation="
+						     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+						     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+						     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+						  
+						  <!-- this is the service object that we want to make transactional -->
+						  <bean id="fooService" class="x.y.service.DefaultFooService"/>
+
+						  <!-- the transactional advice (what 'happens'; see the <aop:advisor/> bean below) -->
+						  <tx:advice id="txAdvice" transaction-manager="txManager">
+							  <!-- the transactional semantics... -->
+							 	 <tx:attributes>
+								    <!-- all methods starting with 'get' are read-only -->
+								    <tx:method name="get*" read-only="true"/>
+								    <!-- other methods use the default transaction settings (see below) -->
+								    <tx:method name="*"/>
+							  	</tx:attributes>
+						  </tx:advice>
+						  
+						  <!-- ensure that the above transactional advice runs for any execution
+						    of an operation defined by the FooService interface -->
+						  <aop:config>
+							  <aop:pointcut id="fooServiceOperation" expression="execution(* x.y.service.FooService.*(..))"/>
+							  <aop:advisor advice-ref="txAdvice" pointcut-ref="fooServiceOperation"/>
+						  </aop:config>
+						  
+						  <!-- don't forget the DataSource -->
+						  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+							  <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+							  <property name="url" value="jdbc:oracle:thin:@rj-t42:1521:elvis"/>
+							  <property name="username" value="scott"/>
+							  <property name="password" value="tiger"/>
+						  </bean>
+
+						  <!-- similarly, don't forget the PlatformTransactionManager -->
+						  <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+						  		<property name="dataSource" ref="dataSource"/>
+						  </bean>
+						  
+						  <!-- other <bean/> definitions here -->
+
+						</beans>
+
+
 
 https://docs.spring.io/spring-framework/docs/3.0.0.M3/reference/html/pt01.html
 
@@ -161,8 +546,5 @@ https://docs.spring.io/spring-framework/docs/2.5.x/reference/transaction.html#tr
 https://docs.spring.io/spring-framework/docs/2.5.x/reference/aop.html
 
 
-
-
-
-		Programatic Transaction Management
+https://docs.spring.io/spring-framework/docs/2.5.x/reference/beans.html#beans-annotation-config
 
