@@ -47,7 +47,7 @@ Difference between web server and application server
 	TCP-Transport Control Protool is like a telephone line and germen and french are the protcols like HTTP,FTP
 	Webserver and webclients use HTTP protocol
 
-	Webservers will be listening to a port which is assgned to them by the operating system, when ever tht port gets any request , it will be redirected to that web server
+	Webservers will be listening to a port which is assgned to them by the operating system, when ever that port gets any request , it will be redirected to that web server
 
 	Most of the application servers have Web Server as integral part of them, that means App Server can do whatever Web Server is capable of. Additionally App Server have components and features to support Application level services such as Connection Pooling, Object Pooling, Transaction Support, Messaging services etc.
 	
@@ -467,9 +467,37 @@ eg:- <bean id="petrolBean" name="shimba,mamu,radhe" class="com.marvel.java.Petro
 
 		Each DispatcherServlet has its own WebApplicationContext, which inherits all the beans already defined in the root WebApplicationContext. These inherited beans defined can be overridden in the servlet-specific scope, and you can define new scope-specific beans local to a given servlet instance.
 
+		Dispactherservlet is defined in the web.xml and it will be loaded on startup,
+		we dont have to create the context manually
+		We dont have to create or destory the webapplicationContext for the dispatcherservlet, it will be created during the server startup and destroyed during the server stop .
+
+
+
+				Consider the following DispatcherServlet servlet configuration (in the web.xml file):
+
+				<web-app>
+
+				    <servlet>
+				        <servlet-name>golfing</servlet-name>
+				        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+				        <load-on-startup>1</load-on-startup>
+				    </servlet>
+
+				    <servlet-mapping>
+				        <servlet-name>golfing</servlet-name>
+				        <url-pattern>/golfing/*</url-pattern>
+				    </servlet-mapping>
+
+				</web-app>
+
+		*With the above servlet configuration in place, you will need to have a file called /WEB-INF/golfing-servlet.xml in your application; this file will contain all of your Spring Web MVC-specific components (beans).
+
+
+		as per the above example the file /golfing-servlet.xml will have a tag called component-scane where we will give the base packages , so in this package  if there is any class with @Component or @Contrller those will be registered in the webapplicationContext
+
 		WebApplicationnContext is an extension of APPlicationContext.
 		It has some additional features which are required for web applications.
-		It knows which servlet it is linked with because of servletcontext
+		It knows which servlet it is linked with because of servletcontext.
 
 	The DispatcherServlet uses HandlerMapping implementations -  to route incoming requests to handler objects. By default, it uses BeanNameUrlHandlerMapping and DefaultAnnotationHandlerMapping, which is driven by @RequestMapping annotation.
 	DispatcherServlet scanes the class path.
