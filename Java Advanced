@@ -1,19 +1,57 @@
-Class
+OOPS Concepts
+
+You cannot declare two methods with the same signature even if they have a different return type.
+
+
+ The compiler automatically provides a no-argument, default constructor for any class without constructors. This default constructor will call the no-argument constructor of the superclass.
+  In this situation, the compiler will complain if the superclass doesn't have a no-argument constructor so you must verify that it does
+
+  The Java runtime environment deletes objects when it determines that they are no longer being used. This process is called garbage collection
+  	The garbage collector automatically cleans up unused objects. An object is unused if the program holds no more references to it. You can explicitly drop a reference by setting the variable holding the reference to null
+
+  Covariant return, means that when one overrides a method, the return type of the overriding method is allowed to be a subtype of the overridden method's return type.
+
+		To clarify this with an example, a common case is Object.clone() - which is declared to return a type of Object, we can override this method to return the Object of the classs type.
+
+Use the most restrictive access level that makes sense for a particular member. Use private unless you have a good reason not to.
+
+Non static block-The Java compiler copies initializer blocks into every constructor. Therefore, this approach can be used to share a block of code between multiple constructors.
+
+
+execution order
+	
+	Static block and static variables defined in the parent class in the order they are defined
+
+	Static block and static variables defined in the child class in the order they are defined
+
+	non Static block and non static variables defined in the parent class in the order they are defined
+
+	parent class constructor
+
+non Static block and non static variables defined in the child class in the order they are defined
+
+	child class constructor
+
+this keyword-	Within an instance method or a constructor, this is a reference to the current object — the object whose method or 					constructor is being called. You can refer to any member of the current object from within an instance method or 					a constructor by using this
+
+
+
+	Class
 1.Outer classs can be declared public or package-private(default)
 
-default means it is visible only inside a package
+	default means it is visible only inside a package
 
-There are 2 types of nested classed,
-	1.Static Nested class
-	2.Inner classes(Non static nested classes)
-		Inner classes are of 2 more types whcih are defined inside the method body
-				1.Local classes
-				2.Annonymous Class
+	There are 2 types of nested classed,
+		1.Static Nested class
+		2.Inner classes(Non static nested classes)
+			Inner classes are of 2 more types which are defined inside the method body
+					1.Local classes
+					2.Annonymous Class
 
 
 	Need for Nested Class
 
-	1.If a class is used only in one place den we can create a inner class,
+	1.If a class is used only in one place then we can create a inner class,
 	2.It increases encapsulation-If we want to create a private vaiable and also to provide access to other class 
 
 
@@ -25,17 +63,23 @@ NESTED classes 2 types
 
 	Static Nested class is a regular class it can be acessed outisde the outer class also
 
-	Static Nested class do not have access to members of the outer class.
+	static class has access to the all the static members including those declared private
+
+	We can access the non static members of a static class by creating the object of a static class
+
+	Static Nested class do not have access to non static members of the outer class.They can acess them by creating objects
 
 2.NON STATIC CLASS OR INNER CLASS		
 
-	Inner class cannot have static declarations because inner class is always associated with the instance.
+	Inner class cannot have static declarations because inner class is always associated with the instance.(untill java 16)
+	AFTER JAVA16 WE CAN HAVE STATIC MEMBERS INSIDE NON STATIC CLASS
 
-	can have static members provided that they are constant variables
+	can have static members provided that they are constant variables(untill java 16).
+	AFTER JAVA16 WE CAN HAVE STATIC MEMBERS INSIDE NON STATIC CLASS
 
 	Inner class have access to all the fields of enclosing class even if they are declared private,
 
-	Inner class cannot have any static members(declare of define)
+	Inner class cannot have any static members(declare of define)(changed after java 16)
 
 	Nested class can be declared private,protected,Default(package private),public
 
@@ -48,14 +92,16 @@ NESTED classes 2 types
 
 		to access the inner class members
 
-			There are two special kinds of inner classes: local classes and anonymous classes.
+			There are additional two special kinds of inner classes: local classes and anonymous classes.
+
+			Non static inner class can access the static and non static variables of the outer class
 
 			1. Local classes are the classes that are defined inside the block, typically inside the body of the method or a for loop or if condition
 
 				A local class has access to the members of its enclosing class,
 				The local class can only access local variables which are declard final or effectively final
 
-				Starting in Java SE 8, if you declare the local class in a method, it can access the method's parameters
+				Starting in Java SE 8, if you declare the local class in a method, it can access the method's parameters(but it has to be effective final, we cannot change the value ,we can only use it)
 
 				For global variables there is no such restriction .
 
@@ -82,13 +128,16 @@ NESTED classes 2 types
 						
 			2.Anonymous class- it is an expression
 					Class which are declared and instantiated in the same time which do not have name
-					Create a anonymous class if you want to use a class only once
+
+					Create a anonymous class if you want to use a local class only once
 
 					Anonymous class can access only those local variables which are decaled final or effective final.
 
 					You cannot declare static initializers or member interfaces in an anonymous class.
 
 					An anonymous class can have static members provided that they are constant variables.
+
+					You cannot declare constructrs in Anonymous class
 
 **Inner classes may inherit static members that are not compile-time constants even though they may not declare them. Nested classes that are not inner classes may declare static members freely, in accordance with the usual rules of the Java programming language.
 
@@ -223,7 +272,7 @@ Streams
 				The combiner function is usually used for parallel streams, for combining the results of each streams running in parallel
 				Even if we are using sequential stream we cannot pass null as third argument.we will get null pointer exception
 
-Java complier internally wih replace string contacination(s1+s2+s3+s4) wih StringBuilder if there are more than 2 concatination
+Java complier internally will replace string contacination(s1+s2+s3+s4) wih StringBuilder if there are more than 2 concatination
 		
 collect is reduction operation for mutuable objects,eg if we use reduce on the string which is immutable , a new string gets created which will effect the performace so we are usig collect.
 		Collector is a interface and Collectors is a implementation for Collector which has methods like Collectors.toList etc.
@@ -283,6 +332,86 @@ Interface
 		Default methods enable you to add new functionality to existing interfaces and ensure binary compatibility with code written for older versions of those interfaces.
 
 
+Copying Object in java
+
+	1.Shallow Copying- Reference is copied, if copied object is changed, main object is also changed
+
+						Obj o=new Obj();
+						0.i="test";
+
+						Obj o1=o// shallow cpoying
+	2.Deep Copying
+
+					New Object is created and all the values of the actual object are copied into it
+
+					Obj o=new Obj();
+						o.i="test";
+
+						Obj o1=new Obj()// deep cpoying
+						o1.i=o.i
+	3.Cloning
+
+			By Implementing Clonable Interface, we can achieve deep copying
+
+
+Serilization is a concept where we can maintian the state of an object, we can either convert the state of object into file supported form or network supported form
+	
+	Transient vairables- It can be used only on global variables, It cannot be used on methods nor on local variables
+		When we use transient variable jvm will ignore the value and will use the default value depending on the data type.
+
+
+		By default Java provides ObjectOutputStream-> writeObject method and ObjectInputStream-> readObject method for serializing and deserilising respectively
+
+		If we want to control the versioning, we need to provide the serialVersionUID attribute. This attribute is used to verify that the saved and loaded objects are compatible. Therefore, we need to ensure it is always the same, or else InvalidClassException will be thrown
+
+		Java serialization heavily uses I/O streams. We need to close a stream immediately after a read or write operation because if we forget to close the stream, we'll end up with a resource leak
+
+Custom Serialization
+		
+		1.Externaizable- It is a subclasss of Serializable marker interface.
+					Should be used when we want custom serilization where some attributes of a class cannot be serilised.
+					Any class which implements this should override
+
+					public void writeExternal(ObjectOutput out) throws IOException;
+
+					public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException;
+
+
+
+
+
+				The key difference here is how we handle the serialization process. When a class implements the java.io.Serializable interface, the JVM takes full responsibility for serializing the class instance. In case of Externalizable, it's the programmer who should take care of the whole serialization and also deserialization process.
+
+				Use Case
+				If we need to serialize the entire object, the Serializable interface is a better fit. On the other hand, for custom serialization, we can control the process using Externalizable.
+
+				Performance
+				The java.io.Serializable interface uses reflection and metadata which causes relatively slow performance. By comparison, the Externalizable interface gives you full control over the serialization process.
+
+				Reading Order
+				While using Externalizable, it's mandatory to read all the field states in the exact order as they were written. Otherwise, we'll get an exception.
+
+				For example, if we change the reading order of the code and name properties in the Country class, a java.io.EOFException will be thrown.
+
+				Meanwhile, the Serializable interface doesn't have that requirement.
+
+				Custom Serialization
+				We can achieve custom serialization with the Serializable interface by marking the field with transient keyword. The JVM won't serialize the particular field but it'll add up the field to file storage with the default value. That's why it's a good practice to use Externalizable in case of custom serialization.
+
+
+	Gson and Jackson are the 2 libraries to convert a object to and from json
+
+		Spring internally uses Jackson as the default Seriliser .
+			If we use @Controller annotation
+				@RequestBody annotation will make spring to automatically deserialise the input json object into java object
+				@ResponseBody annotation will serialise the Output java objet into json object automatically.
+
+			If we use @RestController then spring automatically will do the serialisation and deserilisation without these annotations.
+
+			Furthur reading
+		https://www.baeldung.com/java-serialization-approaches
+
+-------------------------------------------------------------------------------------------------------------------
 Using Core Java we can develop only stand alone applications.
 2 types of stand alone applications
 	1.GUI-Graphica User Interface- eg desktop applications or calculator
@@ -315,3 +444,5 @@ https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html#appro
 
 Animal a =new Animal();
 Animal.Cat c=a.new Cat();
+
+https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html
