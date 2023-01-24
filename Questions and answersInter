@@ -38,6 +38,9 @@ JVM is a virtul machine which is a interpretor and it is responsible for line by
 
  then java compiler will complie the code by replacing + with StringBuilder.append
  but if there is only 2 string concatination , then complier will keep it as it is
+ 
+ StringBuffer is thread safe and StringBuilder is not thread safe
+ StringBuffer is slower when compared to StringBuilder.
 
  *Garbage Collection
 
@@ -230,7 +233,7 @@ Interface
         f.instanceMethod();//child method gets executed
         f.classMethod();//parent method gets executed
 
-        If u create a abstract method (Y) in the parent and if u declare the same metohod(Y) as abstratc in ur child interface then the clas which will implement the child will have to implement the abstract method (Y) , the paretn default implementation will not be available to it
+        If u create a abstract method (Y) in the parent and if u declare the same metohod(Y) as abstratc in ur child interface then the class which will implement the child will have to implement the abstract method (Y) , the paretn default implementation will not be available to it
 
         Default methods can be overridden
 
@@ -242,7 +245,7 @@ Interface
 
       * Comparable - compareTo(Object o)
 
-	        If any custom class wants to use Arrays.sort or Collections.sort den it should implement Comparable.
+	        If any custom class wants to use Arrays.sort or Collections.sort then it should implement Comparable.
 
 	        In Comparable we modify the pojo class,Sometimes we might not be able to modify the class
 	        Comparable can be used only for natural ordering or default sorting.
@@ -432,7 +435,7 @@ the lenght of the array is by default 16(index will be 0-15)
 When we try to insert a value to hashmap using put method, the hashcode of the key will be calculated and
 uisng the formula
 ie index=hashcode & (n-1) (& means modulus operation and n=16)
-whatever index we get we will insert the keyvalue pair in that node.If there are 2 keys with the same index then the first inserted record in that node, the  "next" poniter will be pointing to this ne record.
+whatever index we get we will insert the keyvalue pair in that node.If there are 2 keys with the same index then the first inserted record in that node, the  "next" poniter will be pointing to this new record.
 
 HashMap will allow us to store a "Null" key, "Null" has a hashcode =0 so index of null key will be always 0
 
@@ -633,7 +636,7 @@ Read more: https://javarevisited.blogspot.com/2015/10/how-to-implement-binary-se
 	for serialzation the order in which we serialize , the same order we have to deserialze. 
 	if we do not know the order then we can use instanceOf operator for find the instance
 
-	*Object Graph- When we serialze a objetc , set of all objects which are reachable to that object will be srialized
+	*Object Graph- When we serialze a object , set of all objects which are reachable to that object will be srialized
 
 	while adding customized Serialization we have 
 	implement
@@ -886,7 +889,7 @@ t1.join() method will make other threads to stops until the current thread compl
 
 isAlive() is used to check whether a thread is alive or not. after join method isAlive will return false.
 
-t1.getPriority() will give the priority of thread, the raneg of priority ranges from 1 to 10.
+t1.getPriority() will give the priority of thread, the range of priority ranges from 1 to 10.
 		We can also use inbuilt constants of thread for fixing priority
 		eg t1.setPriority(Thread.MIN_PRIORITY);//this is bulit in constant
 		Setting priority will only hint the OS but if will not guarentee the execution, If there is any constariant in the cpu memory den the thread with higher priority will run first.
