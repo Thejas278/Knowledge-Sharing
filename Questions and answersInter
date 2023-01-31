@@ -913,7 +913,7 @@ Synchronized- can be used only on methods or code block
 			Constructors are not synchronized, it will give a syntax error.The JVM ensures that only one thread can invoke a constructor call at a given point in time.
 
 
-			Every objetc has a intrinsic lock associated with it , if any thread wants any exclusive acess for a objetc then it needs to acquire the lock for the object.
+			Every objetc has a intrinsic lock associated with it , if any thread wants any exclusive acess for a object then it needs to acquire the lock for the object.
 
 			Intrinsic lock is also called as monitor
 
@@ -925,6 +925,14 @@ Synchronized- can be used only on methods or code block
 
 Reentrant Synchronization- Allowing the thread to access the same lock , in a situation if a synchronized method is calling another synchronized method.
 	Without Reentrant Synchronizatio the thread itself would block
+	
+	1) Another significant difference between ReentrantLock and synchronized keyword is fairness. synchronized keyword doesn't support fairness. Any thread can 		acquire lock once released, no preference can be specified, on the other hand you can make ReentrantLock fair by specifying fairness property, while 		creating instance of ReentrantLock. Fairness property provides lock to longest waiting thread, in case of contention.
+
+	2) Second difference between synchronized and Reentrant lock is tryLock() method. ReentrantLock provides convenient tryLock() method, which acquires lock only 		if its available or not held by any other thread. This reduce blocking of thread waiting for lock in Java application.
+
+	3) One more worth noting difference between ReentrantLock and synchronized keyword in Java is, ability to interrupt Thread while waiting for Lock. In case of 		synchronized keyword, a thread can be blocked waiting for lock, for an indefinite period of time and there was no way to control that. ReentrantLock 		provides a method called lockInterruptibly(), which can be used to interrupt thread when it is waiting for lock. Similarly tryLock() with timeout can be used 		to timeout if lock is not available in certain time period.
+
+	4) ReentrantLock also provides convenient method to get List of all threads waiting for lock.
 
 
 	For static methods there will be class level intrinsic lock(test.class)
@@ -967,6 +975,20 @@ AtomicInteger value=new AtomicINteger(1);
 		}  
 
 		In the above example, static variables are class members that are shared among all objects. There is only one copy in the main memory. The value of a volatile variable will never be stored in the cache. All read and write will be done from and to the main memory.
+		
+		
+		There are two important concepts in multithreading environment:
+
+atomicity
+visibility
+The volatile keyword eradicates visibility problems, but it does not deal with atomicity. volatile will prevent the compiler from reordering instructions which involve a write and a subsequent read of a volatile variable; e.g. k++. Here, k++ is not a single machine instruction, but three:
+
+copy the value to a register;
+increment the value;
+place it back.
+So, even if you declare a variable as volatile, this will not make this operation atomic; this means another thread can see a intermediate result which is a stale or unwanted value for the other thread.
+
+On the other hand, AtomicInteger, AtomicReference are based on the Compare and swap instruction. CAS has three operands: a memory location V on which to operate, the expected old value A, and the new value B. CAS atomically updates V to the new value B, but only if the value in V matches the expected old value A; otherwise, it does nothing. In either case, it returns the value currently in V. The compareAndSet() methods of AtomicInteger and AtomicReference take advantage of this functionality, if it is supported by the underlying processor; if it is not, then the JVM implements it via spin lock.
 
 Dead Lock,Starvation and Live Lock
 
