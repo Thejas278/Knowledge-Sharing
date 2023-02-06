@@ -729,19 +729,7 @@ eg:
 	2.Virtual Proxy
 
 
-**	@Transactional
-	Spring will create a transactionInterceptor which will invoke the actual function like begin transaction,When the call ends it will invoke the commit or role back of the actual bean.
-
- 	Spring wraps your bean in the proxy, your bean has no knowledge of it. Only calls from "outside" your bean go through the proxy.
-	We are using in service layer on top of each method.
-	Spring will create a wrapper method and dat method will begina and commit the transaction
-
-
-
-
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
 
 Spring boot
 In spring mvs we have to configurations like class path scan,dispatcher servlet,web jars etc
@@ -827,7 +815,7 @@ load will throw object not found exception
 get will hit the database and it will give us real object and if there is not object it will give null
 
 **Transaction 
-	A transaction is a unit of work with few steps performed by a data base management systme against a database
+	A transaction is a unit of work with few steps performed by a data base management system against a database
 	They are all or nothing ie either all the steps should be completed or al the steps should be rolled back
 	A transaction should take care of Acid Properties
 	A- Atomicity- Ensure that all the steps are successful or all of them fail
@@ -835,8 +823,97 @@ get will hit the database and it will give us real object and if there is not ob
 	I-Isolation- MUltiple users should be able to work without any issue ie concurent read or writes
 	D-After the sucessful operation the data shoudl be stored permentaly
 
+ACID properties: Atomicity, Consistency, Isolation, and Durability.
+**	SPRING TRANSACTION
+Spring 3.1 introduces the @EnableTransactionManagement annotation that we can use in a @Configuration class to enable transactional support:
+ if we're using a Spring Boot project and have a spring-data-* or spring-tx dependencies on the classpath, then transaction management will be enabled by default
+ 
+@Transactional
+	The annotation supports further configuration as well:
+
+	the Propagation Type of the transaction
+	the Isolation Level of the transaction
+	a Timeout for the operation wrapped by the transaction
+	a readOnly flag – a hint for the persistence provider that the transaction should be read only
+	the Rollback rules for the transaction
+	
+	Note that by default, rollback happens for runtime, unchecked exceptions only. The checked exception does not trigger a rollback of the transaction. We can, of 	course, configure this behavior with the rollbackFor and noRollbackFor annotation parameters.
+
+	At a high level, Spring creates proxies for all the classes annotated with @Transactional, either on the class or on any of the methods. The proxy allows the 		framework to inject transactional logic before and after the running method, mainly for starting and committing the transaction.
+	
+	if the transactional bean is implementing an interface, by default the proxy will be a Java Dynamic Proxy. This means that only external method calls that come 	in through the proxy will be intercepted. Any self-invocation calls will not start any transaction, even if the method has the @Transactional annotation.
+
+	Another caveat of using proxies is that only public methods should be annotated with @Transactional. Methods of any other visibilities will simply ignore the 		annotation silently as these are not proxied
+
+ 	Spring wraps your bean in the proxy, your bean has no knowledge of it. Only calls from "outside" your bean go through the proxy.
+	We are using in service layer on top of each method.
+	Spring will create a wrapper method and dat method will begina and commit the transaction
+	
+	Transaction Propagation
+	
+	@Transactional(propagation = Propagation.REQUIRED)
+		REQUIRED is the default propagation. Spring checks if there is an active transaction, and if nothing exists, it creates a new one. Otherwise, the 			business logic appends to the currently active transaction:
+		
+	@Transactional(propagation = Propagation.SUPPORTS)
+		For SUPPORTS, Spring first checks if an active transaction exists. If a transaction exists, then the existing transaction will be used. If there isn't 			a transaction, it is executed non-transactional:
+	
+	@Transactional(propagation = Propagation.MANDATORY)
+		When the propagation is MANDATORY, if there is an active transaction, then it will be used. If there isn't an active transaction, then Spring throws an 		exception:
+	
+	@Transactional(propagation = Propagation.NEVER)
+		For transactional logic with NEVER propagation, Spring throws an exception if there's an active transaction:
+	
+	@Transactional(propagation = Propagation.NOT_SUPPORTED)
+		If a current transaction exists, first Spring suspends it, and then the business logic is executed without a transaction:
+	
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+		When the propagation is REQUIRES_NEW, Spring suspends the current transaction if it exists, and then creates a new one:
+
+Isolation Management in Spring
+	
+	Transaction Isolation
+	
+	Isolation is one of the common ACID properties: Atomicity, Consistency, Isolation, and Durability. Isolation describes how changes applied by concurrent 	transactions are visible to each other.
+	
+	Each isolation level prevents zero or more concurrency side effects on a transaction:
+	
+	We can set the isolation level of a transaction by @Transactional::isolation. It has these five enumerations in Spring: DEFAULT, READ_UNCOMMITTED, 		READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE.
+	
+	DEFAULT: The default isolation level is DEFAULT. As a result, when Spring creates a new transaction, the isolation level will be the default isolation of our 			RDBMS
+
+	READ_UNCOMMITTED(Dirty read): read the uncommitted change of a concurrent transaction
+	
+		If T1 transaction reads data from table A1 that was written by another concurrent transaction T2. If on the way T2 is rollback, the data 			obtained by T1 is invalid one. E.g. a=2 is original data. If T1 read a=1 that was written by T2. If T2 rollback then a=1 will be rollback to a=2 in 			DB. But, now, T1 has a=1 but in DB table it is changed to a=2.
+		
+		Postgres does not support READ_UNCOMMITTED isolation and falls back to READ_COMMITED instead. Also, Oracle does not support or allow READ_UNCOMMITTED.
+
+	Nonrepeatable read: get different value on re-read of a row if a concurrent transaction updates the same row and commits
+	
+		 If T1 transaction reads data from table A1. If another concurrent transaction (T2) update data on table A1. Then the data that T1 has read 			is different from table A1. Because T2 has updated the data on table A1. E.g. if T1 read a=1 and T2 updated a=2. Then a!=b.
+		 
+		 READ_COMMITTED is the default level with Postgres, SQL Server, and Oracle.
+		 REPEATABLE_READ does not allow simultaneous access to a row at all. Hence the lost update can't happen
+	
+	Phantom read: get different rows after re-execution of a range query if another transaction adds or removes some rows in the range and commits
+	
+		 If T1 transaction reads data from table A1 with certain number of rows. If another concurrent transaction (T2) inserts more rows on table 			A1. The number of rows read by T1 is different from rows on table A1.
+		 
+	ISOLATION_SERIALIZABLE: Scenario 1, Scenario 2, Scenario 3 never happen. It is complete isolation. It involves full locking. It affects performace because of 		locking.
+		
+		SERIALIZABLE is the highest level of isolation. It prevents all mentioned concurrency side effects, but can lead to the lowest concurrent access rate 			because it executes concurrent calls sequentially.
+
+		In other words, concurrent execution of a group of serializable transactions has the same result as executing them in serial.
 
 
+RollBack
+	By Default transaction will be rolled back for runtime exceptions, For Unchecked exceptions we can use rollBackfor or rollBackForClass attribute,
+	
+	@Transactional(rollbackFor = MyCheckedException.class)
+	public void foo() {
+   	 throw new RuntimeException();    
+	}
+
+	In the above case transaction will be rolledback even for RuntimeException
 
 
 **	EntityManager
