@@ -814,6 +814,65 @@ load will throw object not found exception
 
 get will hit the database and it will give us real object and if there is not object it will give null
 
+Object Locking
+
+Optimistic Locking 
+
+	is a strategy where you read a record, take note of a version number (other methods to do this involve dates, timestamps or 					checksums/hashes) and check that the version hasn't changed before you write the record back. When you write the record back you filter the update on the 	version to make sure it's atomic. (i.e. hasn't been updated between when you check the version and write the record to the disk) and update the version in one 		hit.
+
+	If the record is dirty (i.e. different version to yours) you abort the transaction and the user can re-start it.
+
+	This strategy is most applicable to high-volume systems and three-tier architectures where you do not necessarily maintain a connection to the database for 	your session. In this situation the client cannot actually maintain database locks as the connections are taken from a pool and you may not be using the same 		connection from one access to the next.
+
+Pessimistic Locking
+
+	is when you lock the record for your exclusive use until you have finished with it. It has much better integrity than optimistic locking 	but requires 		you to be careful with your application design to avoid Deadlocks. To use pessimistic locking you need either a direct connection to the database (as 		would 		typically be the case in a two tier client server application) or an externally available transaction ID that can be used independently of the 		connection.
+
+	In the latter case you open the transaction with the TxID and then reconnect using that ID. The DBMS maintains the locks and allows you to pick the session 	back up through the TxID. This is how distributed transactions using two-phase commit protocols (such as XA or COM+ Transactions) work.
+	
+Optimistic
+
+Optimistic locking assumes that multiple transactions can complete without affecting each other, and that therefore transactions can proceed without locking the data resources that they affect. Before committing, each transaction verifies that no other transaction has modified its data. If the check reveals conflicting modifications, the committing transaction rolls back[1].
+
+Pessimistic
+
+Pessimistic locking assumes that concurrent transactions will conflict with each other, and requires resources to be locked after they are read and only unlocked after the application has finished using the data.
+
+Locking In JPA
+	
+	When we use Pessimistic Locking in a transaction, and access an entity, it'll be locked immediately. The transaction releases the lock either by committing or 		rolling back the transaction.
+	
+	In Optimistic Locking, the transaction doesn't lock the entity immediately. Instead, the transaction commonly saves the entity's state with a version number 		assigned to it.
+	
+	When we try to update the entity's state in a different transaction, the transaction compares the saved version number with the existing version number during 		the update.
+
+	At this point, if the version number differs, it means that we can't modify the entity. If there's an active transaction, then that transaction will be rolled 		back and the underlying JPA implementation will throw an OptimisticLockException.
+	
+	To specify a lock on a custom query method of a Spring Data JPA repository, we can annotate the method with @Lock and specify the required lock mode type:
+
+	@Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
+	@Query("SELECT c FROM Customer c WHERE c.orgId = ?1")
+	public List<Customer> fetchCustomersByOrgId(Long orgId);
+	Copy
+	To enforce the lock on predefined repository methods, such as findAll or findById(id), we have to declare the method within the repository and annotate the 		method with the Lock annotation:
+
+	@Lock(LockModeType.PESSIMISTIC_READ)
+	public Optional<Customer> findById(Long customerId);
+	Copy
+	When the lock is explicitly enabled, and there's no active transaction, the underlying JPA implementation will throw a TransactionRequiredException.
+
+	If the lock can't be granted, and the locking conflict doesn't result in a transaction rollback, JPA throws a LockTimeoutException, but it doesn't mark the 		active transaction for rollback.
+	
+	When using Pessimistic Locking, the database will try to lock the entity immediately. The underlying JPA implementation throws a LockTimeoutException when the 		lock can't be obtained immediately. To avoid such exceptions, we can specify the lock timeout value.
+	
+	In Spring Data JPA, the lock timeout can be specified using the QueryHints annotation by placing a QueryHint on query methods:
+
+	@Lock(LockModeType.PESSIMISTIC_READ)
+	@QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "3000")})
+	public Optional<Customer> findById(Long customerId);
+	
+	When the transaction needs to strictly adhere to ACID rules, we should use Pessimistic Locking. Optimistic Locking should be applied when we need to allow multiple concurrent reads and when eventual consistency is acceptable within the application context.
+
 **Transaction 
 	A transaction is a unit of work with few steps performed by a data base management system against a database
 	They are all or nothing ie either all the steps should be completed or al the steps should be rolled back
@@ -959,5 +1018,14 @@ RollBack
 			Session session = entityManager.unwrap(Session.class);
 
 JPA is a specification it is not a implementation 
+
+postgres vs MYSQL
+Postgres is an object-relational database, while MySQL is a purely relational database. This means that Postgres includes features like table inheritance and function overloading, which can be important to certain applications. Postgres also adheres more closely to SQL standards.
+
+Postgres handles concurrency better than MySQL for multiple reasons:
+	Postgres implements Multiversion Concurrency Control (MVCC) without read locks Postgres supports parallel query plans that can use multiple CPUs/cores Postgres 	can create indexes in a non-blocking way (through the CREATE INDEX CONCURRENTLY syntax).
+	
+Postgres is known for protecting data integrity at the transaction level. This makes it less vulnerable to data corruption.
+
 
 
