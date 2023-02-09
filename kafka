@@ -1,0 +1,36 @@
+Kafka
+  It is a distributed Streaming platform
+  Real Time Event Driven Application
+  Fault Tolerant
+  Scalable
+  Kafka Runs in a cluster
+  
+  RabitMq vs Kafka
+    With Kafka message when sent to the topic dont dissappear, but in case of rabitMq message dissappear as they are consumed.
+    In case of kafka you can have bunch of consumers to read the data from since it does not dissappear
+    
+    Kafka Connect Source and Kafka Connect Sinks
+      Source is used to move the data from datasource to Kafka
+      Sink is used to move the data from Kafka to datasource both of these are java applications
+      
+      Kafka Streams Java API
+        These are use to data transformation , Filtering,Joining etc..
+    
+
+Topic- It is used to publish or consume something from kafka.
+
+  Topic is a log of events.
+  we can make message in toipcs expire based on the size of the topic or by age
+  Events in kafka are immutable
+  
+ Partitions Topics are broken down into smaller components called Partitions.
+ 
+    when we wrire the message the message is actually stored in one of the topics partitions.
+    Messages having the same key will end up in the same partition therefore mainitianing the order.
+    If the message does not have key or null key then it is assigned to a partition in the round robin fashion ,but we will not maintian the order
+    when the messages with keys are produced to Kafka and hash is computed which determines the partition
+    
+   Brokers- Brokers are the machines where the kafka process runs
+        These are the network of machines
+        we need to copy partition data to several brokers to keep the data safe, those copies are called Follower replica and the original one is called Leader replica
+        Read and write happens to the leader
