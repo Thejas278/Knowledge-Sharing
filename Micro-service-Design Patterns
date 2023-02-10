@@ -1,0 +1,182 @@
+Micro-service Design Pattern
+	https://miro.medium.com/max/567/1*CKSVv4WkS8Okx572rX45HA.png
+
+	Decomposition Patterns		Integration Patterns			DataBase	Observability Pattern	Cross Cutting Concern 
+																Patterns								pattern
+
+	Decompose By Busciness		API Gateway Patterns		Database perservice							Service Discovery Pattern
+															pattern
+
+
+								Aggregator pattern-			Shared Database pattern
+
+															CQRS
+
+															SAGa
+
+	capability-					Chained microservice pattern
+
+								Client side ui compostion 
+								pattern
+	Decompose By subdomain
+
+	Strangler Pattern
+
+
+
+
+Decomposition Patterns
+
+	Decompose By Busciness capability- Break the momolithic application based on the busciness capability
+										A business capability is what a business does to generate value (for example, sales, customer service, or marketing)
+
+										 eg: Insurance company might have 
+
+						Sales		Customer		Marketing as the seperate 
+
+	Decompose By subdomain
+							This pattern uses a domain-driven design (DDD) subdomain to decompose monoliths. This approach breaks down the organization’s domain model into separate subdomains that are labeled as core (a key differentiator for the business), supporting (possibly related to business but not a differentiator), or generic (not business-specific)
+
+						
+							 eg: Insurance company might have 
+
+						Sales						Customer		Marketing as the seperate 
+
+						Purchasing subdomains						Campaingns subdomain
+
+
+						Claims subdomains							Reports
+
+	Strangler Pattern
+					In this dsesign pattern we migrate the monolithic application part by part ie 
+					for the Insurance monolith , we move Customer service to a new micro service but other service will be in the monolith and there will be a api gateway which will redirect the customer service calls to the new micro service and other calls to the old monolith application
+
+
+Integration pattern
+
+	API Gateway pattern- Client will interact with the API gateway rather than directly inretacting with the service, WE can add authentication and authorisation in single place. Rate limiting can also be done. Even the api's can be monitotred
+
+		We can create our own gateway using spring cloud
+
+	Client side ui compostion pattern- Single ui page will have multiple microservices running in the background
+
+	Aggregator pattern- Basically, The Service aggregator design pattern is receives a request from the client or API Gateways, and 					than dispatches requests of multiple internal backend microservices, and than combines the results and 							responds back to the initiating request in 1 response structure
+
+						Service service will give the price and comission will give the comission, we will combime them and then give the final price to the user or even api gateway can also become the aggrigator
+
+	Chained Microservice Design Pattern: Chained microservice design pattern produce a single consolidated response to the request. In this case, the request from the client is received by Service A, which is then communicating with Service B, which in turn may be communicating with Service C. All the services are likely using a synchronous HTTP request/response messaging
+
+DataBase Pattern
+
+	Database per service pattern
+
+			Using a database per service has the following benefits:
+
+					Helps ensure that the services are loosely coupled. Changes to one service’s database does not impact any other services.
+
+					Each service can use the type of database that is best suited to its needs. For example, a service that does text searches could use ElasticSearch. A service that manipulates a social graph could use Neo4j.
+
+			Using a database per service has the following drawbacks:
+
+					Implementing business transactions that span multiple services is not straightforward. Distributed transactions are best avoided because of the CAP theorem. Moreover, many modern (NoSQL) databases don’t support them.
+
+					Implementing queries that join data that is now in multiple databases is challenging.
+
+					Complexity of managing multiple SQL and NoSQL databases
+
+			There are various patterns/solutions for implementing transactions and queries that span services:
+
+					Implementing transactions that span services - use the Saga pattern.
+
+					Implementing queries that span services:
+
+						API Composition - the application performs the join rather than the database. For example, a service (or the API gateway) could retrieve a customer and their orders by first retrieving the customer from the customer service and then querying the order service to return the customer’s most recent orders.
+
+						Command Query Responsibility Segregation (CQRS) - maintain one or more materialized views that contain data from multiple services. The views are kept by services that subscribe to events that each services publishes when it updates its data. For example, the online store could implement a query that finds customers in a particular region and their recent orders by maintaining a view that joins customers and orders. The view is updated by a service that subscribes to customer and order events.
+
+	Shared database patterns
+
+
+	CQRS(Command And Query Responsibility Segregation)
+
+			Command is anything which modifes the data eg insert,delete or update
+				This will come into picture when you have database per service pattern and you have to retrieve the data from multiple database for display to to view . So in this case the commands will be stored in the respective service databases and the Query will another database which has the view of the required data, when and command is executed , a event will be triggered which will update the Query database as well
+
+
+	Saga Pattern
+
+			It is used for distributed transaction when multiple services have seperate db and each have to update n their own db and if any one transaction fails then all the other transactions will also roll back
+
+			This can be achieved using
+
+			1.Orchestrator- There will be a orchestator which will send and receive the events for each service and depending on this response each service will either roll back or complete the transaction
+
+			2.Coreography- There will not be a centralised orchestrator, each service will talk to each other and revert or complete the transaction
+
+Cross Cutting Concern 
+	
+	Service Discovery- In this patterns there will be a discovery server which will find which service needs to be called
+
+			2 types 
+
+					1.Client side service discovery
+
+							Client goes the service discovery, he makes the call to discovery server to get the service path and then makes a second call to the actual service
+							Here the client will make 2 calls
+							Eureka is a example for this.
+
+					2.Server Side service discovery
+
+						Server will make the discovery and redirect the user to the right server.Client only make one call
+						example NGINX,AWs
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+HTTP Status Codes
+
+	Informational responses (100 – 199)
+
+	Successful responses (200 – 299)
+
+		200 OK
+			The request succeeded. The result meaning of "success" depends on the HTTP method:
+
+		201 Created
+			The request succeeded, and a new resource was created as a result. This is typically the response sent after POST requests, or some PUT requests.
+
+
+	Redirection messages (300 – 399)
+	Client error responses (400 – 499)
+
+		400 Bad Request
+			The server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).
+			Server error responses (500 – 599)
+
+		401 Unauthorized
+		Although the HTTP standard specifies "unauthorized", semantically this response means "unauthenticated". That is, the client must authenticate itself to get the requested response.
+
+		403 Forbidden
+		The client does not have access rights to the content; that is, it is unauthorized, so the server is refusing to give the requested resource. Unlike 401 Unauthorized, the client's identity is known to the server.
+
+	Server error responses (500 – 599)
+
+		500 Internal Server Error
+		The server has encountered a situation it does not know how to handle.
+
+		501 Not Implemented
+		The request method is not supported by the server and cannot be handled. The only methods that servers are required to support (and therefore that must not return this code) are GET and HEAD.
+
+		502 Bad Gateway
+		This error response means that the server, while working as a gateway to get a response needed to handle the request, got an invalid response.
+
+		503 Service Unavailable
+		The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded.
+
+
+The Bootstrap Application Context
+A Spring Cloud application operates by creating a "bootstrap" context, which is a parent context for the main application. Out of the box it is responsible for loading configuration properties from the external sources, and also decrypting properties in the local external configuration files. The two contexts share an Environment which is the source of external properties for any Spring application. Bootstrap properties are added with high precedence, so they cannot be overridden by local configuration, by default.
+
+for more info 
+https://cloud.spring.io/spring-cloud-static/spring-cloud.html#:~:text=A%20Spring%20Cloud%20application%20operates,the%20local%20external%20configuration%20files.
