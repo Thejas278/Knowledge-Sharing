@@ -216,17 +216,15 @@ Object class in the super most class in java
 
 	The Object class is the top of the class hierarchy. All classes are descendants from this class and inherit methods from it. Useful methods inherited from Object include toString(), equals(), clone(), and getClass().
 
-	
-
 Interface
 	In the Java programming language, an interface is a reference type, similar to a class, that can contain only constants, method signatures, default methods, static methods, and nested types
 
 	Interface can be public or default(Package Private)
 
 	All methods are by default public
-	All the constants are by default public static final so you can omit these modifiers.
+	All the constants are by default public static final so you dont have to use these modifiers.
 
-	For Non static methods if the  child method has the same name , then it will be overrided in the child class(This happens at runtime).
+	For Non static methods if the child method has the same name , then it will be overrided in the child class(This happens at runtime).
 	For static methods,static fields,non static fields the parent method will be hidden not over ridden(this happens at compile time)
 
 	Foo f = new Bar();
@@ -239,9 +237,7 @@ Interface
 
         https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html
 
-
   **Comparator vs comparable
-
 
       * Comparable - compareTo(Object o)
 
@@ -253,10 +249,7 @@ Interface
 	        NullPointerException - if the specified object is null
 		ClassCastException - if the specified object's type prevents it from being compared to this object.
 
-
       * Comparator- compare(Object o1,Object o2)
-
-
 
          It is a good practise to Seralize the comparator as they may be used as ordering methods in serializable data structures (like TreeSet, TreeMap). In order for the data structure to serialize successfully
 
@@ -294,12 +287,12 @@ Interface
 		Comparator ch4=	Comparator.comparing(Chair::getName).reversed();
 		Collections.sort( cl,ch4);
 
-
-
 **Collection
 
+	Methods like add,addAll,remove,removeAll,Iterator ,clear these methods are inhertited from collection Interface.
+
  **List
-       		It is a ordered collection which allows duplicate.
+       	It is a ordered collection which allows duplicate.
 
        	You can convert any collection to any other collection( set collection into arraylist and vice versa) by using a constructor.
 
@@ -310,21 +303,23 @@ Interface
 
 **Set Collection
 
-
 		Duplicates are not allowed, It has only those methods from collection interface
 
 		HashSet -Stores elements in hashtable, insertion order is not maintained(performance is good)
-		TreeSet- Stores elements in red-black tree,insertion order is not maintained,It is a sorted set, It is a impementatio of
+		TreeSet- Stores elements in red-black tree,insertion order is not maintained,It is a sorted set, It is a implementation of
 		set Interface->Sortedset Interface->Navigable Interface
-		LinkedHashSet- elements re stored in hashtable, insertion order is maintaned
+		LinkedHashSet- elements stored in hashtable, insertion order is maintaned
 
 	HashSet Internally uses has map to insert the data 
 
-	eg in the documentation
-		public boolean add(E e) {
-   return map.put(e, PRESENT)==null;
-				}
+eg in the documentation
 
+		public boolean add(E e) {
+  		 return map.put(e, PRESENT)==null;
+		}
+	Now as you can see that whenever we create a HashSet, it internally creates a HashMap and if we insert an element into this HashSet using add() method, it 	actually call put() method on internally created HashMap object with element you have specified as it’s key and constant Object called “PRESENT” as it’s value. 	So we can say that a Set achieves uniqueness internally through HashMap and when we call put(Key, Value) method, it returns the previous value associated with key, or null if there was no mapping for key. So in add() method we check the return value of map.put(key, value) method with null value.
+	
+	As LinkedHashSet extends HashSet, so it internally calls constructors of HashSet using super(). Similarly creating an object of TreeSet class internally creates object of Navigable Map as backing map.
 
 			to get the value from hashSet , the iterator method will return
 			public Iterator<E> iterator() {
@@ -332,9 +327,7 @@ Interface
 		    }
 
 **Queue
-
 		It is used to hold the elements before processing, It has additional methods like
-
 
 				public interface Queue<E> extends Collection<E> {
 				    E element();
@@ -344,10 +337,9 @@ Interface
 				    E remove();
 				}
 
-				Each Queue method exists in two forms: 
-				(1) one throws an exception if the operation fails.
-
-				(2) the other returns a special value if the operation fails (either null or false, depending on the operation). The regular structure of the interface is illustrated in the following table.
+		Each Queue method exists in two forms: 
+		(1) one throws an exception if the operation fails.
+		(2) the other returns a special value if the operation fails (either null or false, depending on the operation). The regular structure of the interface is illustrated in the following table.
 
 				Queue Interface Structure
 
@@ -357,21 +349,20 @@ Interface
 				Examine				element()			peek()
 
 
-				The add method, which Queue inherits from Collection, inserts an element unless it would violate the queue's capacity restrictions, in which case it throws IllegalStateException. The offer method, which is intended solely for use on bounded queues, differs from add only in that it indicates failure to insert an element by returning false.
+	The add method, which Queue inherits from Collection, inserts an element unless it would violate the queue's capacity restrictions, in which case it throws IllegalStateException. The offer method, which is intended solely for use on bounded queues, differs from add only in that it indicates failure to insert an element by returning false.
 
-				The remove and poll methods differ in their behavior only when the queue is empty. Under these circumstances, remove throws NoSuchElementException, while poll returns null.
+	The remove and poll methods differ in their behavior only when the queue is empty. Under these circumstances, remove throws NoSuchElementException, while poll returns null.
+	
+	The element and peek methods return, but do not remove, the head of the queue.
+	 If the queue is empty, element throws NoSuchElementException, while peek returns null.
 
-				The element and peek methods return, but do not remove, the head of the queue.
-				 If the queue is empty, element throws NoSuchElementException, while peek returns null.
+	Queue implementations generally do not allow insertion of null elements. The LinkedList implementation, which was retrofitted to implement Queue, is an exception. For historical reasons, it permits null elements, but you should refrain from taking advantage of this, because null is used as a special return value by the poll and peek methods.
 
-				 Queue implementations generally do not allow insertion of null elements. The LinkedList implementation, which was retrofitted to implement Queue, is an exception. For historical reasons, it permits null elements, but you should refrain from taking advantage of this, because null is used as a special return value by the poll and peek methods.
-
-**dequeue    Is a linear collection of elements which supports adding and removal of elements in both the ends.
+**Dequeue Is a linear collection of elements which supports adding and removal of elements in both the ends.
 			It implememnts both stack and queue
 				 ArrayDeque and LinkedList implement the Deque interface.
 
-				 Note that the Deque interface can be used both as last-in-first-out stacks and first-in-first-out queues
-
+Note that the Deque interface can be used both as last-in-first-out stacks and first-in-first-out queues
 
 			Deque Methods
 
@@ -386,16 +377,12 @@ Interface
 								getLast()											peekLast()
 								
 
+A List is an ordered list of objects, where the same object may well appear more than once.
+For example: [1, 7, 1, 3, 1, 1, 1, 5]. It makes sense to talk about the "third element" in a list. You can add an element anywhere 					in the list, change an element anywhere in the list, or remove an element from any position in the list.
 
-******			A list is an ordered list of objects, where the same object may well appear more than once. For example: [1, 7, 1					, 3, 1, 1, 1, 5]. It makes sense to talk about the "third element" in a list. You can add an element anywhere 					in the list, change an element anywhere in the list, or remove an element from any position in the list.
+A Queue is also ordered, but you'll only ever touch elements at one end. All elements get inserted at the "end" and removed from the "beginning" (or head) of the queue. You can find out how many elements are in the queue, but you can't find out what, say, the "third" element is. You'll see it when you get there.
 
-				A queue is also ordered, but you'll only ever touch elements at one end. All elements get inserted at the "end" and removed from the "beginning" (or head) of the queue. You can find out how many elements are in the queue, but you can't find out what, say, the "third" element is. You'll see it when you get there.
-
-				A set is not ordered and cannot contain duplicates. You again can't ask for the "third" element or even the "first" element, since they are not in any particular order. You can add or remove elements, and you can find out if a certain element exists (e.g., "is 7 in this set?")
-
-
-		
-
+A set is not ordered and cannot contain duplicates. You again can't ask for the "third" element or even the "first" element, since they are not in any particular order. You can add or remove elements, and you can find out if a certain element exists (e.g., "is 7 in this set?").
 
  ** Map provides
         To change the value use entrySet
@@ -415,8 +402,6 @@ Interface
 		Linked HashMap -Insertion order is maintained,they are not synchronized
 
 		TreeMap is a sorted Map
-
-
 
 InnerWorking of HashMap
 
@@ -453,15 +438,12 @@ In java 8
  Read bst-https://www.youtube.com/watch?v=81PpYQ0AN_w
 
 
- ConcurrentHashMap vs SynchronizedHashMap-Both are used to achieve thread safe
+ SynchronizedHashMap vs ConcurrentHashMap -Both are used to achieve thread safe
 
 
  *SynchronizedHashMap 	maintains the lock at object level , to perform put or get we need to acquire the lock
 
- *ConcurrentHashMap 	mainitains the lock at bucket level
- 						read operation doesn't require a lock. So any number of threads can perform a get operation on it.
-
-						If thread1 wants to perform put operation in segment 2 and thread2 wants to perform put operation on segment 4 then it is allowed here
+ *ConcurrentHashMap 	mainitains the lock at bucket level read operation doesn't require a lock. So any number of threads can perform a get operation on it.If 			thread1 wants to perform put operation in segment 2 and thread2 wants to perform put operation on segment 4 then it is allowed here
 
 Difference btw HashMap and HashTable
 
@@ -474,28 +456,20 @@ HashTable is slow
 HashMap can allow one null key
 HashTable does not allow null key
 
-
 In hasMap and hashTable the insertion hashMap is not fixed, but in linked HashMap the isertion order is fixed.
-
 
 ConcurrentHashMap vs Hashtable vs Synchronized Map- All the 3 are threadSafe
 
-		The only difference between Hashtable and Synchronized Map is that later is not a legacy and you can wrap any Map to create it's synchronized version by using Collections.synchronizedMap() method.
-
-		
+The only difference between Hashtable and Synchronized Map is that later is not a legacy and you can wrap any Map to create it's synchronized version by using Collections.synchronizedMap() method.
 
 Read more: https://javarevisited.blogspot.com/2011/04/difference-between-concurrenthashmap.html#ixzz5yjFPtYkJ
-
-
 
 HasSet vs HashMap
 HashSet allows one null value HashMap allows one null key and any number of null values
 HaShSet is a implemention of Set Interface, HashMap is a implemention of Map Interface
 HashSet we have add , HaspMap we have put
 
-
 TreeHashMap is a sorted HashMap
-
 
 ** TreeMap
 	Some of the important points to remember about TreeMap in java are;
@@ -511,8 +485,6 @@ TreeHashMap is a sorted HashMap
 	TreeMap methods to get keyset and values return Iterator that are fail-fast in nature, so any concurrent modification will throw ConcurrentModificationException.
 	
 	TreeMap in java doesn’t allow null keys, however you can have multiple null values associated with different keys.
-
-
 
  ***Cursors
  	To get individual values from collection we have
@@ -544,15 +516,15 @@ Advantages of Data Structure
 
 **Queue-FIFO
 	Queue is a linear list in which elements can be inserted only at one end called rear and deleted only at the other end called front.
-	Queue used FIFO and it has enqueue for insertion and dequeue for deletion
-	WE need to create enque,dequeue isEmpty,isFull,getSize methods with normal logic
+	Queue used FIFO and it has enqueue for insertion and dequeue for deletion.
+	We need to create enque,dequeue isEmpty,isFull,getSize methods with normal logic.
 
 **Linked List
 	LinkedList is an implementation of both a queue and a stack
 
 	Poll vs Pop
-	Poll will return null if the list is empty and Poll is also used to remove the head element
-	Pop will throw java.util.NoSuchElementException and Pop is used to remove and return the head element
+	Poll will return null if the list is empty and Poll is also used to remove the head element.
+	Pop will throw java.util.NoSuchElementException and Pop is used to remove and return the head element.
 	
 
 	Other methods are 
@@ -562,16 +534,14 @@ Advantages of Data Structure
 
 	3 types of linkedList
 	1.Single linked list
-	2.doublylinkeedList
-	3.CircularLinkedList
+	2.doublylinkeedList- It has a link to previous as well as next node
+	3.CircularLinkedList- The nodes are connected to form a circle, First node and last node are connected.
 
 Array vs LinkedList
 
-Array size if fixed, LinkedList size is dynamic
-Array is faster for adding,deleting, Linked list is slower for these operations
-Array consumes more memory, In linked List the memory can be redumped to heap
-
-
+Array size if fixed, LinkedList size is dynamic.
+Array is faster for adding,deleting, Linked list is slower for these operations.
+Array consumes more memory, In linked List the memory can be redumped to heap.
 
 *Tree
 	
@@ -603,22 +573,17 @@ Read more: https://javarevisited.blogspot.com/2015/10/how-to-implement-binary-se
 
 **ArrayList vs Linked List
 
-	ArrayList is fast for gettig the data
-	LinkedList is fast for manupulating the data
-
 	ArrayList uses dynamice resiazable array
 	LinkedList uses doubly linked List
 
-
-
-	Seralization and Deserialization
+Seralization and Deserialization
 
 	Is the process of converting the object into byte array so that it can be transferred into a file or over a network
 
 		Using FileOutPutStream for file and ObjectOutPutStream for Object we can achieve this -Serializzation
 
 
-		Is the process of converting the Bytearray back to java object so that it can be transferred into a file or over a network
+		Is the process of converting the Byte array back to java object so that it can be transferred into a file or over a network
 
 		Using FileInputPutStream for file and ObjectInputPutStream for Object we can achieve this -Serializzation
 
@@ -636,7 +601,7 @@ Read more: https://javarevisited.blogspot.com/2015/10/how-to-implement-binary-se
 	for serialzation the order in which we serialize , the same order we have to deserialze. 
 	if we do not know the order then we can use instanceOf operator for find the instance
 
-	*Object Graph- When we serialze a object , set of all objects which are reachable to that object will be srialized
+	*Object Graph- When we serialze a object , set of all objects which are reachable to that object will be serialized
 
 	while adding customized Serialization we have 
 	implement
@@ -649,6 +614,36 @@ Read more: https://javarevisited.blogspot.com/2015/10/how-to-implement-binary-se
 
 
 Design Patterns
+
+1) Creational Pattern
+	Factory Method Pattern
+	Abstract Factory Pattern
+	Singleton Pattern
+	Prototype Pattern
+	Builder Pattern
+	Object Pool Pattern
+
+2) Structural Pattern
+	Adapter Pattern
+	Bridge Pattern
+	Composite Pattern
+	Decorator Pattern
+	Facade Pattern
+	Flyweight Pattern
+	proxy Pattern
+
+3) Behavioral Pattern
+	Chain of Responsibility
+	Command Pattern
+	Interpreter Pattern
+	Iterator Pattern
+	Mediator Pattern
+	Memento Pattern
+	Observer Pattern
+	State Pattern
+	Strategy Pattern
+	Template Pattern
+
 1.Factory Design Patterns
 
 	It is a design pattern where we are providing the interface to create a object and the subclass has to pass the type and depending on the type we are creating the object
@@ -785,7 +780,6 @@ Threads can be implemented in 2 ways.
 				     t.start();
 				}
 
-
 **Extends Thread class vs Implements Runnable Interface?
 
 	Extending the Thread class will make your class unable to extend other classes, because of the single inheritance feature in  JAVA. However, this will give you a simpler code structure. If you implement Runnable, you can gain better object-oriented design and consistency and also avoid the single inheritance problems.
@@ -846,7 +840,6 @@ For example lets have a look at the following code:
    }
 }
 
-
 **Why don’t we call run() method directly, why call start() method?
 
 	If we call just run method then it will run just like a normal method and we will be not be able to take the advantage of multithreading
@@ -857,12 +850,23 @@ For example lets have a look at the following code:
 
 	method isAlive(): Determine if a thread is still running.
 
-
 Interrupt-
 
 		Interrupt tells the thread to stop what it is doing now and do something else.
+		
+		If main thread suppose T1 has started one more long running process t2 and if you want to stop this thread t2 then there is no cancel mechanism n 			thread. So we are using Interrupts we can request a thread to stop(t2) by using another thread(t1).
+		When a interrupt is invoked , Interrupt flag will be set.
+		In thread implementation of t1 we have to monitor if the interrupt has been invoked by checking this flag (isInterrupted).If interrupt is received 			then we can either return or throw interrupt exception.Interrupt exception is thrown because other wise we will not know if the thread has exited 			by the normal flow or by interrupt.
+	Use Thread.interrupted() to reset the flag or else the flag will always be true.
+	Interrupt is a polite way of asking a thread to stop becasue we cannot force the thread to stop suddenly because it might be in middle of some operation or some db connections might be open.
+	
+	Other than long process . JVM throws interrupt in 3 places
+	sleep
+	wait
+	join
 
-		For methods which thrown InterruptException like sleep and wait, when we use t.interrupt(),If there is Thread.sleep or wait method then InterruptedExceptionis thrown and execution is returned from the run method
+		For methods which thrown InterruptException like sleep and wait, when we use t.interrupt()
+		If there is Thread.sleep or wait method then InterruptedException is thrown and execution is returned from the run method
 
 		If a thread goes a long time without calling the method like sleep(which throws Interrupt Exception), then calling Thread.interrupted will tell if a thread has received a interrupt.
 
@@ -875,7 +879,7 @@ Interrupt-
 
 	*Any method that exits by throwing an InterruptedException clears interrupt status when it does so
 
-t1.join() method will make other threads to stops until the current thread completes the execution.(call only after starting the 			thread or else it wont work)
+t1.join() method will make other threads to stops until the current thread completes the execution.(call only after starting the thread or else it wont work)
 
 			Join method will only throw interrupted exception if the current thread that is calling the t.join() gets interrupted
 
@@ -905,27 +909,28 @@ t1.setName("thejas")- will set the name of thread as thejas
 
 Synchronized- can be used only on methods or code block
 
-		Happens before relationship-Memory rights and other changes from one statement will be visible to another statement.
+	Happens before relationship-Memory writes and other changes from one statement will be visible to another statement.
 
-	
-			adding "synchronized" will make a block or method thread safe, multiple threadsa cannot acces the same resource at a time
+	adding "synchronized" will make a block or method thread safe, multiple threads cannot acces the same resource at a time
 
-			Constructors are not synchronized, it will give a syntax error.The JVM ensures that only one thread can invoke a constructor call at a given point in time.
+	Constructors are not synchronized, it will give a syntax error.The JVM ensures that only one thread can invoke a constructor call at a given point in time.
 
-
-			Every objetc has a intrinsic lock associated with it , if any thread wants any exclusive acess for a object then it needs to acquire the lock for the object.
+	Every object has a intrinsic lock associated with it , if any thread wants any exclusive acess for a object then it needs to acquire the lock for the object.
 
 			Intrinsic lock is also called as monitor
 
 			If one thread has a intrinsic lock another thread cannot have the lock
 
-			When we use synchronized keyword will make sure that the method or statement will acquire the lock and while returning it will release the lock, even during run time exception the lock will be returned.
+	When we use synchronized keyword will make sure that the method or statement will acquire the lock and while returning it will release the lock, even during 		run time exception the lock will be returned.
 
-			When a thread releases an intrinsic lock, a happens-before relationship is established between that action and any subsequent acquisition of the same lock.
-
-Reentrant Synchronization- Allowing the thread to access the same lock , in a situation if a synchronized method is calling another synchronized method.
-	Without Reentrant Synchronizatio the thread itself would block
+	When a thread releases an intrinsic lock, a happens-before relationship is established between that action and any subsequent acquisition of the same lock.
 	
+Reentratnt lock-https://www.youtube.com/watch?v=ahBC69_iyk4
+	
+Reentrant Synchronization- Allowing the thread to access the same lock , in a situation if a synchronized method is calling another synchronized method.
+	Without Reentrant Synchronization the thread itself would block
+	
+	Synchronsed block implicit and Re entrant lock is explicit
 	1) Another significant difference between ReentrantLock and synchronized keyword is fairness. synchronized keyword doesn't support fairness. Any thread can 		acquire lock once released, no preference can be specified, on the other hand you can make ReentrantLock fair by specifying fairness property, while 		creating instance of ReentrantLock. Fairness property provides lock to longest waiting thread, in case of contention.
 
 	2) Second difference between synchronized and Reentrant lock is tryLock() method. ReentrantLock provides convenient tryLock() method, which acquires lock only 		if its available or not held by any other thread. This reduce blocking of thread waiting for lock in Java application.
@@ -938,11 +943,11 @@ Reentrant Synchronization- Allowing the thread to access the same lock , in a si
 	For static methods there will be class level intrinsic lock(test.class)
 	For Non static methods there will be object level lock(this)
 
-	When a thread is acessing a non synchronized method, other threads cannot access other non static methods of that object, but they can access the static synchronized methods because for static methods it is class level lock.
+	When a thread is acessing a synchronized method, other threads cannot access other non static methods of that object, but they can access the static 		synchronized methods because for static methods it is class level lock.
 
 Class level locking-If there are 100 instance of a class then any thread that is acessing a static synchronized method then other 							Threads cannot access the static synchronized methods of that class, but can access non static Synchronized methods.
 
-			If we use synchronize as a statement then  other threads can use other synchronized methods only the statments within the block will be synchronized
+If we use synchronize as a statement then  other threads can use other synchronized methods only the statments within the block will be synchronized
 
 Atomic Operations
 	These are the operations which cannot stop in the middle, either they suceed or they fail,there is no in between.
@@ -954,6 +959,8 @@ Atomic Operations
 	If you use volatile keyword then all variables including long and float
 
 	Volatile established happens before relationship for all the read operation for the variables also when the thread sees the volatile keyword, it will not just see the latest value, it will also see the side effect that led to the value change.
+	
+	 the volatile modifier guarantees that any thread that reads a field will see the most recently written value
 
 	Using Atomis operation is more efficient then acessing the variables in sychronized code but we need to take special care to avoid memory inconsitency,Whether the extra effort is worthwhile depends on the size and complexity of the application
 
@@ -1056,21 +1063,18 @@ wait() will causes the current thread to wait untill another thread invokes noti
 notify() wakes up a single thread that is waiting to accept to use the resource (should be the first thread which used wait())
 notifyAll() will wake up that are waiting to access the resource
 
-
 Immutable design
 
 		Dont provide setters which modify the fields
 		Make all fields private and final
 
-		Don't allow subclasses to override methods. The simplest way to do this is to declare the class as final. A more sophisticated approach is to make the constructor private and construct instances in factory methods.
+		Don't allow subclasses to override methods. The simplest way to do this is to declare the class as final. A more sophisticated approach is to make the 			constructor private and construct instances in factory methods.
 
 		If the instance fields include references to mutable objects, don't allow those objects to be changed:
 			Don't provide methods that modify the mutable objects.
 			Don't share references to the mutable objects. Never store references to external, mutable objects passed to the constructor; if necessary, create copies, and store references to the copies. Similarly, create copies of your internal mutable objects when necessary to avoid returning the originals in your methods.
 
 ** How to achieve Thread Safe
-
-
 
 1. Using the stateless Implementation
 
@@ -1177,8 +1181,8 @@ solution is to maintain the order
         }
     }
 }
-Runnable vs collable
 
+Runnable vs collable
 
 	A Callable needs to implement call() method while a Runnable needs to implement run() method.
 	A Callable can return a value but a Runnable cannot.
@@ -1214,25 +1218,15 @@ Advanced Thread Concepts
 
 				e.execute(r);
 
-
-				
-
-
-
-
-
 **Inner Class
 
-	
-	1.The scope of a nested class is bounded by the scope of its enclosing class. Thus in above example, class NestedClass does not exist independently of class OuterClass.
-	2.A nested class has access to the members, including private members, of the class in which it is nested. However, reverse is not true i.e. the enclosing class does not have access to the members of the nested class.
+	1.The scope of a nested class is bounded by the scope of its enclosing class. Thus in above example, class NestedClass does not exist independently of class 		OuterClass.
+	2.A nested class has access to the members, including private members, of the class in which it is nested. However, reverse is not true i.e. the enclosing 	class does not have access to the members of the nested class.
 	3.A nested class is also a member of its enclosing class.
 	
+For inner class the class file will be created name will be A$B.class where A is the outer class and B is the inner class
 
-	For inner class the class file will be created name will be A$B.class where A is the outer class and B is the inner class
-
-
-	There are 3 types 
+There are 3 types 
 
 	1.Non Static class
 		To Acess the inner class variables we have to the following
@@ -1318,7 +1312,7 @@ In this case an instance of InnerBean class will be created and wired in to inne
 	}
 	}
 
-	If there are 2 interfaces which hav deined a same method in them then the implementing class shoudl also define the method.
+	If there are 2 interfaces which have defined a same method in them then the implementing class shoudl also define the method.
 	this is only applicable if both the interfaces have  the same method.
 
 	Class has more power than interface
@@ -1456,10 +1450,28 @@ which will repeat 3 times
 
 isBlanck()- Cheks whether the given string is blank
 
+In Java 11, there are various methods, such as writeString(), readString(), and isSameFile() which help us to perform several operations on file.
+
+A static not method has been added to the Predicate interface. We can use it to negate an existing predicate, much like the negate method:
+
+				List withoutBlanks = sampleList.stream()
+		  .filter(Predicate.not(String::isBlank))
+  
+  Support for using the local variable syntax (var keyword) in lambda parameters was added in Java 11.
+
+We can make use of this feature to apply modifiers to our local variables, like defining a type annotation:
+
+		List<String> sampleList = Arrays.asList("Java", "Kotlin");
+		String resultString = sampleList.stream()
+		  .map((@Nonnull var x) -> x.toUpperCase())
+		  .collect(Collectors.joining(", "));
+		assertThat(resultString).isEqualTo("JAVA, KOTLIN");
+
 WE can use annotations in lambda expressions 
 Consumer<String> consumer=(@Depriceted var i) -> sop("this is the string");
 
-
+Java 17 
+	we have record classes record Employee (int id,String name) {} we dont have to create a class just this one will is enough. toString, hashcode methods are by 		default implememted for these record classes. The record class will not have setters by default all the fields will be private final
 	
 **AOP-Aspect Oriented Programming
 It is used to increase the modularity by cross cutting concerns, A cross cutting concern is a concern that effect the whole application
