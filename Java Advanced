@@ -11,7 +11,7 @@ You cannot declare two methods with the same signature even if they have a diffe
 
   Covariant return, means that when one overrides a method, the return type of the overriding method is allowed to be a subtype of the overridden method's return type.
 
-		To clarify this with an example, a common case is Object.clone() - which is declared to return a type of Object, we can override this method to return the Object of the classs type.
+	To clarify this with an example, a common case is Object.clone() - which is declared to return a type of Object, we can override this method to return the 		Object of the classs type.
 
 Use the most restrictive access level that makes sense for a particular member. Use private unless you have a good reason not to.
 
@@ -34,9 +34,7 @@ non Static block and non static variables defined in the child class in the orde
 
 this keyword-	Within an instance method or a constructor, this is a reference to the current object — the object whose method or 					constructor is being called. You can refer to any member of the current object from within an instance method or 					a constructor by using this
 
-
-
-	Class
+Class
 1.Outer classs can be declared public or package-private(default)
 
 	default means it is visible only inside a package
@@ -256,16 +254,16 @@ Streams
 			       (a, b) -> a + b);
 
 
-						       	The reduce operation in this example takes two arguments:
+	The reduce operation in this example takes two arguments:
 
-						identity: The identity element is both the initial value of the reduction and the default result if there are no elements in the stream. In this example, the identity element is 0; this is the initial value of the sum of ages and the default value if no members exist in the collection roster.
+	identity: The identity element is both the initial value of the reduction and the default result if there are no elements in the stream. In this example, the 		identity element is 0; this is the initial value of the sum of ages and the default value if no members exist in the collection roster.
 
-						accumulator: The accumulator function takes two parameters: a partial result of the reduction (in this example, the sum of all processed integers so far) and the next element of the stream (in this example, an integer). It returns a new partial result. In this example, the accumulator function is a lambda expression that adds two Integer values and returns an Integer value:
+	accumulator: The accumulator function takes two parameters: a partial result of the reduction (in this example, the sum of all processed integers so far) and 		the next element of the stream (in this example, an integer). It returns a new partial result. In this example, the accumulator function is a lambda 		expression that adds two Integer values and returns an Integer value:
 
 						(a, b) -> a + b
 
 
-						The reduce operation always returns a new value. However, the accumulator function also returns a new value every time it processes an element of a stream
+	The reduce operation always returns a new value. However, the accumulator function also returns a new value every time it processes an element of a stream
 
 
 			There is one more reduce operation with 3 arguments- It has a intial value,accumulator function and Combiner funtion
