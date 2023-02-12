@@ -1,7 +1,5 @@
 AOP
 
-
-
 Key Concepts
 
 		Cross cutting concern- Something which is across multiple objects
@@ -29,7 +27,7 @@ Key Concepts
 
 		Weaving: Process of linking a aspect into the application code. 
 
-		This can be done at compile time (using the AspectJ compiler, for example), load time, or at runtime. Spring AOP, like other pure Java AOP frameworks, performs weaving at runtime.
+This can be done at compile time (using the AspectJ compiler, for example), load time, or at runtime. Spring AOP, like other pure Java AOP frameworks, performs weaving at runtime.
 		
 
 
