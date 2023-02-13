@@ -27,7 +27,7 @@ Micro-service Design Pattern
 
 Decomposition Patterns
 
-	Decompose By Busciness capability- Break the momolithic application based on the busciness capability
+	Decompose By Busciness capability- Break the monolithic application based on the busciness capability
 										A business capability is what a business does to generate value (for example, sales, customer service, or marketing)
 
 										 eg: Insurance company might have 
@@ -53,14 +53,14 @@ Decomposition Patterns
 
 
 Integration pattern
-
-	API Gateway pattern- Client will interact with the API gateway rather than directly inretacting with the service, WE can add authentication and authorisation in single place. Rate limiting can also be done. Even the api's can be monitotred
+	API Gateway pattern- Client will interact with the API gateway rather than directly inretacting with the service, WE can add authentication and 		authorisation in single place. Rate limiting can also be done. Even the api's can be monitotred
 
 		We can create our own gateway using spring cloud
 
-	Client side ui compostion pattern- Single ui page will have multiple microservices running in the background
+		Client side ui compostion pattern- Single ui page will have multiple microservices running in the background
 
-	Aggregator pattern- Basically, The Service aggregator design pattern is receives a request from the client or API Gateways, and 					than dispatches requests of multiple internal backend microservices, and than combines the results and 							responds back to the initiating request in 1 response structure
+Aggregator pattern
+	Basically, The Service aggregator design pattern is receives a request from the client or API Gateways, and than dispatches requests of multiple internal backend microservices, and than combines the results and responds back to the initiating request in 1 response structure
 
 						Service service will give the price and comission will give the comission, we will combime them and then give the final price to the user or even api gateway can also become the aggrigator
 
@@ -74,11 +74,11 @@ DataBase Pattern
 
 					Helps ensure that the services are loosely coupled. Changes to one service’s database does not impact any other services.
 
-					Each service can use the type of database that is best suited to its needs. For example, a service that does text searches could use ElasticSearch. A service that manipulates a social graph could use Neo4j.
+					Each service can use the type of database that is best suited to its needs. For example, a service that does text searches 			could use ElasticSearch. A service that manipulates a social graph could use Neo4j.
 
 			Using a database per service has the following drawbacks:
 
-					Implementing business transactions that span multiple services is not straightforward. Distributed transactions are best avoided because of the CAP theorem. Moreover, many modern (NoSQL) databases don’t support them.
+					Implementing business transactions that span multiple services is not straightforward. Distributed transactions are best 			avoided because of the CAP theorem. Moreover, many modern (NoSQL) databases don’t support them.
 
 					Implementing queries that join data that is now in multiple databases is challenging.
 
@@ -90,22 +90,23 @@ DataBase Pattern
 
 					Implementing queries that span services:
 
-						API Composition - the application performs the join rather than the database. For example, a service (or the API gateway) could retrieve a customer and their orders by first retrieving the customer from the customer service and then querying the order service to return the customer’s most recent orders.
+API Composition
+		- the application performs the join rather than the database. For example, a service (or the API gateway) could retrieve a customer and their orders by 		first retrieving the customer from the customer service and then querying the order service to return the customer’s most recent orders.
 
-						Command Query Responsibility Segregation (CQRS) - maintain one or more materialized views that contain data from multiple services. The views are kept by services that subscribe to events that each services publishes when it updates its data. For example, the online store could implement a query that finds customers in a particular region and their recent orders by maintaining a view that joins customers and orders. The view is updated by a service that subscribes to customer and order events.
+Command Query Responsibility Segregation (CQRS) - 
+		maintain one or more materialized views that contain data from multiple services. The views are kept by services that subscribe to events that each 			services publishes when it updates its data. For example, the online store could implement a query that finds customers in a particular region and 		their recent orders by maintaining a view that joins customers and orders. The view is updated by a service that subscribes to customer and order events.
+		
+Shared database patterns
 
-	Shared database patterns
-
-
-	CQRS(Command And Query Responsibility Segregation)
+CQRS(Command And Query Responsibility Segregation)
 
 			Command is anything which modifes the data eg insert,delete or update
-				This will come into picture when you have database per service pattern and you have to retrieve the data from multiple database for display to to view . So in this case the commands will be stored in the respective service databases and the Query will another database which has the view of the required data, when and command is executed , a event will be triggered which will update the Query database as well
+				This will come into picture when you have database per service pattern and you have to retrieve the data from multiple database for 			display to to view . So in this case the commands will be stored in the respective service databases and the Query will another database which has 		the view of the required data, when and command is executed , a event will be triggered which will update the Query database as well
 
 
-	Saga Pattern
+Saga Pattern
 
-			It is used for distributed transaction when multiple services have seperate db and each have to update n their own db and if any one transaction fails then all the other transactions will also roll back
+			It is used for distributed transaction when multiple services have seperate db and each have to update n their own db and if any one 				transaction fails then all the other transactions will also roll back
 
 			This can be achieved using
 
