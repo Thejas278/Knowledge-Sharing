@@ -300,7 +300,14 @@ Interface
 	**ListIterator is bidirectional, It has hasPrevious() and previous(), nextIndex(),previousIndex() methods as well
 
 		List interface has 2 forms of list iterator , the one with the int argument will point the iterator from the integer index passed, the one without the argument will start the iterator from the begining of the list.
-
+			
+			Algorithm           ArrayList   LinkedList
+			seek front            O(1)         O(1)
+			seek back             O(1)         O(1)
+			seek to index         O(1)         O(N)
+			insert at front       O(N)         O(1)
+			insert at back        O(1)         O(1)
+			insert after an item  O(N)         O(1)
 **Set Collection
 
 		Duplicates are not allowed, It has only those methods from collection interface
