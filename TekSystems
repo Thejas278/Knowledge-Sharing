@@ -90,6 +90,8 @@ Disadvantage
 2.RElationa constraint is not possible
 3.Joining is also not efficient
 
+Mongodb stores the data in BSON format- Binary JSON
+
 
 
 
