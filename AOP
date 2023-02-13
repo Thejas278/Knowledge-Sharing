@@ -14,8 +14,6 @@ Key Concepts
 
 		Pointcut-Advice is associated with the point cut expression, Advice will run when join point matches the Pointcut.
 
-
-
 		Introduction:Declaring additional methods or fields on behalf of a  type.
 					Spring APO allows us to introduce a new interface and its implementation for any advised object.
 
