@@ -5,3 +5,41 @@ Spring Filters
 	Spring provides a Filter implementation named DelegatingFilterProxy that allows bridging between the Servlet container’s lifecycle and Spring’s ApplicationContext. The Servlet container allows registering Filters using its own standards, but it is not aware of Spring defined Beans. DelegatingFilterProxy can be registered via standard Servlet container mechanisms, but delegate all the work to a Spring Bean that implements Filter
 
 	Another benefit of DelegatingFilterProxy is that it allows delaying looking Filter bean instances. This is important because the container needs to register the Filter instances before the container can startup. However, Spring typically uses a ContextLoaderListener to load the Spring Beans which will not be done until after the Filter instances need to be registered.
+
+
+
+
+GIT
+
+git pull tries to automatically merge after fetching commits. It is context sensitive, so all pulled commits will be merged into your currently active branch.
+git pull automatically merges the commits without letting you review them first. If you don’t carefully manage your branches, you may run into frequent conflicts.
+
+git fetch gathers any commits from the target branch that do not exist in the current branch and stores them in your local repository. 
+However, it does not merge them with your current branch. This is particularly useful if you need to keep your repository up to date,
+but are working on something that might break if you update your files. To integrate the commits into your current branch, you must use git merge afterwards.
+
+
+Merge Vs Rebase
+https://www.youtube.com/watch?v=7Mh259hfxJg
+
+when we merge a new commit id will be created if a master has been updated with changes which are not in feature branc
+
+Master-M1->M2-M3
+	M1->F1-F2
+	
+	If we merge above we wil get M1-M2-M3-new merge commit will be added
+	
+REbase- Applies commmit on top of a base
+
+git switch feature
+	git rebase Master
+	
+	This will change the commit history in feature
+
+Master-M1->M2-M3
+	M1->F1-F2
+	If we rebase then M1-M2-M3-F1-F2
+	
+	Rebase is linear and we wont have unnecessary merge commits
+	
+	
