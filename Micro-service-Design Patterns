@@ -130,6 +130,8 @@ Cross Cutting Concern
 
 						Server will make the discovery and redirect the user to the right server.Client only make one call
 						example NGINX,AWs
+						
+						When making a request to a service, the client makes a request via a router (a.k.a load balancer) that runs at a well known location. The router queries a service registry, which might be built into the router, and forwards the request to an available service instance.
 
 
 
