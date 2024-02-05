@@ -4,6 +4,73 @@ Kafka
   Fault Tolerant
   Scalable
   Kafka Runs in a cluster
+
+Kafka is a event streaming platform used to collect ,store and process real time data streams at scale.
+
+Kafka is used as event store
+
+kafka holds data in immutable,append only (you can only append in the end) structure called topics
+
+Topics are logs of events.
+
+Kafka topics are durable because it is written to file system
+
+Kafka is fast because it relies on Disk Caching and memory mapped files instead of jvm memory 
+	Disk Caching means it works directly on the memory of the operating system most of the time
+
+Topics are divided into units called partition
+
+Now which message goes to which partition is based on the key which we pass . If we do not specify the key then the message are stored in a round robin fashion.
+	If we pass the key then we find the hash of the key and mod it will the number of partions and resulting number is just the partition number to write. This will make sure that messages with the same key always goes to the same partiotion.
+
+If you want ordered data then we must put data in single partition, Ordering is guarented inside partition
+
+kafka is a distributes system because partition will divided the kafka topic so that it can be placed in different nodes of differetn kafka cluster, this is why kafka is scalable.
+
+Multiple consumers cannot read from the same partitions
+A consumer can read from multiple partitions
+
+Producer configurations
+key value serilizers
+ack
+
+	ack=all means producer will wait for all replias to return result as the default value fir acknowledge property 
+	ack=1 means only the broker that gets the request will acknowledge it will not wait for the replicas, doing this will increase the performance but will loose the resilliance
+	ack=0 means no acknowledgement
+
+compression.type
+	
+	this is set in producer , The compression is done by batch and improves with larger batch sizes
+	Compression happens in producer and can be reused by broker and consumer
+
+retires and timeouts can also be configured in producer
+
+Kafka Brokers
+
+Brokers can be a computer,pr a instance running in the cloud or a container which runs the kafa process.
+	brokers manage the partitions
+	They manage replications of partitions
+
+Usually its better to have the replication factor=number of brokers
+
+Kafka producers are thread safe for multithreading
+
+kafka admin dependency is required to create kafka topics programatically or we can use Confluent 
+
+Kafka Raft Metadata mode
+	
+	Kafka uses the Raft consensus algorithm for leader election in its Kafka Raft Metadata mode, which eliminates the dependency on ZooKeeper for managing cluster metadata. The Raft algorithm is a consensus protocol designed to ensure fault-tolerant replication of state machines in a distributed system
+	
+	Read more about in https://medium.com/javarevisited/running-kafka-without-zookeeper-66b685db4991#:~:text=Kafka%20uses%20the%20Raft%20consensus%20algorithm%20for%20leader%20election%20in,machines%20in%20a%20distributed%20system.
+
+
+Schema-registry 
+	
+	It will force the producers and consumers to use the schema which is registered.
+	It supports backward compaibilty , it can evolve without any changes breaking
+
+
+
   
   RabitMq vs Kafka
     With Kafka message when sent to the topic dont dissappear, but in case of rabitMq message dissappear as they are consumed.
