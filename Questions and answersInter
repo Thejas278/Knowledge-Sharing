@@ -155,9 +155,6 @@ eg @interface smartPhone{
 
 we can now use @smartPhone(os="symbian",version="1") as annotation
 
-	If the annotation does not have any value then it is called markerAnnotation
-	If it has one value then single value annotation
-
 	Using ReflectionApi we can get the value or features of the object
 
 	eg
@@ -201,10 +198,10 @@ Association
 
 		In Aggregation, both the entries can survive individually which means ending one entity will not effect the other entity
 
-Composition		 is a restricted form of Aggregation in which two entities are highly dependent on each other.
+	Composition is a restricted form of Aggregation in which two entities are highly dependent on each other.
 				It represent parts of relationship, when one is destroyed the dependent object is also destroyed
 
-Composition is a strong Association whereas Aggregation is a weak Association.
+	Composition is a strong Association whereas Aggregation is a weak Association.
 
 Inheritance
 
@@ -231,7 +228,7 @@ Interface
         f.instanceMethod();//child method gets executed
         f.classMethod();//parent method gets executed
 
-        If u create a abstract method (Y) in the parent and if u declare the same metohod(Y) as abstratc in ur child interface then the class which will implement the child will have to implement the abstract method (Y) , the paretn default implementation will not be available to it
+        If u create a abstract method (Y) in the parent and if u declare the same metohod(Y) as abstratc in ur child interface then the class which will implement the child will have to implement the abstract method (Y) , the parents default implementation will not be available to it
 
         Default methods can be overridden
 
@@ -324,7 +321,7 @@ eg in the documentation
 		public boolean add(E e) {
   		 return map.put(e, PRESENT)==null;
 		}
-	Now as you can see that whenever we create a HashSet, it internally creates a HashMap and if we insert an element into this HashSet using add() method, it 	actually call put() method on internally created HashMap object with element you have specified as it’s key and constant Object called “PRESENT” as it’s value. 	So we can say that a Set achieves uniqueness internally through HashMap and when we call put(Key, Value) method, it returns the previous value associated with key, or null if there was no mapping for key. So in add() method we check the return value of map.put(key, value) method with null value.
+	Now as you can see that whenever we create a HashSet, it internally creates a HashMap and if we insert an element into this HashSet using add() method, it actually calls put() method on internally created HashMap object with element you have specified as it’s key and constant Object called “PRESENT” as it’s value. 	So we can say that a Set achieves uniqueness internally through HashMap and when we call put(Key, Value) method, it returns the previous value associated with key, or null if there was no mapping for key. So in add() method we check the return value of map.put(key, value) method with null value.
 	
 	As LinkedHashSet extends HashSet, so it internally calls constructors of HashSet using super(). Similarly creating an object of TreeSet class internally creates object of Navigable Map as backing map.
 
@@ -385,7 +382,7 @@ Note that the Deque interface can be used both as last-in-first-out stacks and f
 								
 
 A List is an ordered list of objects, where the same object may well appear more than once.
-For example: [1, 7, 1, 3, 1, 1, 1, 5]. It makes sense to talk about the "third element" in a list. You can add an element anywhere 					in the list, change an element anywhere in the list, or remove an element from any position in the list.
+For example: [1, 7, 1, 3, 1, 1, 1, 5]. It makes sense to talk about the "third element" in a list. You can add an element anywhere in the list, change an element anywhere in the list, or remove an element from any position in the list.
 
 A Queue is also ordered, but you'll only ever touch elements at one end. All elements get inserted at the "end" and removed from the "beginning" (or head) of the queue. You can find out how many elements are in the queue, but you can't find out what, say, the "third" element is. You'll see it when you get there.
 
@@ -427,12 +424,16 @@ the lenght of the array is by default 16(index will be 0-15)
 When we try to insert a value to hashmap using put method, the hashcode of the key will be calculated and
 uisng the formula
 ie index=hashcode & (n-1) (& means modulus operation and n=16)
-whatever index we get we will insert the keyvalue pair in that node.If there are 2 keys with the same index then the first inserted record in that node, the  "next" poniter will be pointing to this new record.
+whatever index we get we will insert the keyvalue pair in that node.If there are 2 keys with the same index then there will be hash colission
+Then we will check if both the key are same or equal
+if they are different then
+	the first inserted record in that node, the  "next" poniter will be pointing to this new record.
+else if the keys are same
+	if will replace the first record with the new record
 
 HashMap will allow us to store a "Null" key, "Null" has a hashcode =0 so index of null key will be always 0
 
 To get the value of the key we use the same index calculation and once we get the index we compare the hashcode value stored in the index with the hashcode of the Key value and the string key will also be compared using equals method. If both will match then the particular key will be retuned
-
 
 In java 8
  If the number of duplicated index reaches more than the threshold ie TreeIFY_Threshold=8 then node switches from a linked list to a balanced tree  or binary tree to improve the performance
@@ -448,9 +449,14 @@ In java 8
  SynchronizedHashMap vs ConcurrentHashMap -Both are used to achieve thread safe
 
 
- *SynchronizedHashMap 	maintains the lock at object level , to perform put or get we need to acquire the lock
+ *SynchronizedHashMap maintains the lock at object level , to perform put or get we need to acquire the lock
 
- *ConcurrentHashMap 	mainitains the lock at bucket level read operation doesn't require a lock. So any number of threads can perform a get operation on it.If 			thread1 wants to perform put operation in segment 2 and thread2 wants to perform put operation on segment 4 then it is allowed here
+ *ConcurrentHashMap mainitains the lock at bucket level read operation doesn't require a lock. So any number of threads can perform a get operation on it.If thread1 wants to perform put operation in segment 2 and thread2 wants to perform put operation on segment 4 then it is allowed here
+
+	when to use
+	We should favor Collections.synchronizedMap() when data consistency is of utmost importance, and we should choose ConcurrentHashMap for performance-critical applications where there are far more write operations 	than there are read operations.
+
+	This is because the Collections.synchronizedMap() requires each thread to acquire a lock on the entire object for both read/write operations. By comparison, the ConcurrentHashMap allows threads to acquire locks 	on separate segments of the collection, and make modifications at the same time
 
 Difference btw HashMap and HashTable
 
@@ -463,7 +469,7 @@ HashTable is slow
 HashMap can allow one null key
 HashTable does not allow null key
 
-In hasMap and hashTable the insertion hashMap is not fixed, but in linked HashMap the isertion order is fixed.
+In hasMap and hashTable the insertion hashMap is not fixed, but in linked HashMap the insertion order is fixed.
 
 ConcurrentHashMap vs Hashtable vs Synchronized Map- All the 3 are threadSafe
 
@@ -651,7 +657,7 @@ Design Patterns
 	Strategy Pattern
 	Template Pattern
 
-1.Factory Design Patterns
+1.Factory Method Pattern
 
 	It is a design pattern where we are providing the interface to create a object and the subclass has to pass the type and depending on the type we are creating the object
 
@@ -730,7 +736,20 @@ In this design pattern reuseing the already ceated objects and resuing them and 
 A request can be handled by a chain of objects , The request is not coupled to a single object rather than a chain
 eg catchblock
 
+Observer Design pattern
+	An Observer Pattern says that "just define a one-to-one dependency so that when one object changes state, all its dependents are notified and updated automatically".
 
+Command Design pattern
+
+	A Command Pattern says that "encapsulate a request under an object as a command and pass it to invoker object. Invoker object looks for the appropriate object which can handle this command and pass the command 	to the corresponding object and that object executes the command".
+
+	Advantage of command pattern
+	It separates the object that invokes the operation from the object that actually performs the operation.
+	It makes easy to add new commands, because existing classes remain unchanged.
+
+Proxy Design pattern
+You need to update
+	It provides the protection to the original object from the outside world.
 
 **Light weight process vs Heavyweight process
 
@@ -858,15 +877,21 @@ For example lets have a look at the following code:
 	method isAlive(): Determine if a thread is still running.
 
 Interrupt-
-
+Interrupt is a polite way of asking a thread to stop becasue we cannot force the thread to stop suddenly because it might be in middle of some operation or some db connections might be open.
 		Interrupt tells the thread to stop what it is doing now and do something else.
 		
-		If main thread suppose T1 has started one more long running process t2 and if you want to stop this thread t2 then there is no cancel mechanism n 			thread. So we are using Interrupts we can request a thread to stop(t2) by using another thread(t1).
-		When a interrupt is invoked , Interrupt flag will be set.
-		In thread implementation of t1 we have to monitor if the interrupt has been invoked by checking this flag (isInterrupted).If interrupt is received 			then we can either return or throw interrupt exception.Interrupt exception is thrown because other wise we will not know if the thread has exited 			by the normal flow or by interrupt.
-	Use Thread.interrupted() to reset the flag or else the flag will always be true.
-	Interrupt is a polite way of asking a thread to stop becasue we cannot force the thread to stop suddenly because it might be in middle of some operation or some db connections might be open.
-	
+		If main thread suppose T1 has started one more long running process P1 and if you want to stop this thread then there is no cancel mechanism in thread.
+		So we are using Interrupts.
+
+Since P1 is running in a seperate thread how will it know if someone can called the interrupt method?
+
+	when we invoke thread.interrupt(); from the main thread,Interrupt flag will be set.
+	In thread implementation of P1 we have to monitor if the interrupt has been invoked by checking this flag (isInterrupted).
+If interrupt is received then we can either return or throw interrupt exception.Interrupt exception is thrown because other wise we will not know if the thread has exited by the normal flow or by interrupt.
+
+	Use Thread.interrupted() to reset the flag or else the flag will always be true.	
+	When a thread checks for an interrupt by invoking the static method Thread.interrupted, interrupt status is cleared. The non-static isInterrupted method, which is used by one thread to query the interrupt status 	of another, does not change the interrupt status flag.
+
 	Other than long process . JVM throws interrupt in 3 places
 	sleep
 	wait
@@ -886,9 +911,11 @@ Interrupt-
 
 	*Any method that exits by throwing an InterruptedException clears interrupt status when it does so
 
+for clear understanding of interrupt https://www.youtube.com/watch?v=-7ZB-jpaPPo
+
 t1.join() method will make other threads to stops until the current thread completes the execution.(call only after starting the thread or else it wont work)
 
-			Join method will only throw interrupted exception if the current thread that is calling the t.join() gets interrupted
+Join method will only throw interrupted exception if the current thread that is calling the t.join() gets interrupted
 
 			Thread t=new Thread(new ThreadM());
 		
@@ -913,46 +940,50 @@ t1.setName("thejas")- will set the name of thread as thejas
 					 }
 				});
 				t2.start();
+Happens before relationship-Memory writes and other changes from one statement will be visible to another statement.
 
 Synchronized- can be used only on methods or code block
-
-	Happens before relationship-Memory writes and other changes from one statement will be visible to another statement.
 
 	adding "synchronized" will make a block or method thread safe, multiple threads cannot acces the same resource at a time
 
 	Constructors are not synchronized, it will give a syntax error.The JVM ensures that only one thread can invoke a constructor call at a given point in time.
 
-	Every object has a intrinsic lock associated with it , if any thread wants any exclusive acess for a object then it needs to acquire the lock for the object.
+Every object has a intrinsic lock associated with it , if any thread wants any exclusive acess for a object then it needs to acquire the lock for the object.
 
-			Intrinsic lock is also called as monitor
+	Intrinsic lock is also called as monitor
 
-			If one thread has a intrinsic lock another thread cannot have the lock
+	If one thread has a intrinsic lock another thread cannot have the lock
 
-	When we use synchronized keyword will make sure that the method or statement will acquire the lock and while returning it will release the lock, even during 		run time exception the lock will be returned.
+	When we use synchronized keyword will make sure that the method or statement will acquire the lock and while returning it will release the lock, even during run time exception the lock will be returned.
 
 	When a thread releases an intrinsic lock, a happens-before relationship is established between that action and any subsequent acquisition of the same lock.
+
+You might wonder what happens when a static synchronized method is invoked, since a static method is associated with a class, not an object. In this case, the thread acquires the intrinsic lock for the Class object associated with the class. Thus access to class's static fields is controlled by a lock that's distinct from the lock for any instance of the class.
 	
 Reentratnt lock-https://www.youtube.com/watch?v=ahBC69_iyk4
-	
-Reentrant Synchronization- Allowing the thread to access the same lock , in a situation if a synchronized method is calling another synchronized method.
-	Without Reentrant Synchronization the thread itself would block
-	
-	Synchronsed block implicit and Re entrant lock is explicit
-	1) Another significant difference between ReentrantLock and synchronized keyword is fairness. synchronized keyword doesn't support fairness. Any thread can 		acquire lock once released, no preference can be specified, on the other hand you can make ReentrantLock fair by specifying fairness property, while 		creating instance of ReentrantLock. Fairness property provides lock to longest waiting thread, in case of contention.
 
-	2) Second difference between synchronized and Reentrant lock is tryLock() method. ReentrantLock provides convenient tryLock() method, which acquires lock only 		if its available or not held by any other thread. This reduce blocking of thread waiting for lock in Java application.
+	Suppose 4 threads are trying to book a same seat in the movie theater then only 1 thread must be allowed , We can achieven this using Reentratnt lock. 
+	When 1 thread has the lock all the other threads go to waiting state and once the unlock method is called by the thread then again all the waiting threads becomes runnable and again they try to acquire the lock 	and the process repeats
 
-	3) One more worth noting difference between ReentrantLock and synchronized keyword in Java is, ability to interrupt Thread while waiting for Lock. In case of 		synchronized keyword, a thread can be blocked waiting for lock, for an indefinite period of time and there was no way to control that. ReentrantLock 		provides a method called lockInterruptibly(), which can be used to interrupt thread when it is waiting for lock. Similarly tryLock() with timeout can be used 		to timeout if lock is not available in certain time period.
+	Unlike synchronised block we can use Reentratnt.lock(); in 1 method  and Reentratnt.unlock(); in another method
+	
+Reentrant Synchronization-  thread can acquire a lock that it already owns. Allowing a thread to acquire the same lock more than once enables reentrant synchronization.This describes a situation where synchronized code, 			directly or indirectly, invokes a method that also contains synchronized code, and both sets of code use the same lock. Without reentrant synchronization, synchronized code would have to take 			many additional precautions to avoid having a thread cause itself to block.
+	
+	Synchronized block implicit and Re entrant lock is explicit (Implicit means done by the JVM or the tool , not the Programmer)
+	1) Another significant difference between ReentrantLock and synchronized keyword is fairness. synchronized keyword doesn't support fairness. Any thread can acquire lock once released, no preference can be 		specified, on the other hand you can make ReentrantLock fair by specifying fairness property, while creating instance of ReentrantLock. Fairness property provides lock to longest waiting thread, in case of 		conjenction.
+
+	2) Second difference between synchronized and Reentrant lock is tryLock() method. ReentrantLock provides convenient tryLock() method, which acquires lock only 	if its available or not held by any other thread. 	This reduce blocking of thread waiting for lock in Java application.
+
+	3) One more worth noting difference between ReentrantLock and synchronized keyword in Java is, ability to interrupt Thread while waiting for Lock. In case of synchronized keyword, a thread can be blocked waiting 	for lock, for an indefinite period of time and there was no way to control that. ReentrantLock 	provides a method called lockInterruptibly(), which can be used to interrupt thread when it is waiting for lock. 	Similarly tryLock() with timeout can be used to timeout if lock is not available in certain time period.
 
 	4) ReentrantLock also provides convenient method to get List of all threads waiting for lock.
 
+For static methods there will be class level intrinsic lock(test.class)
+For Non static methods there will be object level lock(this)
 
-	For static methods there will be class level intrinsic lock(test.class)
-	For Non static methods there will be object level lock(this)
+When a thread is acessing a synchronized method, other threads cannot access other non static methods of that object, but they can access the static synchronized methods because for static methods it is class level lock.
 
-	When a thread is acessing a synchronized method, other threads cannot access other non static methods of that object, but they can access the static 		synchronized methods because for static methods it is class level lock.
-
-Class level locking-If there are 100 instance of a class then any thread that is acessing a static synchronized method then other 							Threads cannot access the static synchronized methods of that class, but can access non static Synchronized methods.
+Class level locking-If there are 100 instance of a class then any thread that is acessing a static synchronized method then other Threads cannot access the static synchronized methods of that class, but can access non static Synchronized methods.
 
 If we use synchronize as a statement then  other threads can use other synchronized methods only the statments within the block will be synchronized
 
@@ -1018,26 +1049,36 @@ Dead Lock,Starvation and Live Lock
 		Live Lock is a situation in which threads are not blocked but they are busy responding to each other or changing their states because of change in other thread, they are not doing anything useful .
 
 
-	wait()
+Guarded Blocks
+Threads often have to coordinate their actions. The most common coordination idiom is the guarded block. Such a block begins by polling a condition that must be true before the block can proceed. There are a number of steps to follow in order to do this correctly.
 
-						public synchronized void guardedJoy() {
-						    // This guard only loops once for each special event, which may not
-						    // be the event we're waiting for.
-						    while(!joy) {
-						        try {
-						            wait();
-						        } catch (InterruptedException e) {}
-						    }
-						    System.out.println("Joy and efficiency have been achieved!");
-						}
+Suppose, for example guardedJoy is a method that must not proceed until a shared variable joy has been set by another thread. Such a method could, in theory, simply loop until the condition is satisfied, but that loop is wasteful, since it executes continuously while waiting.
 
-			It is a guarded block, suppose u want to execute something after a condition is satisfied , instead of looping and checking for the condition you can use wait().
+public void guardedJoy() {
+    // Simple loop guard. Wastes
+    // processor time. Don't do this!
+    while(!joy) {}
+    System.out.println("Joy has been achieved!");
+}
 
-			Wait will suspend the thread untill another thread has issued a notification that some special event has ocured, it might not be a notificatio which this thread is waiting, now the thread will execute one to check  the condition.
+A more efficient guard invokes Object.wait to suspend the current thread. The invocation of wait does not return until another thread has issued a notification that some special event may have occurred — though not necessarily the event this thread is waiting for:
 
-			 Always invoke wait inside a loop that tests for the condition being waited for. Don't assume that the interrupt was for the particular condition you were waiting for, or that the condition is still true
+public synchronized void guardedJoy() {
+    // This guard only loops once for each special event, which may not
+    // be the event we're waiting for.
+    while(!joy) {
+        try {
+            wait();
+        } catch (InterruptedException e) {}
+    }
+    System.out.println("Joy and efficiency have been achieved!");
+}
 
-			Why is this version of guardedJoy synchronized? Suppose d is the object we're using to invoke wait. When a thread invokes d.wait, it must own the intrinsic lock for d — otherwise an error is thrown. Invoking wait inside a synchronized method is a simple way to acquire the intrinsic lock.
+	Wait will suspend the thread untill another thread has issued a notification that some special event has ocured, it might not be a notificatio which this thread is waiting, now the thread will execute one to check  the condition.
+
+Always invoke wait inside a loop that tests for the condition being waited for. Don't assume that the interrupt was for the particular condition you were waiting for, or that the condition is still true
+
+Why is this version of guardedJoy synchronized? Suppose d is the object we're using to invoke wait. When a thread invokes d.wait, it must own the intrinsic lock for d — otherwise an error is thrown. Invoking wait inside a synchronized method is a simple way to acquire the intrinsic lock.
 
 						public synchronized void guardedJoy() {
 			    // This guard only loops once for each special event, which may not
@@ -1050,10 +1091,10 @@ Dead Lock,Starvation and Live Lock
 			    System.out.println("Joy and efficiency have been achieved!");
 			}
 
-			Wait can also throw InterruptedException
-			when wait is invokd it will release the lock and suspend exectution.At some future time, another thread will acquire the same lock and invoke Object.notifyAll, informing all threads waiting on that lock that something important has happened:
+Wait can also throw InterruptedException
+when wait is invokd it will release the lock and suspend exectution.At some future time, another thread will acquire the same lock and invoke Object.notifyAll, informing all threads waiting on 			that lock that something important has happened:
 
-			There is a second notification method, notify, which wakes up a single thread
+There is a second notification method, notify, which wakes up a single thread
 
 t1.sleep(100) vs t1.wait()
 
@@ -1063,7 +1104,36 @@ t1.sleep(100) vs t1.wait()
 			
 	
 
-	whenever we use wait() and notify() inside the method,the method needs to be synchronized
+	whenever we use wait() and notify() inside the method,the method needs to be synchronized because we wait() for certain condition to be satisfied by the other thread and wait is useful only wiht Notify so for both to work we need the threads to be synchronised other wise it will be a race condition.
+
+			
+		class BlockingQueue {
+			    Queue<String> buffer = new LinkedList<String>();
+			    
+			    public void give(String data) {
+			        buffer.add(data);
+			        notify();  // Since someone may be waiting in take
+			    }
+			    
+			    public String take() throws InterruptedException {
+			        while (buffer.isEmpty())  // Avoid "if" due to spurious wakeups
+			            wait();
+			        return buffer.remove();
+			    }
+		}
+			This is what could potentially happen:
+			
+			A consumer thread calls take() and sees that the buffer.isEmpty().
+			
+			Before the consumer thread goes on to call wait(), a producer thread comes along and invokes a full give(), that is, buffer.add(data); notify();
+			
+			The consumer thread will now call wait() (and miss the notify() that was just called).
+			
+			If unlucky, there will be no more calls to give and the consumer is stuck in wait indefinitely, even though there's data available to be consumed.
+			
+			Once you understand the issue, the solution is obvious: Use synchronized to make sure notify is never called between isEmpty and wait.
+			
+			Without going into details: This synchronization issue is universal. Wait / notify always boils down to communicating something, and inter-thread communication without synchronization is almost 			always broken.
 
 **wait() and notify()
 wait() will causes the current thread to wait untill another thread invokes notify() or notifyAll() method
@@ -1073,13 +1143,15 @@ notifyAll() will wake up that are waiting to access the resource
 Immutable design
 
 		Dont provide setters which modify the fields
-		Make all fields private and final
+		Create all fields private and final. (By making fields private and final, you are making sure that no one will able to change the field value once an object is created)
 
-		Don't allow subclasses to override methods. The simplest way to do this is to declare the class as final. A more sophisticated approach is to make the 			constructor private and construct instances in factory methods.
+		All fields are initialized using a constructor, so values can be assigned at the time of object creation.
+
+		Don't allow subclasses to override methods. The simplest way to do this is to declare the class as final. A more sophisticated approach is to make the 	constructor private and construct instances in 			factory methods.
 
 		If the instance fields include references to mutable objects, don't allow those objects to be changed:
-			Don't provide methods that modify the mutable objects.
-			Don't share references to the mutable objects. Never store references to external, mutable objects passed to the constructor; if necessary, create copies, and store references to the copies. Similarly, create copies of your internal mutable objects when necessary to avoid returning the originals in your methods.
+		Don't provide methods that modify the mutable objects.
+		Don't share references to the mutable objects. Never store references to external, mutable objects passed to the constructor; if necessary, create copies, and store references to the copies. Similarly, 		create copies of your internal mutable objects when necessary to avoid returning the originals in your methods.
 
 ** How to achieve Thread Safe
 
@@ -1227,8 +1299,8 @@ Advanced Thread Concepts
 
 **Inner Class
 
-	1.The scope of a nested class is bounded by the scope of its enclosing class. Thus in above example, class NestedClass does not exist independently of class 		OuterClass.
-	2.A nested class has access to the members, including private members, of the class in which it is nested. However, reverse is not true i.e. the enclosing 	class does not have access to the members of the nested class.
+	1.The scope of a nested class is bounded by the scope of its enclosing class. Thus in above example, class NestedClass does not exist independently of class OuterClass.
+	2.A nested class has access to the members, including private members, of the class in which it is nested. However, reverse is not true i.e. the enclosing class does not have access to the members of the nested class.
 	3.A nested class is also a member of its enclosing class.
 	
 For inner class the class file will be created name will be A$B.class where A is the outer class and B is the inner class
@@ -1287,19 +1359,6 @@ There are 3 types
 	new A().showEmployee();// This does not have a reference and hence it will not utilize the stack memory , it will use only heap
 
 	Since anonymous objects dont have reference , they are eligible for garbage collection
-
-**	What are inner beans
-
-In Spring framework, whenever a bean is used for only one particular property, it’s advise to declare it as an inner bean. And the inner bean is supported both in setter injection ‘property‘ and constructor injection ‘constructor-arg‘. Like Inner classes are the classes which are defined inside the scope of another class. Similarly inner beans are the beans which are defined in the scope of another bean.
-
-<bean id="outer_bean" class="OuterBean">
-      <property name="innerbean">
-           <bean  class="InnerBean"/>
-      </property>
-</bean>
-
-In this case an instance of InnerBean class will be created and wired in to innerbean property of OuterBean class.We should not use Id or name for them and their default scope is prototype
-
 
 ---------------------------------Java Upgrades--------------------------------------------------------------------------------------------
 
@@ -1381,7 +1440,7 @@ This is the implementation, WE donot have to create a new class for the implemen
 
 	Limitations Of Lamnda Functions
 
-	1.we cannot change the value of local variables , because inside the lambda funtion the copy of the local variable is already stored so complier restricts us from changing the value
+	1.Variable used in lambda expression should be final or effectively final
 	2. WE can only implement one method for a reference
 
 
@@ -1397,9 +1456,9 @@ To use stream we need to
 	3.call terminal operartion  on stream
 
 	Intermidiate Operation
-	INtermidiate operations add element processing operations to the stream, but does not start the iteration of the elements.
-	 Intermediate operation is lazy and Terminal operations is not
-	 WE cannot repeat the intermidiate Operation on a stream , it will not have any compitaion error but it will throw exception.
+	Intermidiate operations add element processing operations to the stream, but does not start the iteration of the elements.
+	Intermediate operation is lazy and Terminal operations is not
+	 We cannot repeat the intermidiate Operation on a stream , it will not have any compitaion error but it will throw exception.
 	 we need to call the method using the new stream returned from the previous stream
 
 	When you invoke an intermediate operation on a stream, the operation is not executed immediately. It is executed only when a terminal operation is invoked on that stream
@@ -1478,7 +1537,7 @@ WE can use annotations in lambda expressions
 Consumer<String> consumer=(@Depriceted var i) -> sop("this is the string");
 
 Java 17 
-	we have record classes record Employee (int id,String name) {} we dont have to create a class just this one will is enough. toString, hashcode methods are by 		default implememted for these record classes. The record class will not have setters by default all the fields will be private final
+	we have record classes record Employee (int id,String name) {} we dont have to create a class just this one will is enough. toString, hashcode methods are by default implememted for these record classes. The record class will not have setters by default all the fields will be private final
 	
 **AOP-Aspect Oriented Programming
 It is used to increase the modularity by cross cutting concerns, A cross cutting concern is a concern that effect the whole application
