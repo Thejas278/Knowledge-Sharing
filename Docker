@@ -1,0 +1,58 @@
+difference between docker and virtual machine
+
+
+
+
+	operating system
+
+		Application layer
+		Kernel
+------------------------------
+	Hardware
+
+Operating system has 2 things
+		1.Application Layer-All aplications will recide in the application layer
+		2.Kernel-Kernel will interact with the hardware of the laptop
+
+
+Virtual Machine vs Docker
+Vm will have its own Application layer and Kernel
+Docker will use the Application Layer and kernel of the host 
+
+Vm will have huge size,Docker will be smaller in size 
+Vm will take some minutes to run,Docker will run in milli seconds.
+Vm can be installled in any host
+Docker is mainly written for Linux Operating system hence we cannot in windows os because Windows os has Windows kernel and docker needs Lynux kernel
+
+For windows 
+
+Docker Desktop can be used which allows us to run Lynux based containers on mac and windows as well.It uses Hypervisor layer  with a light weight Linux distribution to privode the Lynux needed Kernel
+
+Docker Image
+	Is a executable artfact similar to a jar file but docker image will have everything to run the application like for java or node applicatio it will have java run time or the node,npm as well.
+
+Docker Container - A running instance of a image is a container, from one image we can run multiple containers
+
+
+In cmd run
+		docker images -to see all the images.
+		docker ps - to see all the containers
+
+Docker hub will have all the official Images.
+	
+	docker pull postgres will pull the latest postgres image
+
+	docker run postgres - will run the image 
+
+	to run the docker image in the background use docker run -d postgres
+
+** We can use docker run directly without using the pull command and docker will automatically download the image for you and run
+
+** To make applications running in a container, we have to bind it to a port ,
+	 we can use docker run -d -p 3044(outside where u want port):80(port of container) postgres.
+	Now the postgres will be acessible in 3044 port
+
+We can even start the previously stopped container.
+
+To build the docker images
+	docker build -t node-app:1.0 filelocation
