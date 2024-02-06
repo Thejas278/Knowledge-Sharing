@@ -1,3 +1,21 @@
+System Design
+
+Vertical Scaling- Buying Big Machine or increasing the power of exisiting machine
+Horizontal Scaling- Buying more machines 
+
+
+vertical Scaling                                              Horizontal Scaling
+
+Load Balancer Not required                               Load Balancer required to redirect the request to different machine
+
+Single Point of failuer									RESILIENT- If one instance failes we can send it to other instance
+
+Data Inconsistency										Consistent- During a transaction its diffucult to maintain Consistency
+
+Scales Well as users increase							Hardware Limit
+
+
+
 Micro-service Design Pattern
 	https://miro.medium.com/max/567/1*CKSVv4WkS8Okx572rX45HA.png
 
