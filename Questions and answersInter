@@ -987,7 +987,7 @@ Class level locking-If there are 100 instance of a class then any thread that is
 
 If we use synchronize as a statement then  other threads can use other synchronized methods only the statments within the block will be synchronized
 
-Atomic Operations
+Atomic Operations https://www.youtube.com/watch?v=WH5UvQJizH0&list=PLhfHPmPYPPRk6yMrcbfafFGSbE2EPK_A6&index=1
 	These are the operations which cannot stop in the middle, either they suceed or they fail,there is no in between.
 
 	Read and write for reference variables and for primitive types (other than float and long) are atomic
