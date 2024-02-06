@@ -1,0 +1,195 @@
+Linux basics commands
+	pwd -> present working directory 
+
+	clear -> will clear the terminal
+	
+
+	ls -> means list, will give the list of folders in the directory
+
+	ls / -> will give the list of folders for root directory
+
+	cd ~ -> will give move to home directory
+
+	cd .. -> go back to 1 step
+
+	cd ../ls -> go back 2 step
+
+	ls -a  -> gives you hidden files
+
+	ls -R will give all the files and folders in subdirectories
+
+	man ls -> will give what any all options are there for ls
+
+	mkdir foldername -> create a folder
+
+	vat test.txt -> will create a file test.txt and open it , we can type anything and then presee :wq it will create a new file
+
+	cat command to create ,open,combine text files
+	cat > test.txt will also create a new file , you can write contents as well
+	cat filename -> will give the contents of the file
+	cat filename1 filename2 -> will display both the files combined
+
+	mv oldname.txt newname.txt -> will rename the file
+
+	rm file name -> will delete the file
+
+	rm -rf directory name -> will delete the directory along with its contents
+
+	cp filename foldername -> will paste the file to another folder
+
+	cp -R folder ./folder1 -> will copy the contents from a folder
+
+	ps -f  ->  will give all the process are running.
+
+	kill -9 pid -> we get pid by running ps -f
+
+	tail -10 filename  -> will give the last 10 lines of a file this is useful for logs
+
+	how to login to another unix machine  -> tellnet or ssh commands
+
+		ssh stands for secure shell
+
+		ssh usernameofremotehost@remotehost
+
+		once you enter the above command it will ask you the password
+
+	copy contents or files from a remote server to my local machine or vice versa
+
+		scp command can be used  ->  secure copy command
+
+	To transfer file from local to remote server
+	scp filename hostname@ipofremoteserver: filetransferdestination
+
+	To transfer file from local to remote server
+	scp  hostname@ipofremoteserver: fileSourcepath filedestinationpathoflocalmachine
+
+		to get hostname it will be present in the terminal of the remote server
+		to get ip of remote server run ->ifconfig -> inside the remote machine
+
+	chmod -> to change the file permission
+
+	grep texttofind filename -> will find the text inside the filename
+
+DevOps
+
+1.Once the deployment is done we need build tools & package managers like Maven or Gradle for java or npm for javascript to buidl the jars
+
+2. Now a days applications are deployed in a container . So we need to have images for our application
+3.Images created for our application needs to be saved in a repository for this we can use Nexus or Docker hub will be used as image repositiry
+
+4. Steps 1,2,3 can be automated using buidl automation tools such as Gitlab,GitHubactions or jenkins
+5.When we run multiple containers it will be difficult to load balance so we need Kubernetes. which is a container orchestrator tool 
+
+Kubernetes
+Open source container orchestrator tool
+
+It offers
+	High availability or no downtime
+	Scalability or high performance-Depending on the number of usage it increase or decreses the pods
+	Disaster recovery- backup and restore
+
+Kubernetes Architecture
+
+	Kubernetes cluster will have atleast one master node and connected to it will have couple of worker nodes
+	Each worker node has a kubelet process running on it, kubelet will help in communicating the the cluster and running our applications in the worker nodes
+
+	Each worker nodes will have many containers deployed on int
+
+	Master node will have certain process which are required for the Kubernetes cluster to work example
+
+		API SERVER- whihch will act as the entry point fot the Kubernetes cluster. This is the end point through which the Kubernetes clients like Kubernetes dashboard or cmd toll etc
+
+		Controll Manager- It will see if any thing needs to be repaired or if the cluster needs to be restarted.
+
+		Scheduler decides on which node the new po should be scheduled
+
+		ETCD key value storage- it any time holds the current state of Kubernetes cluster, all the confoguration data, all the backups which happens is because of the snap shot this storage maintains. It will always have the current status of any Kubernetes component so when the actual state example number of replicas donot match with the desired state a new pod will be created.
+
+
+	Virtual Network - It connects all the nodes to the master node so that all these work as one component
+
+
+	We meed master node because without it we cannot access the worker nodes so in production there will be a backup for master node.
+		More resource is neede to worker node since they do the actual work compared to master node.
+
+
+Components of Kubernetes
+
+
+Pod
+
+	It is the smallest unit of Kubernetes. It is a abstration layer over the container this will help Kubernetes to work with any type of container. It will not interact with the container direclty it will interact with the Kubernetes layer.
+	Each pod will  usually have 1 application, It's like one application per pod 
+		example 
+
+			You will have one pod for db and one pod for your application
+
+
+	Pods will have there own ip which will help them to communicate with other pods like dp pod with the application pod.
+
+	Pods are ephemeral - That means they can die very easily . They die if the pods crash or if the resource to run the application inside the pod is not enough.Now when the new pod is created , it will have the new ip and this will cause inconvinence right so we have to use the serviece component.
+
+
+Service
+	
+	It gives permanent ip address to the pod
+	Lifecycle of pod and service are not connected, Even if the pod dies the ip address will not change .
+
+	The application needs to be acessed through the browser but not our dp serivce so we have internal and external service.
+	By default all service will be internal , we have to configure it to make it external
+
+	Service also works as a loadbalancer
+
+
+Ingress
+
+Displaying the pod ip for the application will look wierd, https://my-app.com right so Ingress will make sure the request goes through it from the browser
+
+
+
+
+ConfigMap
+
+		Usually the database url or any other properties will be in the property file of the application , any change in these properties will end up doing the redeployment which is not efficient so ConfigMap will help us externalise configuration of our application so that for such changes we dont have to rebuild the services.
+
+
+
+Secret
+
+		It is similar to ConfigMap but it will have secret data like username and password which will be stored in base64 format. Kubernetes does not do it for us we have 3rd party tools to achieve this
+
+
+Volumes
+	Think of this component as a external hard drive plugeed in to your cluster
+	It is the storage for our pods, It will attaches a physical storage on a hardrive to your pod. It can be a storage attached to the same worker node or some remote or outside storage attached to your cluster. It can be a cloud storage or onprem storage
+
+
+Deployment
+
+	we need to replicate a pod so that if it dies we can create a new one .
+	Deployment is the blue print for the pods. we donot create pods we create deployments as a user.
+	We can configure scale up and scale down as well in the deployment
+
+	We can replicate the application pod but we cannot replicate the database because database has state and replicating will lead to data inconsitency so we have another component in Kubernetes called Statefulset
+
+
+
+Statefulset
+
+Applications which are stateful like MYSQL,MOndogb should be created using Statefulset and not in deployment.
+Deploying database applications is difficlut in Statefulset so usually DB are often hosted outside the Kubernetes cluster
+
+
+Daemonset
+
+
+Kubernetes Configuration
+
+	All the configuration will pass through Kubernetes API Server like UI,API,CLI to access Kubernetes clusters and these requests have to be in yml format or json format
+
+
+MiniKube
+For local testing we cannot have the entire Kubernetes cluster because of the resource like memory etc so we have minikube which will have one node which will have both master and worker node.
+
+
+Kubectl is a command line tool to interact with the Kubernetes cluster.Out of all the 3 Kubernetes client kubectl is the most powerful one because we can do anything using kubectl
