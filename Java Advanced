@@ -4,14 +4,15 @@ You cannot declare two methods with the same signature even if they have a diffe
 
 
  The compiler automatically provides a no-argument, default constructor for any class without constructors. This default constructor will call the no-argument constructor of the superclass.
-  In this situation, the compiler will complain if the superclass doesn't have a no-argument constructor so you must verify that it does
+  In this situation, the compiler will complain if the superclass doesn't have a no-argument constructor so you must verify that it does.
+If you have a parametrised constructor in your child then even parent class should have no-argument constructor or the same parametrised constructor in the parent and you should explicitly invoke it as the first statement in the child class constructor
 
   The Java runtime environment deletes objects when it determines that they are no longer being used. This process is called garbage collection
   	The garbage collector automatically cleans up unused objects. An object is unused if the program holds no more references to it. You can explicitly drop a reference by setting the variable holding the reference to null
 
   Covariant return, means that when one overrides a method, the return type of the overriding method is allowed to be a subtype of the overridden method's return type.
 
-	To clarify this with an example, a common case is Object.clone() - which is declared to return a type of Object, we can override this method to return the 		Object of the classs type.
+	To clarify this with an example, a common case is Object.clone() - which is declared to return a type of Object, we can override this method to return the Object of the classs type.
 
 Use the most restrictive access level that makes sense for a particular member. Use private unless you have a good reason not to.
 
@@ -32,7 +33,7 @@ non Static block and non static variables defined in the child class in the orde
 
 	child class constructor
 
-this keyword-	Within an instance method or a constructor, this is a reference to the current object — the object whose method or 					constructor is being called. You can refer to any member of the current object from within an instance method or 					a constructor by using this
+this keyword-	Within an instance method or a constructor, this is a reference to the current object — the object whose method or constructor is being called. You can refer to any member of the current object from within an instance method or a constructor by using this
 
 Class
 1.Outer classs can be declared public or package-private(default)
@@ -77,16 +78,13 @@ NESTED classes 2 types
 
 	Inner class have access to all the fields of enclosing class even if they are declared private,
 
-	Inner class cannot have any static members(declare of define)(changed after java 16)
-
 	Nested class can be declared private,protected,Default(package private),public
 
-**An instance of InnerClass can exist only within an instance of OuterClass and has direct access to the methods and fields of its
-		enclosing instance.
+**An instance of InnerClass can exist only within an instance of OuterClass and has direct access to the methods and fields of its enclosing instance.
 
 	If a class is defined inside a class then 
 	Vehicle v =new Vehicle();
-		 Vehicle.Bike b = v.new Bike();
+	Vehicle.Bike b = v.new Bike();
 
 		to access the inner class members
 
@@ -105,22 +103,22 @@ NESTED classes 2 types
 
 				(effective final- a varibale whose value did not change afte the initialization)
 
-						*A local class can have static members provided that they are constant variables. (A constant variable is a variable of primitive type or 	type String that is declared final and initialized with a compile-time constant expression
+*A local class can have static members provided that they are constant variables. (A constant variable is a variable of primitive type or type String that is declared final and initialized with a compile-time constant expression.
 
-		*You cannot have interface inside the block as they are inherently static
+*You cannot have interface inside the block as they are inherently static
 
-						Shadowing 
+	Shadowing 
 
-						1.To refer to the member variable of the inner class FirstLevel, use the keyword this to represent the enclosing scope:
-								System.out.println("this.x = " + this.x);
-						2.Refer to member variables that enclose larger scopes by the class name to which they belong
-								System.out.println("ShadowTest.this.x = " + ShadowTest.this.x);
+		1.To refer to the member variable of the inner class FirstLevel, use the keyword this to represent the enclosing scope:
+			System.out.println("this.x = " + this.x);
+		2.Refer to member variables that enclose larger scopes by the class name to which they belong
+			System.out.println("ShadowTest.this.x = " + ShadowTest.this.x);
 
 
-						Serialization of inner classes, including local and anonymous classes, is strongly discouraged.
+Serialization of inner classes, including local and anonymous classes, is strongly discouraged.
 
-						When the Java compiler compiles certain constructs, such as inner classes, it creates synthetic constructs; these are classes, methods, fields, and other constructs that do not have a corresponding construct in the source code. 
-						 synthetic constructs can vary among different Java compiler implementations, which means that .class files can vary among different implementations as well. Consequently, you may have compatibility issues if you serialize an inner class and then deserialize it with a different JRE implementation.
+When the Java compiler compiles certain constructs, such as inner classes, it creates synthetic constructs; these are classes, methods, fields, and other constructs that do not have a corresponding construct in the source code. 
+synthetic constructs can vary among different Java compiler implementations, which means that .class files can vary among different implementations as well. Consequently, you may have compatibility issues if you serialize an inner class and then deserialize it with a different JRE implementation.
 						
 
 						
@@ -143,8 +141,7 @@ LAMBDA EXPRESSIONS
 
 	Functional Interface cannot have a inner class as well
 	
-
-	Unlike local classes and annonymous classes , Lambda expressions can only access members of enclosing scope which are final or effective final
+Unlike local classes and annonymous classes , Lambda expressions can only access members of enclosing scope which are final or effective final
 	
 	Like local and anonymous classes, lambda expressions can capture variables; they have the same access to local variables of the enclosing scope. However, unlike local and anonymous classes, lambda expressions do not have any shadowing issues 
 
@@ -166,7 +163,7 @@ LAMBDA EXPRESSIONS
 
 	  FUNCTION<T,R>: interface contains the method R apply(T t)
 
-	 SUPPLIER:		The functional interface Supplier contains one method get that takes no arguments and returns an object(use can use it 					to return a new object)
+	 SUPPLIER:The functional interface Supplier contains one method get that takes no arguments and returns an object(use can use it 					to return a new object)
 	 				eg:	() -> { return new HashSet<>(); }
 
 	 BiFunction<T, T, T> merger is a function interface which accepts 2 arguments and produce result, has method apply
@@ -240,10 +237,11 @@ Streams
 
  For general purpose reduction use stream.reduce method
 
- reduce is used for immutable reduction  and collect is used as mutable reduction
+ reduce is used for immutable reduction  and collect is used as mutable reduction 
+	that means-if you have immutable values such as ints, doubles, Strings then normal reduction works just fine. However, if you have to reduce your values into say a List (mutable data structure) then you need to 			use mutable reduction with the collect method.
 
- 	Keep in mind that streams implementation for reduce are same for reduce and collect so we are providing intial value
- 	For parallel streams they perform fork joint source will be split into individual sub tasks(roughly 4* numbe rof cores).
+ Keep in mind that streams implementation for reduce are same for reduce and collect so we are providing intial value
+ 	For parallel streams they perform fork joint source will be split into individual sub tasks(roughly 4* number of cores).
 
 			 		eg
 			 			Integer totalAgeReduce = roster
@@ -252,11 +250,13 @@ Streams
 			   .reduce(
 			       0,
 			       (a, b) -> a + b);
+or
 
+ Optional max=Stream.of(1,4,3,5,21,14).reduce(Integer::max);
 
 	The reduce operation in this example takes two arguments:
 
-	identity: The identity element is both the initial value of the reduction and the default result if there are no elements in the stream. In this example, the 		identity element is 0; this is the initial value of the sum of ages and the default value if no members exist in the collection roster.
+	identity: The identity element is both the initial value of the reduction and the default result if there are no elements in the stream. In this example, the identity element is 0; this is the initial value of the sum of ages and the default value if no members exist in the collection roster.
 
 	accumulator: The accumulator function takes two parameters: a partial result of the reduction (in this example, the sum of all processed integers so far) and 		the next element of the stream (in this example, an integer). It returns a new partial result. In this example, the accumulator function is a lambda 		expression that adds two Integer values and returns an Integer value:
 
@@ -266,22 +266,18 @@ Streams
 	The reduce operation always returns a new value. However, the accumulator function also returns a new value every time it processes an element of a stream
 
 
-			There is one more reduce operation with 3 arguments- It has a intial value,accumulator function and Combiner funtion
+	There is one more reduce operation with 3 arguments- It has a intial value,accumulator function and Combiner funtion
 				The combiner function is usually used for parallel streams, for combining the results of each streams running in parallel
 				Even if we are using sequential stream we cannot pass null as third argument.we will get null pointer exception
 
 Java complier internally will replace string contacination(s1+s2+s3+s4) wih StringBuilder if there are more than 2 concatination
 		
 collect is reduction operation for mutuable objects,eg if we use reduce on the string which is immutable , a new string gets created which will effect the performace so we are usig collect.
-		Collector is a interface and Collectors is a implementation for Collector which has methods like Collectors.toList etc.
-
-		
+		Collector is a interface and Collectors is a implementation for Collector which has methods like Collectors.toList etc.		
 
  Differences Between Aggregate Operations and Iterators
-
-
- Aggregate operations use internal Iteration,they do not contain a method like next to instruct them to process the next element of the collection. With internal delegation, your application determines what collection it iterates, but the JDK determines how to iterate the collection. 
-With external iteration, your application determines both what collection it iterates and how it iterates it. 
+	Aggregate operations use internal Iteration,they do not contain a method like next to instruct them to process the next element of the collection. With internal delegation, your application determines what 		collection it iterates, but the JDK determines how to iterate the collection. 
+	With external iteration, your application determines both what collection it iterates and how it iterates it. 
 
 However, external iteration can only iterate over the elements of a collection sequentially. 
 Internal iteration does not have this limitation. It can more easily take advantage of parallel computing.
@@ -301,9 +297,9 @@ For-each loop
 
 		This is a methods of Iterable interface. All the Collection interfaces extends Iterable Interface
 
-		The for-each construct is also applicable to arrays, where it hides the index variable rather than the iterator. The following method returns the sum of the values in an int array:
-
-		The for-each loop hides the iterator, so you cannot call remove. Therefore, the for-each loop is not usable for filtering. Similarly it is not usable for loops where you need to replace elements in a list or array as you traverse it. Finally, it is not usable for loops that must iterate over multiple collections in parallel. These shortcomings were known by the designers, who made a conscious decision to go with a clean, simple construct that would cover the great majority of cases.
+		The for-each loop hides the iterator, so you cannot call remove. Therefore, the for-each loop is not usable for filtering.
+		It is not usable for loops where you need to replace elements in a list or array as you traverse it. 
+		Finally, it is not usable for loops that must iterate over multiple collections in parallel. 
 
 Iterable Interface
 
@@ -349,7 +345,9 @@ Copying Object in java
 						o1.i=o.i
 	3.Cloning
 
-			By Implementing Clonable Interface, we can achieve deep copying
+			By Implementing Clonable Interface and by overriding a public void clone method
+Note that the super.clone() call returns a shallow copy of an object, but we set deep copies of mutable fields manually, so the result is correct
+We can also achieve deep cpoying using a cpoy constructor.
 
 
 Serilization is a concept where we can maintian the state of an object, we can either convert the state of object into file supported form or network supported form
@@ -374,17 +372,14 @@ Custom Serialization
 
 					public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException;
 
-
-
-
-
-				The key difference here is how we handle the serialization process. When a class implements the java.io.Serializable interface, the JVM takes full responsibility for serializing the class instance. In case of Externalizable, it's the programmer who should take care of the whole serialization and also deserialization process.
+	The key difference here is how we handle the serialization process. When a class implements the java.io.Serializable interface, the JVM takes full responsibility for serializing the class 				instance. In case of Externalizable, it's the programmer who should take care of the whole serialization and also deserialization process.
 
 				Use Case
 				If we need to serialize the entire object, the Serializable interface is a better fit. On the other hand, for custom serialization, we can control the process using Externalizable.
 
 				Performance
-				The java.io.Serializable interface uses reflection and metadata which causes relatively slow performance. By comparison, the Externalizable interface gives you full control over the serialization process.
+				The java.io.Serializable interface uses reflection and metadata which causes relatively slow performance. 
+				By comparison, the Externalizable interface gives you full control over the serialization process.
 
 				Reading Order
 				While using Externalizable, it's mandatory to read all the field states in the exact order as they were written. Otherwise, we'll get an exception.
@@ -392,9 +387,11 @@ Custom Serialization
 				For example, if we change the reading order of the code and name properties in the Country class, a java.io.EOFException will be thrown.
 
 				Meanwhile, the Serializable interface doesn't have that requirement.
+	Externalisable needs a default constructor ,Java serilisation does not require this
+	Performance wise Externalisable is better
 
-				Custom Serialization
-				We can achieve custom serialization with the Serializable interface by marking the field with transient keyword. The JVM won't serialize the particular field but it'll add up the field to file storage with the default value. That's why it's a good practice to use Externalizable in case of custom serialization.
+Custom Serialization
+		We can achieve custom serialization with the Serializable interface by marking the field with transient keyword. The JVM won't serialize the particular field but it'll add up the field to file storage with the default value. That's why it's a good practice to use Externalizable in case of custom serialization.
 
 
 	Gson and Jackson are the 2 libraries to convert a object to and from json
