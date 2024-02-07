@@ -16,6 +16,46 @@ JVM is a virtul machine which is a interpretor and it is responsible for line by
  JVM is also platform dependent and provides core java functions like memory management, garbage collection, security etc.
  WE need to have different jvm for different operating system
 
+Memory leak
+	One of the core benefits of Java is the automated memory management with the help of the built-in Garbage Collector (or GC for short). The GC implicitly takes care of allocating and freeing up memory, and thus 	is capable of handling the majority of memory leak issues
+
+	A Memory Leak is a situation where there are objects present in the heap that are no longer used, but the garbage collector is unable to remove them from memory
+	unreferenced objects are removed by the garbage collector but the referenced ones are not removed
+
+	Static Variables can cause memory leak
+		Static variables cannot be elected for garbage collection while the class is loaded. They can be collected when the respective class loader (that was responsible for loading this class) is itself 			collected for garbage.
+
+		A class or interface may be unloaded if and only if its defining class loader may be reclaimed by the garbage collector [...] Classes and interfaces loaded by the bootstrap loader may not be unloaded.
+
+	Database connections,input streams, and session objects if not closed with finaly blocks can cause memory leak
+
+	ThreadLocal
+			Memory Leaks with ThreadLocals
+
+		ThreadLocals are supposed to be garbage collected once the holding thread is no longer alive. But the problem arises when we use ThreadLocals along with modern application servers.
+		
+		Modern application servers use a pool of threads to process requests, instead of creating new ones (for example, the Executor in the case of Apache Tomcat). Moreover, they also use a separate classloader.
+		
+		Since Thread Pools in application servers work on the concept of thread reuse, they’re never garbage collected; instead, they’re reused to serve another request.
+		
+		If any class creates a ThreadLocal variable, but doesn’t explicitly remove it, then a copy of that object will remain with the worker Thread even after the web application is stopped, thus preventing the 		object from being garbage collected.
+		
+		How to Prevent It?
+		
+		It’s good practice to clean-up ThreadLocals when we’re no longer using them. ThreadLocals provide the remove() method, which removes the current thread’s value for this variable.
+		Don’t use ThreadLocal.set(null) to clear the value. It doesn’t actually clear the value, but will instead look up the Map associated with the current thread and set the key-value pair as the current 			thread and null, respectively.
+		It’s best to consider ThreadLocal a resource that we need to close in a finally block, even in the case of an exception::
+		 
+		
+		try {
+		    threadLocal.set(System.nanoTime());
+		    //... further processing
+		}
+		finally {
+		    threadLocal.remove();
+		}
+
+
  Members of the class-fields,methods and inner classes
 
  variables decalred using final keyword can only be initialized in a constructor.
