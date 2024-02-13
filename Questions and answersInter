@@ -54,7 +54,18 @@ Memory leak
 		finally {
 		    threadLocal.remove();
 		}
-
+ThreadPool https://www.youtube.com/watch?v=sIkG0X4fqs4
+	If you want to execute 1000 tasks then you can use ExecutorService to get the fixed threads say 10 threads which can be re used to complete the 1000 tasks all the tasks will be moved to a thread safe ques to 		that the can be picked for our thread, usually Blockingqueue is used because it is thread safe
+	Poll size - If we have cpu intensive operation then we should use number of threads =number of cpu because at a time we can use only 4 threads because each kava thread =1 os thread
+			int coreCount=Runtime.getRunTime().availableProcessors() will give the processor count and that can be set as the pool size.
+		    If it is the Io operation or get data from database then once the request is sent , the threads goes into wait state so now we can re use these threads so in this case we can set the threadpool size 			to some big number say 100
+			Too many threads will have more memory consumption also if our server is running other applications then we cannot assume that all 100 threads will be used for our operation
+	Type of ThreadPool
+	1.FixedThreadPool
+	2.CachedThread pool- It will have one synchronous queue whcih will store one task and it will see if any threads are avilable if not it will create a new thread ,add it to the pool
+		and execite the task in this case if we do not specify the threadpool size so anynumner of threads can be created if there are no free threads availabel and this service will also kill the thread if the thread is idal for 60 seconds to save the memory
+	2.ScheduledThreadPool
+	3.SingleThreadPool
 
  Members of the class-fields,methods and inner classes
 
@@ -111,7 +122,7 @@ but String s3=new String("thejas")// Object is created in heap so s1!=s3
 		Default is also called as package private
 		Protected =Can be acessed by subclass or package private
 
-		For overriding the return type does not matter only methodname and argumentlist matter
+		For overriding the return type does not matter only methodname and argument list matter
 
 Constructor is a block with no return type, It has same name as the class, It is not a member of a class so its not inherited,It can only be invoked.
 
@@ -626,8 +637,8 @@ Read more: https://javarevisited.blogspot.com/2015/10/how-to-implement-binary-se
 
 **ArrayList vs Linked List
 
-	ArrayList uses dynamice resiazable array
-	LinkedList uses doubly linked List
+	ArrayList uses dynamice resiazable array, ArrayList is faster to retrival of data
+	LinkedList uses doubly linked List, LinkedList is faster for manupulation
 
 Seralization and Deserialization
 
