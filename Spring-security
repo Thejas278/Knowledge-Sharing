@@ -2,9 +2,9 @@ Spring Security AutoConfiguration
 		
 Sprig Security workflow
 
-	The client sends a request to the application, and the container creates a FilterChain which contains the Filters and Servlet that should 			process the HttpServletRequest based on the path of the request URI.
+	The client sends a request to the application, and the container creates a FilterChain which contains the Filters and Servlet that should process the HttpServletRequest based on the path of the request URI.
 	
-	In a Spring MVC application the Servlet is an instance of DispatcherServlet. At most one Servlet can handle a single HttpServletRequest and 			HttpServletResponse. However, more than one Filter can be used to:
+	In a Spring MVC application the Servlet is an instance of DispatcherServlet. At most one Servlet can handle a single HttpServletRequest and HttpServletResponse. However, more than one Filter can be used to:
 
 			a:Prevent downstream Filters or the Servlet from being invoked. In this instance the Filter will typically write the HttpServletResponse.
 
@@ -12,42 +12,63 @@ Sprig Security workflow
 
 DelegatingFilterProxy
 	
-	Spring provides a Filter implementation named DelegatingFilterProxy that allows bridging between the Servlet container’s lifecycle and Spring’s 		ApplicationContext. 
+	Spring provides a Filter implementation named DelegatingFilterProxy that allows bridging between the Servlet container’s lifecycle and Spring’s ApplicationContext. 
 	
-	The Servlet container allows registering Filters using its own standards, but it is not aware of Spring defined Beans. DelegatingFilterProxy can be registered 		via standard Servlet container mechanisms, but delegate all the work to a Spring Bean that implements Filter.
+	The Servlet container allows registering Filters using its own standards, but it is not aware of Spring defined Beans. DelegatingFilterProxy can be registered 	via standard Servlet container mechanisms, but delegate all the work to a Spring Bean that implements Filter.
 	For non spring boot application we have to add the DelegatingFilterProxy manually in the web.xml with url patter as /**.
 	
-	When we add the spring security dependency there are around 4-5 spring security fileters and The delegating filter proxy will delegate the request to these 		security filters.Among the 4-5 filters one the filter is a authorisation filter
+	When we add the spring security dependency there are around 4-5 spring security fileters and The delegating filter proxy will delegate the request to these security filters.Among the 4-5 filters one the filter is a authorisation filter
 	
 FilterChainProxy
 	Spring Security’s Servlet support is contained within FilterChainProxy.
 	FilterChainProxy is a special Filter provided by Spring Security that allows delegating to many Filter instances through SecurityFilterChain.
 	Since FilterChainProxy is a Bean, it is typically wrapped in a DelegatingFilterProxy.
 	
-SecurityFilterChain is used by FilterChainProxy to determine which Spring Security Filter instances should be invoked for the current request.
+SecurityFilterChain is used by FilterChainProxy to determine which Spring Security Filter instances should be invoked for the current request.We can have multiple SecurityFilterChains
 
-AuthenticationManager is responsible for authentication in spring security app . It has a method called autnenticate().
-AuthenticationManagerBulilder class is responsible to get the AuthenticationManager.
-WebSecurityConfigureAdapter is a class which provides us the AuthenticationManagerBulilder instance , we have to extend this class to get AuthenticationManagerBulilder so that we can add our custom logic
+SecurityContextHolder - The SecurityContextHolder is where Spring Security stores the details of who is authenticated.
 
-Authorization
-	For authorization also we use the same WebSecurityConfigureAdapter where we have to override public void configure(HttpSecurity http) method 
-	* Order for the ant matcher patterns will be most restrictive to least restrictive.
+SecurityContext - is obtained from the SecurityContextHolder and contains the Authentication of the currently authenticated user.
+
+Authentication - Can be the input to AuthenticationManager to provide the credentials a user has provided to authenticate or the current user from the SecurityContext.
+
+GrantedAuthority - An authority that is granted to the principal on the Authentication (i.e. roles, scopes, etc.)
+
+AuthenticationManager - the API that defines how Spring Security’s Filters perform authentication. It acts as a bridge between Specific AuthenticationProvider and spring security filters
+
+ProviderManager - the most common implementation of AuthenticationManager.
+
+AuthenticationProvider - used by ProviderManager to perform a specific type of authentication.
+
+Request Credentials with AuthenticationEntryPoint - used for requesting credentials from a client (i.e. redirecting to a log in page, sending a WWW-Authenticate response, etc.)
+
+AbstractAuthenticationProcessingFilter - a base Filter used for authentication. This also gives a good idea of the high level flow of authentication and how pieces work together.
+
 	
 	There is a Interface AuthenticationProvider which has some implementations which do the actual AUthentication, It has a method called authenticate().
 	
-Authenticaition Objetc is like a DTO which will have crediatial and once the crediantial is valiedate the same Authentication object will return the principal user info as well.
+Authenticaition Objetc is like a DTO which will have crediatial and once the crediantial is validate the same Authentication object will return the principal user info as well.
 
 This Authentication object will be stored in the security context which will be saved in the local thread so that we can get the info about current logged in user any where.
 
 Also there is one more spring security filter which will store the principal object in the session so that we dont have to authenticate for every request and it will take this object and it will save it for thread local for every request.
 
 
+Spring security flow
+	When we add the spring decurity dependency, when the user sends any request, the delegating filter proxy will delegate the request to FilterChainProxy,
+	FilterChainProxy will send the request to a filter called SecurityFilterChain which can delegate the request to series of filters one of the filter is AuthenticationFilter,from here the request is sent to 		AutenticationManager which is a interface which has a most common used implementation called ProviderManager
+	ProviderManager will find the appropriate provider implementation and then we have to Implement UserDetailsService which will give have the method load by username
+	We have to extend the User class privoded by the spring
+	Once the authentication is performed , we get the Authentication Object which will have the principal,
+	Once the filter receives this Authentication object it will be set in the spring security context as principal 
+	This Authentication object will be stored in the security context which will be saved in the local thread so that we can get the info about current logged in user any where.
+
+
 Read the  document for proper understanding : https://docs.spring.io/spring-security/reference/servlet/getting-started.html
 		
 		Spring Boot automatically:
 
-			Enables Spring Security’s default configuration, which creates a servlet Filter as a bean named springSecurityFilterChain. This bean is 				responsible for all the security (protecting the application URLs, validating submitted username and passwords, redirecting to the log 					in form, and so on) within your application.
+					Enables Spring Security’s default configuration, which creates a servlet Filter as a bean named SecurityFilterChain. This bean is responsible for all the security (protecting 					the application URLs, validating submitted username and passwords, redirecting to the log in form, and so on) within your application.
 
 				Creates a UserDetailsService bean with a username of user and a randomly generated password that is logged to the console.
 
