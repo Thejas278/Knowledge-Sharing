@@ -121,9 +121,9 @@ API Composition
 		- the application performs the join rather than the database. For example, a service (or the API gateway) could retrieve a customer and their orders by first retrieving the customer from the customer 		service and then querying the order service to return the customer’s most recent orders.
 
 Command Query Responsibility Segregation (CQRS) - 
-			Imagine we have a flipkart application where during some sale offer there will be huge load on the application 				but number of read operations will be more than the right operation so if both read and write operations are on 			the same machine then it might impact the perfromance
-			so we are segregating the read and write operations into different services and each service will have its own 				database
-			Whenever there is a command request ie to add to upodate the record we send a event to query service so that any 			change in this db will be reflected in the query db as well we can use kafka for event streaming
+			Imagine we have a flipkart application where during some sale offer there will be huge load on the application 	but number of read operations will be more than the right operation so if both read and write operations are on 			the same machine then it might impact the perfromance
+			so we are segregating the read and write operations into different services and each service will have its own 	database
+			Whenever there is a command request ie to add to upodate the record we send a event to query service so that any change in this db will be reflected in the query db as well we can use kafka for event streaming
 
 Saga Pattern
 			It is used for distributed transaction when multiple services have seperate db and each have to update n their 				own db and if any one transaction fails then all the other transactions will also roll back
