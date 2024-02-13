@@ -18,10 +18,10 @@ Key Concepts
 					Spring APO allows us to introduce a new interface and its implementation for any advised object.
 
 
-		Target object: object being advised by one or more aspects. Also referred to as the advised object. Since Spring AOP is 				implemented using runtime proxies, this object will always be a proxied object.
+		Target object: object being advised by one or more aspects. Also referred to as the advised object. Since Spring AOP is implemented using runtime proxies, this object will always be a proxied object.
 
 
-		AOP proxy: an object created by the AOP framework in order to implement the aspect contracts (advise method executions and 				so on). In the Spring Framework, an AOP proxy will be a JDK dynamic proxy or a CGLIB proxy.
+		AOP proxy: an object created by the AOP framework in order to implement the aspect contracts (advise method executions and so on). In the Spring Framework, an AOP proxy will be a JDK dynamic proxy or a CGLIB proxy.
 
 		Weaving: Process of linking a aspect into the application code. 
 
@@ -37,7 +37,7 @@ This can be done at compile time (using the AspectJ compiler, for example), load
 												or
 					 @Before("execution(* com.xyz.myapp.dao.*.*(..))")
 
-			2.After returning advice: Advice to be executed after a join point completes normally: for example, if a method 		returns without throwing an exception.
+			2.After returning advice: Advice to be executed after a join point completes normally: for example, if a method returns without throwing an exception.
 
 									@AfterReturning("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
 
@@ -57,7 +57,7 @@ This can be done at compile time (using the AspectJ compiler, for example), load
 
 									@AfterThrowing("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
 
-			4.After (finally) advice: Advice to be executed regardless of the means by which a join point exits (normal or 									exceptional return).
+			4.After (finally) advice: Advice to be executed regardless of the means by which a join point exits (normal or 	exceptional return).
 
 									After (finally) advice runs however a matched method execution exits. It is declared using the @After annotation. 
 
@@ -65,7 +65,7 @@ This can be done at compile time (using the AspectJ compiler, for example), load
 
 											@After("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
 
-	**		5.Around advice: Advice that surrounds a join point such as a method invocation. This is the most powerful kind of 					advice. Around advice can perform custom behavior before and after the method invocation. It is also 							responsible for choosing whether to proceed to the join point or to shortcut the advised method 						execution by returning its own return value or throwing an exception.
+	**		5.Around advice: Advice that surrounds a join point such as a method invocation. This is the most powerful kind of advice. Around advice can perform custom behavior before and after the method invocation. It is also 	responsible for choosing whether to proceed to the join point or to shortcut the advised method execution by returning its own return value or throwing an exception.
 
 
 					Around advice runs "around" a matched method execution. It has the opportunity to do work both before and after the method executes, and to determine when, how, and even if, the method actually gets to execute at all. Around advice is often used if you need to share state before and after a method execution in a thread-safe manner (starting and stopping a timer for example). 
