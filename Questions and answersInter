@@ -122,7 +122,7 @@ but String s3=new String("thejas")// Object is created in heap so s1!=s3
 		Default is also called as package private
 		Protected =Can be acessed by subclass or package private
 
-		For overriding the return type does not matter only methodname and argument list matter
+		For overloading the return type does not matter only methodname and argument list matter
 
 Constructor is a block with no return type, It has same name as the class, It is not a member of a class so its not inherited,It can only be invoked.
 
@@ -318,7 +318,7 @@ Interface
 	comparable is used to  one field
 
 
-	Comparator- Actual class is not effected, Implemented in the seperate class
+	, Implemented in the seperComparator- Actual class is not effectedate class
 	comparable- Actual class is effected
 
 	Comparable is used to default sorting,Comparator is used for custom sorting
