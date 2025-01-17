@@ -66,7 +66,7 @@ NESTED classes 2 types
 
 	We can access the non static members of a static class by creating the object of a static class
 
-	Static Nested class do not have access to non static members of the outer class.They can acess them by creating objects
+	Static Nested class do not have access to non static members of the outer class.They can access them by creating objects
 
 2.NON STATIC CLASS OR INNER CLASS		
 
@@ -163,7 +163,7 @@ Unlike local classes and annonymous classes , Lambda expressions can only access
 
 	  FUNCTION<T,R>: interface contains the method R apply(T t)
 
-	 SUPPLIER:The functional interface Supplier contains one method get that takes no arguments and returns an object(use can use it 					to return a new object)
+	 SUPPLIER:The functional interface Supplier contains one method get that takes no arguments and returns an object(use can use it to return a new object)
 	 				eg:	() -> { return new HashSet<>(); }
 
 	 BiFunction<T, T, T> merger is a function interface which accepts 2 arguments and produce result, has method apply
@@ -275,23 +275,82 @@ Java complier internally will replace string contacination(s1+s2+s3+s4) wih Stri
 collect is reduction operation for mutuable objects,eg if we use reduce on the string which is immutable , a new string gets created which will effect the performace so we are usig collect.
 		Collector is a interface and Collectors is a implementation for Collector which has methods like Collectors.toList etc.		
 
- Differences Between Aggregate Operations and Iterators
-	Aggregate operations use internal Iteration,they do not contain a method like next to instruct them to process the next element of the collection. With internal delegation, your application determines what 		collection it iterates, but the JDK determines how to iterate the collection. 
-	With external iteration, your application determines both what collection it iterates and how it iterates it. 
+reduce is a "fold" operation, it applies a binary operator to each element in the stream where the first argument to the operator is the return value of the previous application and the second argument is the current stream element.
 
-However, external iteration can only iterate over the elements of a collection sequentially. 
-Internal iteration does not have this limitation. It can more easily take advantage of parallel computing.
+collect is an aggregation operation where a "collection" is created and each element is "added" to that collection. Collections in different parts of the stream are then added together.
+
+			Let the stream be a <- b <- c <- d
+
+			In reduction,
+
+			you will have ((a # b) # c) # d
+
+			where # is that interesting operation that you would like to do.
+
+			In collection,
+
+			your collector will have some kind of collecting structure K.
+
+			K consumes a. K then consumes b. K then consumes c. K then consumes d.
+
+			At the end, you ask K what the final result is.
+
+			K then gives it to you.
+
+ Differences Between Streams and Iterators
+
+	However, external iteration can only iterate over the elements of a collection sequentially. 
+	Internal iteration does not have this limitation. It can more easily take advantage of parallel computing.
+
+	Talking about streams, in general, is a vast topic. However, I will derive about why you should favour the streams API over Iterators.
+
+	First and foremost, with the stream API, we can now program at a much higher level of abstraction, just like SQL queries, i.e. we express what we want and let the library handle the rest.
+
+	Second, stream operations perform their iterations behind the scenes (internal iteration) , this means the processing of the data could be done in parallel or in a different order that may be more optimized.
+
+	On the other hand, if you decide to explicitly iterate over your collection to perform some computation whether that's with an Iterator or the syntactic sugar for an iterator (the enhanced for loop) then you're explicitly taking the items in the collection and processing them one by one thus it's inherently serial.
+
+	Aggregate operations use internal Iteration,they do not contain a method like next to instruct them to process the next element of the collection. With internal delegation, your application determines what collection it iterates, but the JDK determines how to iterate the collection. With external iteration, your application determines both what collection it iterates and how it iterates it. 
+
+	Using iterators instead of the stream API also means a lot more work has to be done when you want to go parallel or find different ways to optimise your program.
+
+	Yet, this also means that you're spending much more time dealing with the low-level details instead of just focusing on what you want your program to do.
+
+Also mentioned in the Java-8 in Action book:
+
+	The internal iteration in the Streams library can automatically choose a data representation and implementation of parallelism to match your hardware. By contrast, once you’ve chosen external iteration by writing for-each, then you’ve essentially committed to self-manage any parallelism. (Self-managing in practice means either “one fine day we’ll parallelize this” or “starting the long and arduous battle involving tasks and synchronized”.)
+
+	Java 8 needed an interface like Collection but without iterators, ergo Stream!
+
+	Essentially, with the stream API, your life is much easier in many ways but what I find most useful is the fact that you can now put more time into focusing on what you want your code to do and at the same time you can decide to go parallel without dealing with the low-level stuff.
+
+	This is of course not saying to always utilise streams wherever/whenever possible. Rather it's stating the benefits of using streams over Iterators.
+
+	There are certain places where it will be more appropriate to use Iterators rather than the stream API and vice versa. So choose wisely which approach to proceed with in terms of processing data in collections.
 
 They process elements from a stream: Aggregate operations process elements from a stream, not directly from a collection. Consequently, they are also called stream operations.
 
 They support behavior as parameters: You can specify lambda expressions as parameters for most aggregate operations. This enables you to customize the behavior of a particular aggregate operation.
 
 
-Streams vs normal iterators
+Collection.forEach() uses the collection iterator and the processing order is defined
 
-			Collection.forEach() uses the collection iterator and the processing order is defined
+Collection.stream().forEach() ignores the iretaror and take the element one by one hence the processing order is not defined.
 
-			Collection.stream().forEach() ignores the iretaror and take the element one by one hence the processing order is not defined.
+Iterable vs Iterator
+
+	An Iterable is a simple representation of a series of elements that can be iterated over. It does not have any iteration state such as a "current element". Instead, it has one method that produces an Iterator.
+
+	An Iterator is the object with iteration state. It lets you check if it has more elements using hasNext() and move to the next element (if any) using next().
+
+	Typically, an Iterable should be able to produce any number of valid Iterators.
+
+	An implementation of Iterable is one that provides an Iterator of itself:
+
+		public interface Iterable<T>
+		{
+		    Iterator<T> iterator();
+		}
 
 For-each loop
 
@@ -333,7 +392,7 @@ Copying Object in java
 						Obj o=new Obj();
 						0.i="test";
 
-						Obj o1=o// shallow cpoying
+						Obj o1=o// shallow cpoying here we are not creating 2 objects instead we are craeting 2 references
 	2.Deep Copying
 
 					New Object is created and all the values of the actual object are copied into it
@@ -347,7 +406,7 @@ Copying Object in java
 
 			By Implementing Clonable Interface and by overriding a public void clone method
 Note that the super.clone() call returns a shallow copy of an object, but we set deep copies of mutable fields manually, so the result is correct
-We can also achieve deep cpoying using a cpoy constructor.
+We can also achieve deep copying using a copy constructor.
 
 
 Serilization is a concept where we can maintian the state of an object, we can either convert the state of object into file supported form or network supported form
@@ -372,7 +431,7 @@ Custom Serialization
 
 					public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException;
 
-	The key difference here is how we handle the serialization process. When a class implements the java.io.Serializable interface, the JVM takes full responsibility for serializing the class 				instance. In case of Externalizable, it's the programmer who should take care of the whole serialization and also deserialization process.
+	The key difference here is how we handle the serialization process. When a class implements the java.io.Serializable interface, the JVM takes full responsibility for serializing the class instance. In case of Externalizable, it's the programmer who should take care of the whole serialization and also deserialization process.
 
 				Use Case
 				If we need to serialize the entire object, the Serializable interface is a better fit. On the other hand, for custom serialization, we can control the process using Externalizable.
