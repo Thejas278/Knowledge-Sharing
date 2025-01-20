@@ -1,4 +1,4 @@
-Using core java we can develp desktop applications or standalone applications
+ Using core java we can develp desktop applications or standalone applications
 Using advanced java we can develop web applications- applications which provide service in web
 
 Advanced Java has
@@ -54,18 +54,19 @@ They can also be used for caching some contents
 
 Questions and answers
 
+TCP-Transport Control Protool is like a telephone line and germen and french are the protcols like HTTP,FTP
+	Webserver and webclients use HTTP protocol
+
 Difference between web server and application server
 
-	Web Server is mostly designed to serve static content, though most Web Servers have plugins to support scripting languages like Perl, PHP, ASP, JSP etc. through which these servers can generate dynamic HTTP content.
-
-	TCP-Transport Control Protool is like a telephone line and germen and french are the protcols like HTTP,FTP
-	Webserver and webclients use HTTP protocol
+	Web Server is mostly designed to serve static content, though most Web Servers have plugins to support scripting languages like Perl, PHP, ASP, JSP etc. through which these servers can generate dynamic HTTP content.	
 
 	Webservers will be listening to a port which is assgned to them by the operating system, when ever that port gets any request , it will be redirected to that web server
 
 	Most of the application servers have Web Server as integral part of them, that means App Server can do whatever Web Server is capable of. Additionally App Server have components and features to support Application level services such as Connection Pooling, Object Pooling, Transaction Support, Messaging services etc.
 	
 	As web servers are well suited for static content and app servers for dynamic content, most of the production environments have web server acting as reverse proxy to app server. That means while servicing a page request, static contents (such as images/Static HTML) are served by web server that interprets the request. Using some kind of filtering technique (mostly extension of requested resource) web server identifies dynamic content request and transparently forwards to app server
+
 	Example of such configuration is Apache Tomcat HTTP Server and Oracle (formerly BEA) WebLogic Server. Apache Tomcat HTTP Server is Web Server and Oracle WebLogic is Application Server.
 
 Webserver support web applications
@@ -73,9 +74,7 @@ Application server supports enterprise level application.
 
 	WebServers support static contents like Servlets,JSP,HTML it does not support EJB's
 
-	Every Application server will have webserver but if the provided web server is not enough then we need application server.
-
-
+	Every Application server will have webserver but if the provided web server is not enough then we need application server. 
 
 
 How a web server works
@@ -159,16 +158,16 @@ There are 2 ways to call a servlet from another servlet
 
 JSP-Java Server Pages
 	we can write java code inside html
-	Internally every jasp page is converted into a servlet with class name same as the jsp file name and what ever we have defined inside the sctipelt tag will go inside the service method(<%  java code %>)
+	Internally every jsp page is converted into a servlet with class name same as the jsp file name and what ever we have defined inside the scriplet tag will go inside the service method(<%  java code %>)
 <%! variables if you wnat to use outside the service method %>- This is called declaration tag
 
 <%@ import="java.util.Date" %>- Directive tag
 
 SpringBootApplication.run(Currentclassname.class,args);
 The return type of above call is ConfigurableApplicationContext context
-we can do context.getbean(classname);- This is not used in practical but we can acess 
+we can do context.getbean(classname);- This is not used in practical but we can acess the beans returned.
 
-@Component - Using this annotation on top of a class  will create a singleton object for this class in spring container.Spring will create by itself
+@Component - Using this annotation on top of a class  will create a singleton object for this class in spring container.Spring will create by itself.
 
 @Scope(value="prototype")- using this annotation along with @component will remove the singleton behaviour, The particular classes object ie bean inside spring container will only be created if we try to create it.
 
@@ -194,8 +193,7 @@ To use a class by its name we have to use
 		    private Formatter formatter;
 		}
 
-By default @Autowire searches by type
-@Qualifier searches by name;
+By default @Autowire searches by type  and @Qualifier searches by name;
 -----------------------------------------------------------------------------------------------------------------------------------
 ***THE IOC CONTAINER
 		
@@ -643,11 +641,10 @@ eg:-
 	Modern web-apps can have dozens of such filters. Things like authorization, caching, ORM session management, and dependency injection are often implemented with the aid of servlet filter. All of these filters need to be registered in web.xml.
 
 ** Instantiating Servlet Filters - without Spring Framework
-	Your servlet container creates instances of Filters declared in web.xml and calls them at appropriate times (i.e., when servicing servlet requests). Now if you are like most of the Dependency Injection (DI) fans, you would likely say that creation of instances is what my DI framework (Spring) does better. Can't I get my servlet filters created with Spring so they are amenable to all DI goodness?
-
+	Your servlet container creates instances of Filters declared in web.xml and calls them at appropriate times (i.e., when servicing servlet requests). 
 	DelegatingFilterProxy, so that Spring creates your filter instances,This is where DelegatingFilterProxy steps in.
 
- 	DelegatingFilterProxy is an impelmentation of the javax.servlet.Filter interface provided by Spring Framework.
+ 	DelegatingFilterProxy is an implementation of the javax.servlet.Filter interface provided by Spring Framework.
 
   	Once you configure DelegatingFilterProxy in web.xml, you can declare the actual beans that do the filtering in your spring configuration. This way, Spring creates the instances of beans that do the actual filtering, and you can use DI to configure these beans.
 
@@ -692,12 +689,10 @@ eg:-
 
 	For post request use post() 
 
-	** To change the port number if tomcat i spring boot 
+	** To change the port number if tomcat in  spring boot 
 	go to application.properties of ser/resource folder and type server.port=8081
 
-** Spring core module
-
-		Difference between spring mvc and spring core
+** Spring modules
 
 		1.Spring core
 			The Core is the Ioc container is reposible for Instantiating,Configuring and managing the dependencies between the objects.
@@ -796,13 +791,13 @@ eg if some one is using spring-mvc jar then they would need dispacteher servlet 
 how about autoconfiguring a data source if hibernate is in the class path
 
 Auto configuration in spring means depending on the jar files present in the classpath and the exisiting confuration spring-boot will provide its own default configuration
-WE have sprig initilizar is used to create ready to run projects provided by spring- start.spring.io is the link
+We have spring initilizar is used to create ready to run projects provided by spring- start.spring.io 
 GroupId is the reverse domain name
 Artifact Id is the project name
 
 All the spring auto configure will be present in sprint-boot-autoconfigure.jar/META-INF/spring.factories
 
-INside this file there wil be some anotations like
+Inside this file there wil be some anotations like
 
 @Conditional.class {{DataSource.class}} -If will autoconfigure only if there is datasource.class in the class path
 
@@ -843,7 +838,7 @@ States of Hibernate Objects
 
 when we do session.delete(user) object goes from persistant to transcient state
 
-To update a object only if any changes are made then we need to add @ori.hibernate.annotations.Entity(SelectBeforeUpdate=true) below the entity annotation of pojo class. This means we are telling hibernate to run a selcet to check the data in database before updating
+To update a object only if any changes are made then we need to add @ori.hibernate.annotations.Entity(SelectBeforeUpdate=true) below the entity annotation of pojo class. This means we are telling hibernate to run a select to check the data in database before updating
 
 SessionFactory vs session
 
@@ -857,7 +852,7 @@ we have
 1st level caching
 2nd level caching eg ehcaching
 
-By default first leve caching is enabled by hibernate
+By default first level caching is enabled by hibernate
  to enable second level cache we have to download the required second level cash through pom.xml
  and set second leve cache to true and mention the provider in hibernate.cfg.xml file
  and use @2 anotations in the entity class
@@ -874,6 +869,11 @@ get will hit the database and it will give us real object and if there is not ob
 Object Locking
 read this https://stackoverflow.com/questions/129329/optimistic-vs-pessimistic-locking
 
+When dealing with conflicts, you have two options:
+
+You can try to avoid the conflict, and that's what Pessimistic Locking does.
+Or, you could allow the conflict to occur, but you need to detect it upon committing your transactions, and that's what Optimistic Locking does.
+
 Pessimistic locking achieves this goal by taking a shared or read lock on the account so Bob is prevented from changing the account.
 both Alice and Bob will acquire a read lock on the account table row that both users have read. The database acquires these locks on SQL Server when using Repeatable Read or Serializable.
 Because both Alice and Bob have read the account with the PK value of 1, neither of them can change it until one user releases the read lock. This is because a write operation requires a write/exclusive lock acquisition, and shared/read locks prevent write/exclusive locks.
@@ -886,17 +886,17 @@ This time, we have an additional version column. The version column is increment
 
 Optimistic Locking 
 
-	Is a strategy where you read a record, take note of a version number (other methods to do this involve dates, timestamps or checksums/hashes) and check that the version hasn't changed before you write the record back. When you write the record back you filter the update on the version to make sure it's atomic. (i.e. hasn't been updated between when you check the version and write the record to the disk) and update the version in one 	hit.
+	Is a strategy where you read a record, take note of a version number (other methods to do this involve dates, timestamps or checksums/hashes) and check that the version hasn't changed before you write the record back. When you write the record back you filter the update on the version to make sure it's atomic. (i.e. hasn't been updated between when you check the version and write the record to the disk) and update the version in one hit.
 
 	If the record is dirty (i.e. different version to yours) you abort the transaction and the user can re-start it.
 
-	This strategy is most applicable to high-volume systems and three-tier architectures where you do not necessarily maintain a connection to the database for 	your session. In this situation the client cannot actually maintain database locks as the connections are taken from a pool and you may not be using the same connection from one access to the next.
+	This strategy is most applicable to high-volume systems and three-tier architectures where you do not necessarily maintain a connection to the database for your session. In this situation the client cannot actually maintain database locks as the connections are taken from a pool and you may not be using the same connection from one access to the next.
 
 Pessimistic Locking
 
 	Is when you lock the record for your exclusive use until you have finished with it. It has much better integrity than optimistic locking but requires you to be careful with your application design to avoid Deadlocks. To use pessimistic locking you need either a direct connection to the database (as would typically be the case in a two tier client server application) or an externally available transaction ID that can be used independently of the connection.
 
-	In the latter case you open the transaction with the TxID and then reconnect using that ID. The DBMS maintains the locks and allows you to pick the session 	back up through the TxID. This is how distributed transactions using two-phase commit protocols (such as XA or COM+ Transactions) work.
+	In the latter case you open the transaction with the TxID and then reconnect using that ID. The DBMS maintains the locks and allows you to pick the session back up through the TxID. This is how distributed transactions using two-phase commit protocols (such as XA or COM+ Transactions) work.
 	
 Optimistic
 
@@ -921,12 +921,11 @@ Locking In JPA
 	@Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
 	@Query("SELECT c FROM Customer c WHERE c.orgId = ?1")
 	public List<Customer> fetchCustomersByOrgId(Long orgId);
-	Copy
+	
 	To enforce the lock on predefined repository methods, such as findAll or findById(id), we have to declare the method within the repository and annotate the method with the Lock annotation:
-
 	@Lock(LockModeType.PESSIMISTIC_READ)
 	public Optional<Customer> findById(Long customerId);
-	Copy
+	
 	When the lock is explicitly enabled, and there's no active transaction, the underlying JPA implementation will throw a TransactionRequiredException.
 
 	If the lock can't be granted, and the locking conflict doesn't result in a transaction rollback, JPA throws a LockTimeoutException, but it doesn't mark the active transaction for rollback.
@@ -967,26 +966,26 @@ Spring 3.1 introduces the @EnableTransactionManagement annotation that we can us
 	
 	Note that by default, rollback happens for runtime, unchecked exceptions only. The checked exception does not trigger a rollback of the transaction. We can, of course, configure this behavior with the rollbackFor and noRollbackFor annotation parameters.
 
-	At a high level, Spring creates proxies for all the classes annotated with @Transactional, either on the class or on any of the methods. The proxy allows the 		framework to inject transactional logic before and after the running method, mainly for starting and committing the transaction.
+	At a high level, Spring creates proxies for all the classes annotated with @Transactional, either on the class or on any of the methods. The proxy allows the framework to inject transactional logic before and after the running method, mainly for starting and committing the transaction.
 	
 	if the transactional bean is implementing an interface, by default the proxy will be a Java Dynamic Proxy. This means that only external method calls that come in through the proxy will be intercepted. Any self-invocation calls will not start any transaction, even if the method has the @Transactional annotation.
 
-	Another caveat of using proxies is that only public methods should be annotated with @Transactional. Methods of any other visibilities will simply ignore the 		annotation silently as these are not proxied
+	Another caveat of using proxies is that only public methods should be annotated with @Transactional. Methods of any other visibilities will simply ignore the  annotation silently as these are not proxied
 
  	Spring wraps your bean in the proxy, your bean has no knowledge of it. Only calls from "outside" your bean go through the proxy.
 	We are using in service layer on top of each method.
-	Spring will create a wrapper method and dat method will begina and commit the transaction
+	Spring will create a wrapper method and dat method will begin and commit the transaction
 	
 	Transaction Propagation
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-		REQUIRED is the default propagation. Spring checks if there is an active transaction, and if nothing exists, it creates a new one. Otherwise, the 			business logic appends to the currently active transaction:
+		REQUIRED is the default propagation. Spring checks if there is an active transaction, and if nothing exists, it creates a new one. Otherwise, the business logic appends to the currently active transaction:
 		
 	@Transactional(propagation = Propagation.SUPPORTS)
-		For SUPPORTS, Spring first checks if an active transaction exists. If a transaction exists, then the existing transaction will be used. If there isn't 			a transaction, it is executed non-transactional:
+		For SUPPORTS, Spring first checks if an active transaction exists. If a transaction exists, then the existing transaction will be used. If there isn't 	a transaction, it is executed non-transactional:
 	
 	@Transactional(propagation = Propagation.MANDATORY)
-		When the propagation is MANDATORY, if there is an active transaction, then it will be used. If there isn't an active transaction, then Spring throws an 		exception:
+		When the propagation is MANDATORY, if there is an active transaction, then it will be used. If there isn't an active transaction, then Spring throws an exception:
 	
 	@Transactional(propagation = Propagation.NEVER)
 		For transactional logic with NEVER propagation, Spring throws an exception if there's an active transaction:
@@ -997,7 +996,7 @@ Spring 3.1 introduces the @EnableTransactionManagement annotation that we can us
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 		When the propagation is REQUIRES_NEW, Spring suspends the current transaction if it exists, and then creates a new one:
 
-Isolation Management in Spring
+Isolation Management in Spring https://www.youtube.com/watch?v=-gxyut1VLcs&t=252s
 	
 	Transaction Isolation
 	
@@ -1007,20 +1006,20 @@ Each isolation level prevents zero or more concurrency side effects on a transac
 	
 READ_UNCOMMITTED(Dirty read): read the uncommitted change of a concurrent transaction
 	
-		If T1 transaction reads data from table A1 that was written by another concurrent transaction T2. If on the way T2 is rollback, the data obtained by T1 is invalid one. E.g. a=2 is original data. If T1 		read a=1 that was written by T2. If T2 rollback then a=1 will be rollback to a=2 in DB. But, now, T1 has a=1 but in DB table it is changed to a=2.
+		If T1 transaction reads data from table A1 that was written by another concurrent transaction T2. If on the way T2 is rollback, the data obtained by T1 is invalid one. E.g. a=2 is original data. If T1 read a=1 that was written by T2. If T2 rollback then a=1 will be rollback to a=2 in DB. But, now, T1 has a=1 but in DB table it is changed to a=2.
 		
 		Postgres does not support READ_UNCOMMITTED isolation and falls back to READ_COMMITED instead. Also, Oracle does not support or allow READ_UNCOMMITTED.
 
 Nonrepeatable read: get different value on re-read of a row if a concurrent transaction updates the same row and commits
 	
-		 If T1 transaction reads data from table A1. If another concurrent transaction (T2) update data on table A1. Then the data that T1 has read is different from table A1. Because T2 has updated the data on 		table A1. E.g. if T1 read a=1 and T2 updated a=2. Then a!=b.
+		 If T1 transaction reads data from table A1. If another concurrent transaction (T2) update data on table A1. Then the data that T1 has read is different from table A1. Because T2 has updated the data on 	table A1. E.g. if T1 read a=1 and T2 updated a=2. Then a!=b.
 		 
 		 READ_COMMITTED is the default level with Postgres, SQL Server, and Oracle.
 		 REPEATABLE_READ does not allow simultaneous access to a row at all. Hence the lost update can't happen
 	
 Phantom read: get different rows after re-execution of a range query if another transaction adds or removes some rows in the range and commits
 	
-		 If T1 transaction reads data from table A1 with certain number of rows. If another concurrent transaction (T2) inserts more rows on table A1. The number of rows read by T1 is different from rows on 			table A1.
+		 If T1 transaction reads data from table A1 with certain number of rows. If another concurrent transaction (T2) inserts more rows on table A1. The number of rows read by T1 is different from rows on 	table A1.
 	
 We can set the isolation level of a transaction by @Transactional::isolation. It has these five enumerations in Spring: DEFAULT, READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE.
 	
