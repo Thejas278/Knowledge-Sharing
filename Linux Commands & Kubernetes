@@ -72,12 +72,12 @@ Linux basics commands
 
 DevOps
 
-1.Once the deployment is done we need build tools & package managers like Maven or Gradle for java or npm for javascript to buidl the jars
+1.Once the development is done we need build tools & package managers like Maven or Gradle for java or npm for javascript to build the jars
 
 2. Now a days applications are deployed in a container . So we need to have images for our application
-3.Images created for our application needs to be saved in a repository for this we can use Nexus or Docker hub will be used as image repositiry
+3.Images created for our application needs to be saved in a repository for this we can use Nexus or Docker hub , they will be used as image repository
 
-4. Steps 1,2,3 can be automated using buidl automation tools such as Gitlab,GitHubactions or jenkins
+4. Steps 1,2,3 can be automated using build automation tools such as Gitlab,GitHubactions or jenkins
 5.When we run multiple containers it will be difficult to load balance so we need Kubernetes. which is a container orchestrator tool 
 
 Kubernetes
@@ -93,7 +93,7 @@ Kubernetes Architecture
 	Kubernetes cluster will have atleast one master node and connected to it will have couple of worker nodes
 	Each worker node has a kubelet process running on it, kubelet will help in communicating the the cluster and running our applications in the worker nodes
 
-	Each worker nodes will have many containers deployed on int
+	Each worker nodes will have many containers deployed on it
 
 	Master node will have certain process which are required for the Kubernetes cluster to work example
 
@@ -185,7 +185,14 @@ Daemonset
 
 Kubernetes Configuration
 
-	All the configuration will pass through Kubernetes API Server like UI,API,CLI to access Kubernetes clusters and these requests have to be in yml format or json format
+	All the configuration will pass through Kubernetes API Server like UI,API,CLI to access Kubernetes clusters and these requests have to be in yml format or json format.
+	This is the only entry point for the kubernetes cluster
+
+	The configuration file will have 3 components
+	1.metadata
+	2.specification
+	3.status- This will be added by kubernetes in the runtime , it is like self healing example if a pod dies then kubernetes will check the desired spec(2nd component). iF the actual spec and desired spec are different then it will update the status.
+	It wil get the current state from Etcd which is the brain of cluster.
 
 
 MiniKube
@@ -193,3 +200,7 @@ For local testing we cannot have the entire Kubernetes cluster because of the re
 
 
 Kubectl is a command line tool to interact with the Kubernetes cluster.Out of all the 3 Kubernetes client kubectl is the most powerful one because we can do anything using kubectl
+
+
+
+https://www.youtube.com/watch?v=s_o8dwzRlu4&t=220s 															41:08
