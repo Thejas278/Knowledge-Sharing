@@ -1,4 +1,6 @@
 Kafka
+https://www.youtube.com/watch?v=vHbvbwSEYGo
+https://www.youtube.com/watch?v=j4bqyAMMb7o&list=PLa7VYi0yPIH0KbnJQcMv5N9iW8HkZHztH
   It is a distributed Streaming platform
   Real Time Event Driven Application
   Fault Tolerant
@@ -21,11 +23,11 @@ Kafka is fast because it relies on Disk Caching and memory mapped files instead 
 Topics are divided into units called partition
 
 Now which message goes to which partition is based on the key which we pass . If we do not specify the key then the message are stored in a round robin fashion.
-	If we pass the key then we find the hash of the key and mod it will the number of partions and resulting number is just the partition number to write. This will make sure that messages with the same key always goes to the same partiotion.
+	If we pass the key then we find the hash of the key and mod it will the number of partions and resulting number is just the partition number to write. This will make sure that messages with the same key always goes to the same partition.
 
 If you want ordered data then we must put data in single partition, Ordering is guarented inside partition
 
-kafka is a distributes system because partition will divided the kafka topic so that it can be placed in different nodes of differetn kafka cluster, this is why kafka is scalable.
+kafka is a distributes system because partition will divided the kafka topic so that it can be placed in different nodes of different kafka cluster, this is why kafka is scalable.
 
 Multiple consumers cannot read from the same partitions
 A consumer can read from multiple partitions
@@ -34,7 +36,7 @@ Producer configurations
 key value serilizers
 ack
 
-	ack=all means producer will wait for all replias to return result as the default value fir acknowledge property 
+	ack=all means producer will wait for all replias to return result as the default value for acknowledge property 
 	ack=1 means only the broker that gets the request will acknowledge it will not wait for the replicas, doing this will increase the performance but will loose the resilliance
 	ack=0 means no acknowledgement
 
@@ -47,7 +49,7 @@ retires and timeouts can also be configured in producer
 
 Kafka Brokers
 
-Brokers can be a computer,pr a instance running in the cloud or a container which runs the kafa process.
+Brokers can be a computer,or a instance running in the cloud or a container which runs the kafa process.
 	brokers manage the partitions
 	They manage replications of partitions
 
@@ -76,7 +78,7 @@ Schema-registry
     With Kafka message when sent to the topic dont dissappear, but in case of rabitMq message dissappear as they are consumed.
     In case of kafka you can have bunch of consumers to read the data from since it does not dissappear
     
-    Kafka Connect Source and Kafka Connect Sinks
+    Kafka Connect Source and Kafka Connect Sink
       Source is used to move the data from datasource to Kafka
       Sink is used to move the data from Kafka to datasource both of these are java applications
       
