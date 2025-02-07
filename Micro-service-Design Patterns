@@ -10,7 +10,7 @@ Load Balancer Not required                               Load Balancer required 
 
 Single Point of failuer					RESILIENT- If one instance failes we can send it to other instance
 
-Vertical scaling uses a single machine to which 	Data is inconsistent in horizontal scaling because separate machines process different requests, which might cause their data to become out of sync.
+Vertical scaling uses a single machine to which Data is consistent, in horizontal scaling because separate machines process different requests, which might cause their data to become out of sync.
 all queries are forwarded,
 eliminating the possibility of data inconsistency.
 
@@ -50,7 +50,7 @@ Micro-service Design Pattern
 
 Decomposition Patterns
 
-	Decompose By Busciness capability
+	Decompose By Business capability
 		Break the monolithic application based on the busciness capability
 		A business capability is what a business does to generate value (for example, sales, customer service, or marketing)
 	
@@ -59,7 +59,7 @@ Decomposition Patterns
 			Sales		Customer		Marketing as the seperate 
 	
 	Decompose By subdomain
-		This pattern uses a domain-driven design (DDD) subdomain to decompose monoliths. This approach breaks down the organization’s domain model into separate subdomains that are labeled as core (a key 			differentiator for the business), supporting (possibly related to business but not a differentiator), or generic (not business-specific)
+		This pattern uses a domain-driven design (DDD) subdomain to decompose monoliths. This approach breaks down the organization’s domain model into separate subdomains that are labeled as core (a key differentiator for the business), supporting (possibly related to business but not a differentiator), or generic (not business-specific)
 	
 							
 								 eg: Insurance company might have 
@@ -73,25 +73,25 @@ Decomposition Patterns
 	
 	Strangler Pattern
 		In this dsesign pattern we migrate the monolithic application part by part ie 
-		for the Insurance monolith , we move Customer service to a new micro service but other service will be in the monolith and there will be a api gateway which will redirect the customer service calls to the 		new micro service and other calls to the old monolith application
+		for the Insurance monolith , we move Customer service to a new micro service but other service will be in the monolith and there will be a api gateway which will redirect the customer service calls to the new micro service and other calls to the old monolith application
 
 
 Integration pattern
 
 	API Gateway pattern- 
-			Client will interact with the API gateway rather than directly inretacting with the service, We can add authentication and authorisation in single place. Rate limiting can also be 					done. Even the 	api's can be monitotred
+			Client will interact with the API gateway rather than directly interacting with the service, We can add authentication and authorisation in single place. Rate limiting can also be done. Even the 	api's can be monitotred
 
 			We can create our own gateway using spring cloud
 
 			Client side ui compostion pattern- Single ui page will have multiple microservices running in the background
 
 	Aggregator pattern
-		Basically, The Service aggregator design pattern is receives a request from the client or API Gateways, and than dispatches requests of multiple internal backend microservices, and than combines the 			results and responds back to the initiating request in 1 response structure
+		Basically, The Service aggregator design pattern is receives a request from the client or API Gateways, and than dispatches requests of multiple internal backend microservices, and than combines the 	results and responds back to the initiating request in 1 response structure
 	
 		Service service will give the price and comission will give the comission, we will combime them and then give the final price to the user or even api gateway can also become the aggrigator
 	
 	Chained Microservice Design Pattern: 
-		Chained microservice design pattern produce a single consolidated response to the request. In this case, the request from the client is received by Service A, which is then communicating with Service B, 		which in turn may be communicating with Service C. All the services are likely using a synchronous HTTP request/response messaging
+		Chained microservice design pattern produce a single consolidated response to the request. In this case, the request from the client is received by Service A, which is then communicating with Service B, 	which in turn may be communicating with Service C. All the services are likely using a synchronous HTTP request/response messaging
 
 DataBase Pattern
 
@@ -101,11 +101,11 @@ DataBase Pattern
 
 					Helps ensure that the services are loosely coupled. Changes to one service’s database does not impact any other services.
 
-					Each service can use the type of database that is best suited to its needs. For example, a service that does text searches could use ElasticSearch. A service that manipulates a 					social graph could use Neo4j.
+					Each service can use the type of database that is best suited to its needs. For example, a service that does text searches could use ElasticSearch. A service that manipulates a social graph could use Neo4j.
 
 			Using a database per service has the following drawbacks:
 
-			Implementing business transactions that span multiple services is not straightforward. Distributed transactions are best avoided because of the CAP theorem. Moreover, many modern (NoSQL) databases 			don’t support them.
+			Implementing business transactions that span multiple services is not straightforward. Distributed transactions are best avoided because of the CAP theorem. Moreover, many modern (NoSQL) databases don’t support them.
 
 					Implementing queries that join data that is now in multiple databases is challenging.
 
@@ -118,15 +118,15 @@ DataBase Pattern
 					Implementing queries that span services:
 
 API Composition
-		- the application performs the join rather than the database. For example, a service (or the API gateway) could retrieve a customer and their orders by first retrieving the customer from the customer 		service and then querying the order service to return the customer’s most recent orders.
+		- the application performs the join rather than the database. For example, a service (or the API gateway) could retrieve a customer and their orders by first retrieving the customer from the customer service and then querying the order service to return the customer’s most recent orders.
 
 Command Query Responsibility Segregation (CQRS) - 
-			Imagine we have a flipkart application where during some sale offer there will be huge load on the application 	but number of read operations will be more than the right operation so if both read and write operations are on 			the same machine then it might impact the perfromance
+			Imagine we have a flipkart application where during some sale offer there will be huge load on the application 	but number of read operations will be more than the right operation so if both read and write operations are on the same machine then it might impact the perfromance
 			so we are segregating the read and write operations into different services and each service will have its own 	database
-			Whenever there is a command request ie to add to upodate the record we send a event to query service so that any change in this db will be reflected in the query db as well we can use kafka for event streaming
+			Whenever there is a command request ie to add to update the record we send a event to query service so that any change in this db will be reflected in the query db as well we can use kafka for event streaming
 
 Saga Pattern
-			It is used for distributed transaction when multiple services have seperate db and each have to update n their 				own db and if any one transaction fails then all the other transactions will also roll back
+			It is used for distributed transaction when multiple services have seperate db and each have to update n their 	own db and if any one transaction fails then all the other transactions will also roll back
 
 			This can be achieved using
 
@@ -142,7 +142,7 @@ Cross Cutting Concern
 
 					1.Client side service discovery
 
-							Client goes the service discovery, he makes the call to discovery server to get the service path and then makes a second call to the actual service
+							Client does the service discovery, he makes the call to discovery server to get the service path and then makes a second call to the actual service
 							Here the client will make 2 calls
 							Eureka is a example for this.
 
@@ -156,6 +156,29 @@ Cross Cutting Concern
 
 
 -----------------------------------------------------------------------------------------------------------------------------
+RestTemplate
+	Synchronous client to perform HTTP requests
+
+WebClient
+	As of Spring Framework 5, alongside the WebFlux stack, Spring introduced a new HTTP client called WebClient.
+
+	WebClient is a modern, alternative HTTP client to RestTemplate. Not only does it provide a traditional synchronous API, but it also supports an efficient nonblocking and asynchronous approach.
+
+	That said, if we’re developing new applications or migrating an old one, it’s a good idea to use WebClient. Moving forward, RestTemplate will be deprecated in future versions.
+
+	RestTemplate will continue to exist (at least for now). You don't have to replace it with WebClient.
+	One of the main differences is RestTemplate is synchronous and blocking i.e. when you do a rest call you need to wait till the response comes back to proceed further.
+
+	But WebClient is complete opposite of this. The caller need not wait till response comes back. Instead he will be notified when there is a response.
+
+	If you need such a functionality, then yes you need to replace your Resttemplate with WebClient.
+	You can in fact achieve Rest template like synchronous processing in webclient using .block(). But the other way is not possible.
+
+	EDIT:
+
+	RestTemplate is marked as feature complete in future version(> 5.0) and will not have new features added going forward
+
+Feign Client vs RestTemplate
 
 HTTP Status Codes
 
@@ -203,3 +226,6 @@ A Spring Cloud application operates by creating a "bootstrap" context, which is 
 
 for more info 
 https://cloud.spring.io/spring-cloud-static/spring-cloud.html#:~:text=A%20Spring%20Cloud%20application%20operates,the%20local%20external%20configuration%20files.
+
+
+Java 9 + version needs jaxb-api because of modularity it got removed in java9
