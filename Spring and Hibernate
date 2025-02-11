@@ -358,8 +358,9 @@ Injecting dependencies
 	If we use both constructor and setter injection, IOC container will use the setter injection. Changes: We can easily change the value by setter injection
 
 	Using constructor injection we cannot reconfigure a object.
-	Also setter injection is also a solution for circular depedency issue.
-
+Circular Dependency
+	We can avoid circular dependency using setter injection by using @Lazy on the dependency.But in construcotr injection we cannot resolve circular dependency.
+	
 Bean dependency resolution generally happens as follows:
 	The BeanFactory is created and initialized with a configuration which describes all the beans. (Most Spring users use a BeanFactory or ApplicationContext implementation that supports XML format configuration files.)
 	Each bean has dependencies expressed in the form of properties, constructor arguments, or arguments to the static-factory method when that is used instead of a normal constructor. These dependencies will be provided to the bean, when the bean is actually created.
