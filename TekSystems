@@ -6,10 +6,6 @@ dsl
 under dependencies we have 
 	testcompile- depedency used for test
 	compile-dependency used to compile
-	
-
-
-
 
 ---------------------------------------------------------------
 Data Structures
@@ -70,29 +66,4 @@ For space complexity we only consider the data space
 	short,unsigned short - 2bytes
 	float,long,unsignedint,unsigned long- 4 bytes
 	double,long double,long long - bytes
-
-	
-
-
-
-
------------------------------------------------------------------------------------------------------------------------------------
-Sql vs Nosql database
-
-Nosql database
-1.Insertion and retrieval is eifficient since there are no joins required
-2.Schema is easily changable- We alter the schema without effecting the exisiting records ie its easier
-3.Built for scalability or sharding or horizonatl partition
-4.These systems are build for aggregation ie to get the intelligent data
-
-Disadvantage
-1.update=delete+insert ie updates are not nice or easy means ACID is not guarented
-2.RElationa constraint is not possible
-3.Joining is also not efficient
-
-Mongodb stores the data in BSON format- Binary JSON
-
-
-
-
 
