@@ -20,6 +20,35 @@ Hardware Limit
 The latest edition of AWS Ops Automator enables vertical scaling of Amazon EC2 instances, allowing automatic management of resources. It automatically adjusts capacity in order to ensure consistent, predictable performance at the lowest possible cost. It can resize the instances by restarting the existing instance with a new size. Alternatively, it can resize an instance by replacing the old instance with a new, resized instance.
 
  MongoDB, and Google Clous Scanner are good examples of horizontal scaling.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Spring boot
+In spring mvc we have to configurations like class path scan,dispatcher servlet,web jars etc
+
+eg if some one is using spring-mvc jar then they would need dispacteher servlet dependency or 
+how about autoconfiguring a data source if hibernate is in the class path
+
+Auto configuration in spring means depending on the jar files present in the classpath and the exisiting confuration spring-boot will provide its own default configuration
+We have spring initilizar is used to create ready to run projects provided by spring- start.spring.io 
+GroupId is the reverse domain name
+Artifact Id is the project name
+
+All the spring auto configure will be present in sprint-boot-autoconfigure.jar/META-INF/spring.factories
+
+Inside this file there wil be some anotations like
+
+@Conditional.class {{DataSource.class}} -If will autoconfigure only if there is datasource.class in the class path
+
+@ConditionaOnMissingBean- It will autoconfigure of there is no other  bean matching this name
+
+
+SpringApplication.run(PecokApplication.class, args);
+
+is a static method , when we run this method, it will
+1.set up default configuration
+2.starts spring application context
+3.performs classpath scan
+4.starts tomcat server
+
 
 Micro-service Design Pattern
 	https://miro.medium.com/max/567/1*CKSVv4WkS8Okx572rX45HA.png
@@ -178,7 +207,19 @@ WebClient
 
 	RestTemplate is marked as feature complete in future version(> 5.0) and will not have new features added going forward
 
+
+Feign Client 
+			Declarative webservice client
+
+			Feign allows you to abstract the mechanics of calling a REST service. Once you configure and annotate the Feign interface, you can call a REST service by making a simple Java function call. The actual implementation of making a REST call is handled at runtime by Feign. This means that the implementation can be configured without changing your business logic code.
+
+			By just changing the Feign configuration in Java or using properties you can add encoding/decoding, logging, and change the REST call implementation library. All this is done through configuration only, while the business logic that calls the service remains unchanged.
+
+			Since Feign uses standard Java interfaces, it's also easy to mock them during unit tests.
+
 Feign Client vs RestTemplate
+			One of the advantages of using Feign over RestTemplate is that, we do not need to write any implementation to call the other services. So there is no need to write any unit test as there is no code to test in the first place. However, it is advised that we write Integration tests.
+
 
 HTTP Status Codes
 
@@ -219,6 +260,53 @@ HTTP Status Codes
 
 		503 Service Unavailable
 		The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded.
+
+
+Circuit Breaker
+
+		Imagine you have a orderservice which makes a call to paymentservice. OrderService has a Threadpool from which each thread makes a request to payment service here there can be 2 types of failures
+			1.Immediate Failure where immediately we will get exception and after that even if we make 10 repeated calls to the payment service, the request will always fail so there is no point doing 11th call.
+
+			2.TimeOut Failure- Here there is no immediate failure so Imagine if there are 10 threads in Orderservice , because of somme issue will Paymentservice all the threads of Orderservice will be stuck and Orderservice will not be able to process any other request from other service also,ie failire in PaymentService has caused Failure in OrderService this might have a cascading effect as well ie if Paymentservice is used by other service say EmployeeService,StorageService both will be stcuk similar to Orderservice because of Paymentservice 
+
+				watch this vide for more info https://www.youtube.com/watch?v=ADHcBxEXvFA
+
+	Hystrix implements Circuit Breaker pattern but it is in maitainance mode so we should use resilliance4j
+
+
+ZipKin and Sleuth
+	It is used for distributed log tracing to find out for which instance of which microservice failed.
+
+	Sleuth generates trace information while Zipkin visualizes it , If we add Zipkin Sleuth then for each request spring cloud sleuth will generte a metadata
+	which will have servicename--TraceId---spanId--Export Flag
+
+		servicename will be micrservice instance name
+		TraceId will be common for each request
+		spanId will be specific to each microservice
+
+		You can run zipkin server as a docker image or you can download the zipkin jar and execute it
+
+	MicroMeter
+
+	Spring Cloud Sleuth’s last minor version is 3.1. You can check the 3.1.x branch for the latest commits.
+
+	The core of this project got moved to Micrometer Tracing project and the instrumentations will be moved to Micrometer and all respective projects (no longer all instrumentations will be done in a single repository.
+
+	Prometheus
+
+	It is a open source monitoring system.
+	It is designed to collection time series data from various sources such as server,applications and stores data in a time series database, which allows user to query and visualise data in various ways
+
+API Gateway
+
+	It is a abstraction layer for you Microservices so that the ui guy does not need to worry or change his code when you refactor or change something in your backend.
+	Api gateway will expose the api's which are needed for the front end or client.
+
+	It is sometimes referred as Edge Microservice.
+
+	Since api gateway act as single point of entry to our application ,We can also add Loadbalancing,caching,authentication,monitoring and other features as well.
+
+	Zuul is a ApiGateway provided by netflix
 
 
 The Bootstrap Application Context
