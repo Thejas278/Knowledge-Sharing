@@ -34,7 +34,7 @@ non Static block and non static variables defined in the child class in the orde
 	child class constructor
 
 this keyword-	Within an instance method or a constructor, this is a reference to the current object — the object whose method or constructor is being called. You can refer to any member of the current object from within an instance method or a constructor by using this
-
+Java complier internally will replace string contacination(s1+s2+s3+s4) wih StringBuilder if there are more than 2 concatination.
 Class
 1.Outer classs can be declared public or package-private(default)
 
@@ -141,7 +141,7 @@ LAMBDA EXPRESSIONS
 
 	Functional Interface cannot have a inner class as well
 	
-Unlike local classes and annonymous classes , Lambda expressions can only access members of enclosing scope which are final or effective final
+like local classes and annonymous classes , Lambda expressions can only access members of enclosing scope which are final or effective final
 	
 	Like local and anonymous classes, lambda expressions can capture variables; they have the same access to local variables of the enclosing scope. However, unlike local and anonymous classes, lambda expressions do not have any shadowing issues 
 
@@ -151,10 +151,9 @@ Unlike local classes and annonymous classes , Lambda expressions can only access
 
  	you do not have to enclose a void method invocation in braces
 
-	 If there is single expression then we do not need to use flower brackets {}, also 	Java runtime evaluates the expression and return the value.
+	 If there is single expression then we do not need to use flower brackets {}, also Java runtime evaluates the expression and return the value.
 
-	 A return statement is not an expression; in a lambda expression, you must enclose statements in braces ({}). However, you do not have to enclose a void method invocation in braces. 
-
+	 A return statement is not an expression in a lambda expression, you must enclose statements in braces ({}). However, you do not have to enclose a void method invocation in braces. 
 	
 
 	 PREDICATE<T>: has a method test(T t) which returns a boolean value
@@ -167,8 +166,6 @@ Unlike local classes and annonymous classes , Lambda expressions can only access
 	 				eg:	() -> { return new HashSet<>(); }
 
 	 BiFunction<T, T, T> merger is a function interface which accepts 2 arguments and produce result, has method apply
-	
-
 
 	when to use
 
@@ -199,19 +196,17 @@ METHOD REFERENCE
 
 	Reference to an instance method of a particular object	containingObject::instanceMethodName
 
-	Reference to an instance method of an arbitrary object of a particular type	ContainingType::methodName
+	Reference to an instance method of an arbitrary object of a particular type ContainingType::methodName
 		eg:Arrays.sort(stringArray, String::compareToIgnoreCase);
 
-	Reference to a constructor	ClassName::new
-
+	Reference to a constructor ClassName::new
 
 	eg for constructor reference
 
 		You can use a constructor reference in place of the lambda expression as follows:
 
 		Set<Person> rosterSet = transferElements(roster, HashSet::new);
-			The Java compiler infers that you want to create a HashSet collection that contains elements of type Person. Alternatively, you can specify this as follows:
-
+			The Java compiler infers that you want to create a HashSet collection that contains elements of type Person. 
 Streams
 
 	Pipeline is a sequence of aggregate operations
@@ -222,91 +217,68 @@ Streams
 
 	Stream has zero or more intermediate operations which return a stream of its predicate type eg filter,mapInt etc method of stream
 
-	Stream has Terminal operation which does not return a stream eg forEach,avegare method of stream
-
+	Stream has Terminal operation which does not return a stream eg forEach,average method of stream
 
 			 list.stream().
                 mapToInt(s->Integer.parseInt(s)).
                 filter(e-> e%2==0).
                 forEach((m)->System.out.println(m));
 
- Reduction Operations:The JDK contains many terminal operations such as average that return one value by combining the contents of a stream.
+Reduce and Collect
+	Reduce is used for immutable reduction  and Collect is used as mutable reduction 
+	that means-if you have immutable values such as ints, doubles, Strings then normal reduction works just fine. However, if you 		have to reduce your values into say a List (mutable data structure) then you need to use mutable reduction with the collect 		method.
 
- 	eg:average,getAsDouble() etc
+	 Reduction Operations:The JDK contains many terminal operations such as average that return one value by combining the contents 	of a stream.
+	 	eg:average,getAsDouble() etc
+	
+	 For general purpose reduction use stream.reduce method 
 
-
- For general purpose reduction use stream.reduce method
-
- reduce is used for immutable reduction  and collect is used as mutable reduction 
-	that means-if you have immutable values such as ints, doubles, Strings then normal reduction works just fine. However, if you have to reduce your values into say a List (mutable data structure) then you need to 			use mutable reduction with the collect method.
-
- Keep in mind that streams implementation for reduce are same for reduce and collect so we are providing intial value
- 	For parallel streams they perform fork joint source will be split into individual sub tasks(roughly 4* number of cores).
+ For parallel streams they perform fork joint pool source will be split into individual sub tasks(roughly 4* number of cores).
 
 			 		eg
-			 			Integer totalAgeReduce = roster
+
+		 Optional max=Stream.of(1,4,3,5,21,14).reduce(Integer::max);
+
+or
+			Integer totalAgeReduce = roster
 			   .stream()
 			   .map(Person::getAge)
 			   .reduce(
 			       0,
 			       (a, b) -> a + b);
-or
-
- Optional max=Stream.of(1,4,3,5,21,14).reduce(Integer::max);
 
 	The reduce operation in this example takes two arguments:
 
 	identity: The identity element is both the initial value of the reduction and the default result if there are no elements in the stream. In this example, the identity element is 0; this is the initial value of the sum of ages and the default value if no members exist in the collection roster.
 
-	accumulator: The accumulator function takes two parameters: a partial result of the reduction (in this example, the sum of all processed integers so far) and 		the next element of the stream (in this example, an integer). It returns a new partial result. In this example, the accumulator function is a lambda 		expression that adds two Integer values and returns an Integer value:
+	accumulator: The accumulator function takes two parameters: a partial result of the reduction (in this example, the sum of all processed integers so far) and 	the next element of the stream (in this example, an integer). It returns a new partial result. In this example, the accumulator function is a lambda expression that adds two Integer values and returns an Integer value:
 
 						(a, b) -> a + b
 
-
 	The reduce operation always returns a new value. However, the accumulator function also returns a new value every time it processes an element of a stream
 
-
 	There is one more reduce operation with 3 arguments- It has a intial value,accumulator function and Combiner funtion
-				The combiner function is usually used for parallel streams, for combining the results of each streams running in parallel
-				Even if we are using sequential stream we cannot pass null as third argument.we will get null pointer exception
+	The combiner function is usually used for parallel streams, for combining the results of each streams running in parallel
+	Even if we are using sequential stream we cannot pass null as third argument.we will get null pointer exception
 
-Java complier internally will replace string contacination(s1+s2+s3+s4) wih StringBuilder if there are more than 2 concatination
-		
-collect is reduction operation for mutuable objects,eg if we use reduce on the string which is immutable , a new string gets created which will effect the performace so we are usig collect.
-		Collector is a interface and Collectors is a implementation for Collector which has methods like Collectors.toList etc.		
+	Collector is a interface and Collectors is a implementation for Collector which has methods like Collectors.toList etc.	
+
+Reduce vs Collect	
+Reduce is used for immutable reduction  and Collect is used as mutable reduction 
 
 reduce is a "fold" operation, it applies a binary operator to each element in the stream where the first argument to the operator is the return value of the previous application and the second argument is the current stream element.
 
-collect is an aggregation operation where a "collection" is created and each element is "added" to that collection. Collections in different parts of the stream are then added together.
-
-			Let the stream be a <- b <- c <- d
-
-			In reduction,
-
-			you will have ((a # b) # c) # d
-
-			where # is that interesting operation that you would like to do.
-
-			In collection,
-
-			your collector will have some kind of collecting structure K.
-
-			K consumes a. K then consumes b. K then consumes c. K then consumes d.
-
-			At the end, you ask K what the final result is.
-
-			K then gives it to you.
+collect is an aggregation operation where a "collection" is created and each element is "added" to that collection. Collections in different parts of the stream are then added together.		
 
  Differences Between Streams and Iterators
+	
+why you should favour the streams API over Iterators.
+	First and foremost, with the stream API, we can now program at a much higher level of abstraction, just like SQL queries, i.e. 		we express what we want and let the library handle the rest.
+
+	Second, stream operations perform their iterations behind the scenes (internal iteration) , this means the processing of the 		data could be done in parallel or in a different order that may be more optimized.
 
 	However, external iteration can only iterate over the elements of a collection sequentially. 
 	Internal iteration does not have this limitation. It can more easily take advantage of parallel computing.
-
-	Talking about streams, in general, is a vast topic. However, I will derive about why you should favour the streams API over Iterators.
-
-	First and foremost, with the stream API, we can now program at a much higher level of abstraction, just like SQL queries, i.e. we express what we want and let the library handle the rest.
-
-	Second, stream operations perform their iterations behind the scenes (internal iteration) , this means the processing of the data could be done in parallel or in a different order that may be more optimized.
 
 	On the other hand, if you decide to explicitly iterate over your collection to perform some computation whether that's with an Iterator or the syntactic sugar for an iterator (the enhanced for loop) then you're explicitly taking the items in the collection and processing them one by one thus it's inherently serial.
 
@@ -339,6 +311,10 @@ Collection.stream().forEach() ignores the iretaror and take the element one by o
 
 Iterable vs Iterator
 
+ArrayList implements List, List extends Collection, Collection extends Iterable
+		Iterable <- Collection <- List <- ArrayList'
+		Iterable, Collection and List just declare abstract method 'iterator()' and ArrayList alone implements it
+
 	An Iterable is a simple representation of a series of elements that can be iterated over. It does not have any iteration state such as a "current element". Instead, it has one method that produces an Iterator.
 
 	An Iterator is the object with iteration state. It lets you check if it has more elements using hasNext() and move to the next element (if any) using next().
@@ -353,10 +329,9 @@ Iterable vs Iterator
 		}
 
 For-each loop
+		This is a methods of Iterable interface. All the Collection interfaces extends Iterable Interface.
 
-		This is a methods of Iterable interface. All the Collection interfaces extends Iterable Interface
-
-		The for-each loop hides the iterator, so you cannot call remove. Therefore, the for-each loop is not usable for filtering.
+		The for-each loop hides the iterator, so you cannot call remove. Therefore, the for-each loop is not usable for 			filtering.
 		It is not usable for loops where you need to replace elements in a list or array as you traverse it. 
 		Finally, it is not usable for loops that must iterate over multiple collections in parallel. 
 
@@ -384,6 +359,17 @@ Interface
 
 		Default methods enable you to add new functionality to existing interfaces and ensure binary compatibility with code written for older versions of those interfaces.
 
+			interface TestInterface
+			{
+			    // abstract method
+			    public void square(int a);
+			
+			    // default method
+			    default void show()
+			    {
+			      System.out.println("Default Method Executed");
+			    }
+			}
 
 Copying Object in java
 
@@ -395,7 +381,7 @@ Copying Object in java
 						Obj o1=o// shallow cpoying here we are not creating 2 objects instead we are craeting 2 references
 	2.Deep Copying
 
-					New Object is created and all the values of the actual object are copied into it
+	New Object is created and all the values of the actual object are copied into it
 
 					Obj o=new Obj();
 						o.i="test";
@@ -404,9 +390,27 @@ Copying Object in java
 						o1.i=o.i
 	3.Cloning
 
-			By Implementing Clonable Interface and by overriding a public void clone method
-Note that the super.clone() call returns a shallow copy of an object, but we set deep copies of mutable fields manually, so the result is correct
+By Implementing Clonable Interface and by overriding a public void clone method
+Note that the super.clone() call returns a shallow copy of an object, but we set deep copies of mutable fields manually, so the result is correct https://www.geeksforgeeks.org/clone-method-in-java-2/
+
 We can also achieve deep copying using a copy constructor.
+
+		class Person {
+	private String name;
+	private int age;
+
+	public Person(String name, int age) {
+		this.name = name;
+		this.age = age;
+	}
+
+	public Person(Person another) {
+		this(another.name, another.age);
+	}
+
+	// Getters and setters for the instance variables
+}
+
 
 
 Serilization is a concept where we can maintian the state of an object, we can either convert the state of object into file supported form or network supported form
@@ -415,7 +419,7 @@ Serilization is a concept where we can maintian the state of an object, we can e
 		When we use transient variable jvm will ignore the value and will use the default value depending on the data type.
 
 
-		By default Java provides ObjectOutputStream-> writeObject method and ObjectInputStream-> readObject method for serializing and deserilising respectively
+		By default Java provides ObjectOutputStream-> writeObject method and ObjectInputStream-> readObject method for serializing and deserializing respectively
 
 		If we want to control the versioning, we need to provide the serialVersionUID attribute. This attribute is used to verify that the saved and loaded objects are compatible. Therefore, we need to ensure it is always the same, or else InvalidClassException will be thrown
 
@@ -433,19 +437,18 @@ Custom Serialization
 
 	The key difference here is how we handle the serialization process. When a class implements the java.io.Serializable interface, the JVM takes full responsibility for serializing the class instance. In case of Externalizable, it's the programmer who should take care of the whole serialization and also deserialization process.
 
-				Use Case
-				If we need to serialize the entire object, the Serializable interface is a better fit. On the other hand, for custom serialization, we can control the process using Externalizable.
+Use Case
+	If we need to serialize the entire object, the Serializable interface is a better fit. On the other hand, for custom serialization, we can control the process using Externalizable.
 
-				Performance
-				The java.io.Serializable interface uses reflection and metadata which causes relatively slow performance. 
-				By comparison, the Externalizable interface gives you full control over the serialization process.
+Performance
+The java.io.Serializable interface uses reflection and metadata which causes relatively slow performance. 
+By comparison, the Externalizable interface gives you full control over the serialization process.
 
-				Reading Order
-				While using Externalizable, it's mandatory to read all the field states in the exact order as they were written. Otherwise, we'll get an exception.
+Reading Order
+While using Externalizable, it's mandatory to read all the field states in the exact order as they were written. Otherwise, we'll get an exception.
+For example, if we change the reading order of the code and name properties in the Country class, a java.io.EOFException will be thrown.
 
-				For example, if we change the reading order of the code and name properties in the Country class, a java.io.EOFException will be thrown.
-
-				Meanwhile, the Serializable interface doesn't have that requirement.
+Meanwhile, the Serializable interface doesn't have that requirement.
 	Externalisable needs a default constructor ,Java serilisation does not require this
 	Performance wise Externalisable is better
 
@@ -455,12 +458,12 @@ Custom Serialization
 
 	Gson and Jackson are the 2 libraries to convert a object to and from json
 
-		Spring internally uses Jackson as the default Seriliser .
-			If we use @Controller annotation
-				@RequestBody annotation will make spring to automatically deserialise the input json object into java object
-				@ResponseBody annotation will serialise the Output java objet into json object automatically.
+Spring internally uses Jackson as the default Seriliser .
+If we use @Controller annotation
+	@RequestBody annotation will make spring to automatically deserialise the input json object into java object
+	@ResponseBody annotation will serialise the Output java objet into json object automatically.
 
-			If we use @RestController then spring automatically will do the serialisation and deserilisation without these annotations.
+If we use @RestController then spring automatically will do the serialisation and deserilisation without these annotations.
 
 			Furthur reading
 		https://www.baeldung.com/java-serialization-approaches
