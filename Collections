@@ -1,0 +1,311 @@
+**Collection
+
+	Methods like add,addAll,remove,removeAll,Iterator ,clear these methods are inhertited from collection Interface.
+
+ **List
+       	It is a ordered collection which allows duplicate.
+
+       	You can convert any collection to any other collection( set collection into arraylist and vice versa) by using a constructor.
+
+	**Iterator is unidirectional, has 3 methods- hasNext();next();remove();
+	**ListIterator is bidirectional, It has hasPrevious() and previous(), nextIndex(),previousIndex() methods as well
+
+		List interface has 2 forms of list iterator , the one with the int argument will point the iterator from the integer index passed, the one without the argument will start the iterator from the begining of the list.
+			
+			Algorithm           ArrayList   LinkedList
+			seek front            O(1)         O(1)
+			seek back             O(1)         O(1)
+			seek to index         O(1)         O(N)
+			insert at front       O(N)         O(1)
+			insert at back        O(1)         O(1)
+			insert after an item  O(N)         O(1)
+**Set Collection
+
+		Duplicates are not allowed, It has only those methods from collection interface
+
+		HashSet -Stores elements in hashtable, insertion order is not maintained(performance is good)
+		TreeSet- Stores elements in red-black tree,insertion order is not maintained,It is a sorted set, It is a implementation of
+		set Interface->Sortedset Interface->Navigable Interface
+		LinkedHashSet- elements stored in hashtable, insertion order is maintaned
+
+	HashSet Internally uses Hash map to insert the data 
+
+eg in the documentation
+
+		public boolean add(E e) {
+  		 return map.put(e, PRESENT)==null;
+		}
+	Now as you can see that whenever we create a HashSet, it internally creates a HashMap and if we insert an element into this HashSet using add() method, it actually calls put() method on internally created HashMap object with element you have specified as it’s key and constant Object called “PRESENT” as it’s value. 	So we can say that a Set achieves uniqueness internally through HashMap and when we call put(Key, Value) method, it returns the previous value associated with key, or null if there was no mapping for key. So in add() method we check the return value of map.put(key, value) method with null value.
+	
+	As LinkedHashSet extends HashSet, so it internally calls constructors of HashSet using super(). Similarly creating an object of TreeSet class internally creates object of Navigable Map as backing map.
+
+			to get the value from hashSet , the iterator method will return
+			public Iterator<E> iterator() {
+		        return map.keySet().iterator();
+		    }
+
+**Queue
+		It is used to hold the elements before processing, It has additional methods like
+
+				public interface Queue<E> extends Collection<E> {
+				    E element();
+				    boolean offer(E e);
+				    E peek();
+				    E poll();
+				    E remove();
+				}
+
+		Each Queue method exists in two forms: 
+		(1) one throws an exception if the operation fails.
+		(2) the other returns a special value if the operation fails (either null or false, depending on the operation). The regular structure of the interface is illustrated in the following table.
+
+				Queue Interface Structure
+
+				Type of Operation	Throws exception	Returns special value
+				Insert				add(e)				offer(e)
+				Remove				remove()			poll()
+				Examine				element()			peek()
+
+
+	The add method, which Queue inherits from Collection, inserts an element unless it would violate the queue's capacity restrictions, in which case it throws IllegalStateException. The offer method, which is intended solely for use on bounded queues, differs from add only in that it indicates failure to insert an element by returning false.
+
+	The remove and poll methods differ in their behavior only when the queue is empty. Under these circumstances, remove throws NoSuchElementException, while poll returns null.
+	
+	The element and peek methods return, but do not remove, the head of the queue.
+	 If the queue is empty, element throws NoSuchElementException, while peek returns null.
+
+	Queue implementations generally do not allow insertion of null elements. The LinkedList implementation, which was retrofitted to implement Queue, is an exception. For historical reasons, it permits null elements, but you should refrain from taking advantage of this, because null is used as a special return value by the poll and peek methods.
+
+**Dequeue Is a linear collection of elements which supports adding and removal of elements in both the ends.
+			It implememnts both stack and queue
+				 ArrayDeque and LinkedList implement the Deque interface.
+
+Note that the Deque interface can be used both as last-in-first-out stacks and first-in-first-out queues
+
+			Deque Methods
+
+			Type of Operation	First Element (Beginning of the Deque instance)		Last Element (End of the Deque instance)
+			Insert				addFirst(e)											offerFirst(e)
+								addLast(e)											offerLast(e)
+												
+			Remove				removeFirst()										removeLast()
+								pollFirst()											pollLast()
+											
+			Examine				getFirst()											peekFirst()
+								getLast()											peekLast()
+								
+
+A List is an ordered list of objects, where the same object may well appear more than once.
+For example: [1, 7, 1, 3, 1, 1, 1, 5]. It makes sense to talk about the "third element" in a list. You can add an element anywhere in the list, change an element anywhere in the list, or remove an element from any position in the list.
+
+A Queue is also ordered, but you'll only ever touch elements at one end. All elements get inserted at the "end" and removed from the "beginning" (or head) of the queue. You can find out how many elements are in the queue, but you can't find out what, say, the "third" element is. You'll see it when you get there.
+
+A set is not ordered and cannot contain duplicates. You again can't ask for the "third" element or even the "first" element, since they are not in any particular order. You can add or remove elements, and you can find out if a certain element exists (e.g., "is 7 in this set?").
+
+ ** Map provides
+        To change the value use entrySet
+        for(Map.Entry<Integer, String> i:m.entrySet()){
+			i.setValue("Shimuli");
+			}
+
+        To remove the value use iterator
+
+        Iterator itr1=m.keySet().iterator();
+		while(itr1.hasNext()){
+			
+			itr.remove();
+		}
+
+		HashMap-Insertion order is not maintained,they are not synchronized
+		Linked HashMap -Insertion order is maintained,they are not synchronized
+
+		TreeMap is a sorted Map
+
+InnerWorking of HashMap
+
+	A hash collision in Java occurs when two or more keys have the same hash code and are stored in the same bucket
+
+	HashMap uses a technique called hashing,If 2 objects are equal then they must have same hashcode
+	Every object will have a hascode method which gives the hashcode of that object eg 231245 ,hashcode is a set of integer numbers.
+
+	HasMap internally has a array of Node (each Node is a linked list)
+	Node will have ie Node<k,v> will have
+
+				int hashcode;
+				 key;
+		 		value;
+				 Node<k,v> next;
+
+	the lenght of the array is by default 16(index will be 0-15)
+	When we try to insert a value to hashmap using put method, the hashcode of the key will be calculated and
+	uisng the formula
+
+		ie index=hashcode & (n-1) (& means modulus operation and n=16)
+
+	whatever index we get we will insert the keyvalue pair in that node.If there are 2 keys with the same index then there will be hash colission
+	Then we will check if both the key are same or equal
+	if they are different then
+		the first inserted record in that node, the  "next" poniter will be pointing to this new record.
+	else if the keys are same
+		if will replace the first record with the new record
+
+HashMap will allow us to store a "Null" key, "Null" has a hashcode =0 so index of null key will be always 0
+
+To get the value of the key we use the same index calculation and once we get the index we compare the hashcode value stored in the index with the hashcode of the Key value and the string key will also be compared using equals method. If both will match then the particular key will be retuned
+
+In java 8
+ If the number of duplicated index reaches more than the threshold ie TreeIFY_Threshold=8 then node switches from a linked list to a balanced tree  or binary tree to improve the performance
+
+ Balanced tree means the heavier hashcode will be moved to the right side of the tree and the lighter one will be moved to the left.
+ If the hascodes are equal then we compare the keys
+
+ A binary search tree is a * sorted binary tree, where value of a node is greater than or equal to its * left the child and less than or equal to its right child.
+
+ Read bst-https://www.youtube.com/watch?v=81PpYQ0AN_w
+
+
+ SynchronizedHashMap vs ConcurrentHashMap -Both are used to achieve thread safe
+
+
+ *SynchronizedHashMap maintains the lock at object level , to perform put or get we need to acquire the lock
+
+ *ConcurrentHashMap mainitains the lock at bucket level read operation doesn't require a lock. So any number of threads can perform a get operation on it.If thread1 wants to perform put operation in segment 2 and thread2 wants to perform put operation on segment 4 then it is allowed here
+
+	when to use
+	We should favor Collections.synchronizedMap() when data consistency is of utmost importance, and we should choose ConcurrentHashMap for performance-critical applications where there are far more write operations 	than there are read operations.
+
+	This is because the Collections.synchronizedMap() requires each thread to acquire a lock on the entire object for both read/write operations. By comparison, the ConcurrentHashMap allows threads to acquire locks 	on separate segments of the collection, and make modifications at the same time
+
+Difference btw HashMap and HashTable
+
+Hashmap is not thread safe and it is not synchronized
+HashTable is threads safe and it is synchnonized
+
+HashMap is fast
+HashTable is slow
+
+HashMap can allow one null key
+HashTable does not allow null key
+
+In hasMap and hashTable the insertion hashMap is not fixed, but in linked HashMap the insertion order is fixed.
+
+ConcurrentHashMap vs Hashtable vs Synchronized Map- All the 3 are threadSafe
+
+The only difference between Hashtable and Synchronized Map is that later is not a legacy and you can wrap any Map to create it's synchronized version by using Collections.synchronizedMap() method.
+
+Read more: https://javarevisited.blogspot.com/2011/04/difference-between-concurrenthashmap.html#ixzz5yjFPtYkJ
+
+HasSet vs HashMap
+HashSet allows one null value HashMap allows one null key and any number of null values
+HaShSet is a implemention of Set Interface, HashMap is a implemention of Map Interface
+HashSet we have add , HaspMap we have put
+
+TreeHashMap is a sorted HashMap and it does not allow null keys.
+
+** TreeMap
+	Some of the important points to remember about TreeMap in java are;
+
+	Apart from implementing Map interface, Java TreeMap also implements NavigableMap and indirectly implements SortedMap interface. TreeMap also extends AbstractMap class.
+
+	TreeMap entries are sorted in the natural ordering of its keys. It also provides a constructor to provide Comparator to be used for ordering. So if you are using any class as key, make sure it’s implementing Comparable interface for natural ordering.
+
+	Java TreeMap implementation provides guaranteed log(n) time cost for the containsKey, get, put and remove operations.
+
+	TreeMap is not synchronized and hence not thread-safe. For multithreaded environments, you can get a wrapped synchronized using Collections.synchronizedSortedMap method.
+
+	TreeMap methods to get keyset and values return Iterator that are fail-fast in nature, so any concurrent modification will throw ConcurrentModificationException.
+	
+	TreeMap in java doesn’t allow null keys, however you can have multiple null values associated with different keys.
+
+ ***Cursors
+ 	To get individual values from collection we have
+
+ 		1.Enumeration
+ 		2.Iteration
+ 		3.ListIteration
+
+ 	Utility classes which have some utility methods for collection
+
+ 		1.Collections
+ 		2.Arrays
+
+Advantages of Data Structure
+	Reusability
+	Efficiency
+	Abstraction
+
+    **Stack-LIFO
+     Stack is a linear list in which insertion and deletions are allowed only at one end, called top.
+	Stack is a abstract datatype. It uses LIFO-Last In First Out,
+	It has features like 
+	push - to add a element
+	pop- to delete a element
+	peek-to view a element
+	In stack we have only one entry point
+	If we are adding more value to the fixed size stack then we get overflow error
+	Underflow error is when you try to get value from a empty stack
+
+**Queue-FIFO
+	Queue is a linear list in which elements can be inserted only at one end called rear and deleted only at the other end called front.
+	Queue used FIFO and it has enqueue for insertion and dequeue for deletion.
+	We need to create enque,dequeue isEmpty,isFull,getSize methods with normal logic.
+
+**Linked List
+	LinkedList is an implementation of both a queue and a stack
+
+	Poll vs Pop
+	Poll will return null if the list is empty and Poll is also used to remove the head element.
+	Pop will throw java.util.NoSuchElementException and Pop is used to remove and return the head element.
+	
+
+	Other methods are 
+	peek()
+	peekFirst()
+	peekLast()
+
+	3 types of linkedList
+	1.Single linked list
+	2.doublylinkeedList- It has a link to previous as well as next node
+	3.CircularLinkedList- The nodes are connected to form a circle, First node and last node are connected.
+
+Array vs LinkedList
+
+Array size if fixed, LinkedList size is dynamic.
+Array is faster for adding,deleting, Linked list is slower for these operations.
+Array consumes more memory, In linked List the memory can be redumped to heap.
+
+*Tree
+	
+	This data structure uses a concept of Node
+
+	TopNode is root node
+	lines which connect each node is edge
+	Nodes which donot have any child are called Leaf Node
+
+**Binary Tree
+
+	Binary tree is a Tree which does not have more than 2 nodes, all the nodes can have 0,1 not more than 2 node
+
+	Types in Binary Tree
+
+	1.Strict Binary Tree- Either 0 or 2 nodes or childrens
+	2.Full Binary Tree - Where all the childrens are on same level( they will have same right and left nodes)
+	3.Complete Binary tree where the level of child nodes are l and l-1
+
+	Depth- Distance btw Root Node
+	Height-Height till last child node
+
+	Height of the tree = height of root node
+
+
+
+
+Read more: https://javarevisited.blogspot.com/2015/10/how-to-implement-binary-search-tree-in-java-example.html#ixzz5vtwsQjZh
+
+**ArrayList vs Linked List
+
+	ArrayList uses dynamice resiazable array, ArrayList is faster to retrival of data
+	LinkedList uses doubly linked List, LinkedList is faster for manupulation
+
+	Manipulation with ArrayList is slow because it internally uses an array. If any element is removed from the array, all the other elements are shifted in memory.
+	Manipulation with LinkedList is faster than ArrayList because it uses a doubly linked list, so no bit shifting is required in memory.
