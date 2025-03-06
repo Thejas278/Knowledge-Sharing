@@ -80,6 +80,28 @@ NESTED classes 2 types
 
 	Nested class can be declared private,protected,Default(package private),public
 
+To Acess the inner class variables we have to the following
+	we have to create a outer class Instance and using that we have to access the inner class variables
+
+		Outer o=new Outer();
+		Outer.Inner u= o.new Inner();
+
+		If we want to access the outer class non static variables then we dont have to create the objects of outer class
+
+		public class InnerRun  {
+		private int it=10;
+		int j=20;
+	
+	
+		public class Ulai{
+		public void getUlai(){
+			
+		System.out.println(j+it);
+		}
+	}
+
+		}
+
 **An instance of InnerClass can exist only within an instance of OuterClass and has direct access to the methods and fields of its enclosing instance.
 
 	If a class is defined inside a class then 
@@ -136,6 +158,19 @@ synthetic constructs can vary among different Java compiler implementations, whi
 					You cannot declare constructrs in Anonymous class
 
 **Inner classes may inherit static members that are not compile-time constants even though they may not declare them. Nested classes that are not inner classes may declare static members freely, in accordance with the usual rules of the Java programming language.
+
+**Inner Class
+
+	1.The scope of a nested class is bounded by the scope of its enclosing class.NestedClass does not exist independently of class OuterClass.
+	2.A nested class has access to the members, including private members, of the class in which it is nested. However, reverse is not true i.e. the enclosing class does not have access to the members of the nested class.
+	3.A nested class is also a member of its enclosing class.
+	
+For inner class the class file will be created name will be A$B.class where A is the outer class and B is the inner class
+
+** Anonymous Objects are objects without reference
+	new A().showEmployee();// This does not have a reference and hence it will not utilize the stack memory , it will use only heap
+
+	Since anonymous objects dont have reference , they are eligible for garbage collection
 
 LAMBDA EXPRESSIONS
 
@@ -424,6 +459,39 @@ Serilization is a concept where we can maintian the state of an object, we can e
 		If we want to control the versioning, we need to provide the serialVersionUID attribute. This attribute is used to verify that the saved and loaded objects are compatible. Therefore, we need to ensure it is always the same, or else InvalidClassException will be thrown
 
 		Java serialization heavily uses I/O streams. We need to close a stream immediately after a read or write operation because if we forget to close the stream, we'll end up with a resource leak
+Seralization and Deserialization
+
+	Is the process of converting the object into byte array so that it can be transferred into a file or over a network
+
+		Using FileOutPutStream for file and ObjectOutPutStream for Object we can achieve this -Serializzation
+
+
+		Is the process of converting the Byte array back to java object so that it can be transferred into a file or over a network
+
+		Using FileInputPutStream for file and ObjectInputPutStream for Object we can achieve this -Serializzation
+
+
+	Transcient is a keyword which is only used for variables
+	Transcient will not serialize the object value it will send the default value of the field
+
+	transcient  int i=10;  //o/p will be 0
+
+	transcient final int i=10;  //o/p will be 10 ( because for final variables value will be assigned at compile time)
+		if final variable is initilized inside constructor then transcient will work, op will be 0
+
+	transcient static int i=10;  //o/p will be 10 (only non static variables participate in serialization)
+
+	for serialzation the order in which we serialize , the same order we have to deserialze. 
+	if we do not know the order then we can use instanceOf operator for find the instance
+
+	*Object Graph- When we serialze a object , set of all objects which are reachable to that object will be serialized
+
+	while adding customized Serialization we have to implement
+	private void WriteObject(OOS oos);
+	private void readObject(OIS ois); if we dont implement these methods then jvm will use the defaut serialisation methods
+	*these 2 methods are called automatically by jvm hence they are called call back methods
+
+	continue from here https://www.youtube.com/watch?v=p-98X_1mMIY
 
 Custom Serialization
 		
