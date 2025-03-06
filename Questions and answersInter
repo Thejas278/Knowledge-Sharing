@@ -342,42 +342,6 @@ Interface
 		Collections.sort( cl,ch4);
 
 
-Seralization and Deserialization
-
-	Is the process of converting the object into byte array so that it can be transferred into a file or over a network
-
-		Using FileOutPutStream for file and ObjectOutPutStream for Object we can achieve this -Serializzation
-
-
-		Is the process of converting the Byte array back to java object so that it can be transferred into a file or over a network
-
-		Using FileInputPutStream for file and ObjectInputPutStream for Object we can achieve this -Serializzation
-
-
-	Transcient is a keyword which is only used for variables
-	Transcient will not serialize the object value it will send the default value of the field
-
-	transcient  int i=10;  //o/p will be 0
-
-	transcient final int i=10;  //o/p will be 10 ( because for final variables value will be assigned at compile time)
-		if final variable is initilized inside constructor then transcient will work, op will be 0
-
-	transcient static int i=10;  //o/p will be 10 (only non static variables participate in serialization)
-
-	for serialzation the order in which we serialize , the same order we have to deserialze. 
-	if we do not know the order then we can use instanceOf operator for find the instance
-
-	*Object Graph- When we serialze a object , set of all objects which are reachable to that object will be serialized
-
-	while adding customized Serialization we have to implement
-	private void WriteObject(OOS oos);
-	private void readObject(OIS ois); if we dont implement these methods then jvm will use the defaut serialisation methods
-	*these 2 methods are called automatically by jvm hence they are called call back methods
-
-	continue from here https://www.youtube.com/watch?v=p-98X_1mMIY
-
-
-
 Design Patterns
 
 1) Creational Pattern
@@ -547,69 +511,6 @@ Command Design pattern
 Proxy Design pattern
 You need to update
 	It provides the protection to the original object from the outside world.
-
-**Inner Class
-
-	1.The scope of a nested class is bounded by the scope of its enclosing class.NestedClass does not exist independently of class OuterClass.
-	2.A nested class has access to the members, including private members, of the class in which it is nested. However, reverse is not true i.e. the enclosing class does not have access to the members of the nested class.
-	3.A nested class is also a member of its enclosing class.
-	
-For inner class the class file will be created name will be A$B.class where A is the outer class and B is the inner class
-
-There are 3 types 
-
-	1.Non Static class
-		To Acess the inner class variables we have to the following
-	we have to create a outer class Instance and using that we have to access the inner class variables
-
-		Outer o=new Outer();
-		Outer.Inner u= o.new Inner();
-
-		If we want to access the outer class non static variables then we dont have to create the objects of outer class
-
-		public class InnerRun  {
-		private int it=10;
-		int j=20;
-	
-	
-		public class Ulai{
-		public void getUlai(){
-			
-		System.out.println(j+it);
-		}
-	}
-
-		}
-
-
-	2.Static Class
-		**If we make the inner class static we dont need to create the object of the outer class,
-		**Only Nested class can be static , the outer class cannot be static
-
-		To Acess the non static variables inside a static class
-		StringUnique.Inside u = new StringUnique.Inside();
-		u.run();
-
-** 	To acess the non static inner class , we have to create Object of the outer class
-	To acess the  static inner class , we do not have to create object of outer class
-
-	A static class cannot access non-static members of the Outer class. It can access only static members of Outer class.
-
-
-	3.Anonymous Inner Classes
-
-	**	Age oj1 = new Age() {
-            @Override
-            public void getAge() {
-                System.out.print("Age is "+x);
-            }
-        };
-
-	Age is a interface,
-** Anonymous Objects are objects without reference
-	new A().showEmployee();// This does not have a reference and hence it will not utilize the stack memory , it will use only heap
-
-	Since anonymous objects dont have reference , they are eligible for garbage collection
 
 ---------------------------------Java Upgrades--------------------------------------------------------------------------------------------
 
