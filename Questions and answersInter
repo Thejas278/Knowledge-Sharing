@@ -17,7 +17,13 @@ JRE=JVM+library classes
 
 JVM is a virtul machine which is a interpretor and it is responsible for line by line execution.JVM converts the byte code into machine level language
  JVM is also platform dependent and provides core java functions like memory management, garbage collection, security etc.
- WE need to have different jvm for different operating system
+ WE need to have different jvm for different operating system.
+
+*Garbage Collection
+
+ Garbage collector is best example of Daemon thread as it is always running in background.
+ Finalization:Just before destroying an object, Garbage Collector calls finalize() method on the object to perform cleanup activities.
+    Once finalize() method completes, Garbage Collector destroys that object.
 
 Memory leak
 	One of the core benefits of Java is the automated memory management with the help of the built-in Garbage Collector (or GC for short). The GC implicitly takes care of allocating and freeing up memory, and thus 	is capable of handling the majority of memory leak issues
@@ -66,24 +72,6 @@ Memory leak
 		finally {
 		    threadLocal.remove();
 		}
-ThreadPool https://www.youtube.com/watch?v=sIkG0X4fqs4
-	If you want to execute 1000 tasks then you can use ExecutorService to get the fixed threads say 10 threads which can be re used to complete the 1000 tasks all the tasks will be moved to a thread safe ques to that the can be picked for our thread, usually Blockingqueue is used because it is thread safe
-
-	Poll size - If we have cpu intensive operation then we should use number of threads =number of cpu because at a time we can use only 4 threads because each kava thread =1 os thread
-			int coreCount=Runtime.getRunTime().availableProcessors() will give the processor count and that can be set as the pool size.
-		    If it is the Io operation or get data from database then once the request is sent , the threads goes into wait state so now we can re use these threads so in this case we can set the threadpool size to some big number say 100
-			Too many threads will have more memory consumption also if our server is running other applications then we cannot assume that all 100 threads will be used for our operation
-
-	Type of ThreadPool
-
-	1.FixedThreadPool
-
-	2.CachedThread pool- It will have one synchronous queue whcih will store one task and it will see if any threads are avilable if not it will create a new thread ,add it to the pool
-		and execite the task in this case if we do not specify the threadpool size so anynumner of threads can be created if there are no free threads availabel and this service will also kill the thread if the thread is idal for 60 seconds to save the memory
-
-	2.ScheduledThreadPool
-
-	3.SingleThreadPool
 
  Members of the class-fields,methods and inner classes
 
@@ -111,13 +99,7 @@ ThreadPool https://www.youtube.com/watch?v=sIkG0X4fqs4
  StringBuffer is thread safe and StringBuilder is not thread safe
  StringBuffer is slower when compared to StringBuilder.
 
- *Garbage Collection
-
- Garbage collector is best example of Daemon thread as it is always running in background.
- Finalization:Just before destroying an object, Garbage Collector calls finalize() method on the object to perform cleanup activities.
-    Once finalize() method completes, Garbage Collector destroys that object.
-
-Stack is used to method execution, Heap is used for storing objects
+ Stack is used to method execution, Heap is used for storing objects
 
 Object class is the only class that does not extend any other class,every class is implicitly a subclass of Object.
 
@@ -127,10 +109,8 @@ Visibility in the child can be more than Parent class but cannot be less than th
 String Interning
 	Thanks to the immutability of Strings in Java, the JVM can optimize the amount of memory allocated for them by storing only one copy of each literal String in the pool. This process is called interning
 
-Before Java 7, the JVM placed the Java String Pool in the PermGen space, which has a fixed size — it can’t be expanded at runtime and is not eligible for garbage collection.
-
+Before Java 7, the JVM placed the Java String Pool in the Permanent Generation (PermGen space), which has a fixed size — it can’t be expanded at runtime .
 	The risk of interning Strings in the PermGen (instead of the Heap) is that we can get an OutOfMemory error from the JVM if we intern too many Strings.
-
 	From Java 7 onwards, the Java String Pool is stored in the Heap space, which is garbage collected by the JVM. The advantage of this approach is the reduced risk of OutOfMemory error because unreferenced Strings will be removed from the pool, thereby releasing memory.
 
 String s1="thejas"
@@ -150,7 +130,7 @@ but String s3=new String("thejas")// Object is created in heap so s1!=s3
 		Default is also called as package private
 		Protected =Can be acessed by subclass or package private
 
-		For overloading the return type does not matter only methodname and argument list matter
+For overloading the return type does not matter only methodname and argument list matter
 
 Constructor is a block with no return type, It has same name as the class, It is not a member of a class so its not inherited,It can only be invoked.
 
@@ -160,7 +140,6 @@ A nested class has access to all the private members of its enclosing class—bo
 
 static methods are inherited but not overridden, if you try to override then the static method in the parent class will be hidden
  variables declared using static final needs to be initialized
-
  
  Serializable is a marker interface
 
@@ -276,7 +255,7 @@ Association
 
 		In Aggregation, both the entries can survive individually which means ending one entity will not effect the other entity
 
-	Composition is a restricted form of Aggregation in which two entities are highly dependent on each other.
+	Composition is a restricted form of Association in which two entities are highly dependent on each other.
 				It represent parts of relationship, when one is destroyed the dependent object is also destroyed
 
 	Composition is a strong Association whereas Aggregation is a weak Association.
@@ -306,27 +285,25 @@ Interface
         f.instanceMethod();//child method gets executed
         f.classMethod();//parent method gets executed
 
-        If u create a abstract method (Y) in the parent and if u declare the same metohod(Y) as abstratc in ur child interface then the class which will implement the child will have to implement the abstract method (Y) , the parents default implementation will not be available to it
+        If u create a abstract method (Y) in the parent and if u declare the same method(Y) as abstratc in ur child interface then the class which will implement the child will have to implement the abstract method (Y) , the parents default implementation will not be available to it
 
         Default methods can be overridden
 
         https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html
 
-  **Comparator vs comparable
-
-      * Comparable - compareTo(Object o)
+ 
+ * Comparable - compareTo(Object o)
 
 	        If any custom class wants to use Arrays.sort or Collections.sort then it should implement Comparable.
 
-	        In Comparable we modify the pojo class,Sometimes we might not be able to modify the class
-	        Comparable can be used only for natural ordering or default sorting.
-
+	        In Comparable we modify the pojo class,Sometimes we might not be able to modify the class.
+		Since we have to modify the actual class we can implement only 1 type of sorting.
 	        NullPointerException - if the specified object is null
 		ClassCastException - if the specified object's type prevents it from being compared to this object.
 
-      * Comparator- compare(Object o1,Object o2)
+ * Comparator- compare(Object o1,Object o2)
 
-         It is a good practise to Seralize the comparator as they may be used as ordering methods in serializable data structures (like TreeSet, TreeMap). In order for the data structure to serialize successfully
+         It is a good practise to Seralize the comparator as they may be used as ordering methods in serializable data structures (like 	TreeSet, TreeMap). In order for the data structure to serialize successfully
 
          Arrays.sort or Collections.sort will take one more argument which take Comparator as argument.
 
@@ -336,16 +313,18 @@ Interface
 			First object with Second object will be ascending
 			reverse will be descending
 
-
-
+		if you return 1 then it will be swapped
+		ie if(e1.employeeAge>e2.employeeAge)
+			return 1;
+		else
+			return -1;
+ **Comparator vs comparable
 	Comparator has compare method
 	comparable has compareTo method
 
 	Comparator is used to compare more than one field
 	comparable is used to  one field
-
-
-	, Implemented in the seperate class ,Comparator- Actual class is not effectedate class
+	Implemented in the seperate class ,Comparator- Actual class is not effectedate class
 	comparable- Actual class is effected
 
 	Comparable is used to default sorting,Comparator is used for custom sorting
@@ -1339,7 +1318,24 @@ ThreadLocal
 
 As a result, when we call a get() method on the threadLocalValue, we’ll get an Integer value for the requesting thread:
 
+ThreadPool https://www.youtube.com/watch?v=sIkG0X4fqs4
+	If you want to execute 1000 tasks then you can use ExecutorService to get the fixed threads say 10 threads which can be re used to complete the 1000 tasks all the tasks will be moved to a thread safe ques to that the can be picked for our thread, usually Blockingqueue is used because it is thread safe
 
+	Poll size - If we have cpu intensive operation then we should use number of threads =number of cpu because at a time we can use only 4 threads because each kava thread =1 os thread
+			int coreCount=Runtime.getRunTime().availableProcessors() will give the processor count and that can be set as the pool size.
+		    If it is the Io operation or get data from database then once the request is sent , the threads goes into wait state so now we can re use these threads so in this case we can set the threadpool size to some big number say 100
+			Too many threads will have more memory consumption also if our server is running other applications then we cannot assume that all 100 threads will be used for our operation
+
+	Type of ThreadPool
+
+	1.FixedThreadPool
+
+	2.CachedThread pool- It will have one synchronous queue whcih will store one task and it will see if any threads are avilable if not it will create a new thread ,add it to the pool
+		and execite the task in this case if we do not specify the threadpool size so anynumner of threads can be created if there are no free threads availabel and this service will also kill the thread if the thread is idal for 60 seconds to save the memory
+
+	2.ScheduledThreadPool
+
+	3.SingleThreadPool
 
 Parallism means completing or doing a lot of work at once.
 		To achieve Parellism in Java we have
