@@ -375,14 +375,14 @@ Design Patterns
 
 1.Factory Method Pattern
 
-	It is a design pattern where we are providing the interface to create a object and the subclass has to pass the type and depending on the type we are creating the object
+	Imagine you have a interface(Account) and you have many implementations of that interface(Savings,Salary..etc) instead of exposing the code of object creation to the client, we are creating a factory class which is responsible for creating the object.If we need to add any new type of account then we dont have to change the client code, we have to change the factory class.
 
 	The factory method pattern loosens the coupling code by separating our Product‘s construction code from the code that uses this Product
 
 	The Factory Method Pattern is also known as Virtual Constructor.
 	It promotes polymorphism you can create diffferent objects in runtime
 
-									class GetPlanFactory{  
+			class GetPlanFactory{  
 			      
 			   //use getPlan method to get object of type Plan   
 			       public Plan getPlan(String planType){  
@@ -404,14 +404,14 @@ Design Patterns
 
 
 2.Abstract Factory Pattern
-		define an interface or abstract class for creating families of related (or dependent) objects but without specifying their concrete sub-classes
+		Define an interface or abstract class for creating families of related (or dependent) objects but without specifying their concrete sub-classes.
+Imagine you have to make a meal combo
 
-		
-
-				interface CarFactory {
-				    Car createCar();
-				    CarSpecification createSpecification();
+		interface ComboFactory {
+				    Food createFood();
+				    Drink createDrinks();
 				}
+
 
 3.ProtoType Design Pattern
 
@@ -421,27 +421,88 @@ Design Patterns
           
         e1.showRecord();  
         System.out.println("\n");  
-        EmployeeRecord e2=(EmployeeRecord) e1.getClone();  //IN get clone we are creating a object
+        EmployeeRecord e2=(EmployeeRecord) e1.getClone();  //IN get clone we are creating a object,this will be shallow cloning
         e2.showRecord();  
 
+	Or
+	You can create a interface and add a clone method and make classes implement the interface
+
+			public abstract class Tree {
+    
+				    // ...
+				    public abstract Tree copy();
+				    
+				}
+and implement and test
+		public class TreePrototypesUnitTest {
+			public void givenAPlasticTreePrototypeWhenClonedThenCreateA_Clone() {
+		        // ...
+		
+		        PlasticTree plasticTree = new PlasticTree(mass, height);
+		        plasticTree.setPosition(position);
+		        PlasticTree anotherPlasticTree = (PlasticTree) plasticTree.copy();
+		        anotherPlasticTree.setPosition(otherPosition);
+		
+		        assertEquals(position, plasticTree.getPosition());
+		        assertEquals(otherPosition, anotherPlasticTree.getPosition());
+		    }
+		}
 4.Builder Design Pattern
-	construct a complex object from simple objects using step-by-step approach
+	separates the construction of complex objects from their representation, offering a cleaner and more flexible approach to object creation.
+	construct a complex object from simple objects using step-by-step approach.
 
-	Create a tank Interface
-	create a fuel Interface
+		public class Post {
+		
+		    private final String title;
+		
+		    private final String text;
+		
+		      Post(Builder builder) {
+		        this.title = builder.title;
+		        this.text = builder.text;
+		           }
+		
+		      public static class Builder {
+		        private String title;
+		        private String text;
+		     
+		        public Builder title(String title) {
+		            this.title = title;
+		            return this;
+		        }
+		
+		        public Builder text(String text) {
+		            this.text = text;
+		            return this;
+		        }
+		
+		             public Post build() {
+		            return new Post(this);
+		        }
+		    }
+		}
 
-	create a car interfcae which extends both tank and fuel
+	and use it like
+		Post post = new Post.Builder()
+		  .title("Java Builder Pattern")
+		  .text("Explaining how to implement the Builder Pattern in Java")
+		  .category("Programming")
+		  .build();
 
-	create a implementation nanocar extending car Interface
+	Even Lombook has a builder annotation @Builder.
+
+----------------------------------------------------------------------------------------------------------------------------------
 
 Structural DesignPattern
 
-
-5.Adopter Design pattern: It is a structural design pattern where 2 unrelated interfaces can work together and the object which joins these 2 are called Adapter.
+5.Adopter Design pattern: 
+An Adapter pattern acts as a connector between two incompatible interfaces that otherwise cannot be connected directly. The main goal for this pattern is to convert an existing interface into another one the client expects.
 
 	Adapter makes things work after they're designed; Bridge makes them work before they are
 
 	Effectively, the Adapter pattern is useful when you have existing code, be it third party, or in-house, but out of your control, or otherwise not changeable to quite meet the interface you need it to.
+
+	A phone(Interface) needs a Specific Charger(Interface) , if u dont have company charger then Some other Hardware will implemenet Specific Charger and that will act as Adapter which will connect Phone interface and Specific Charger interface. 
 
 6.Brdige Design Pattern
 It is a structural Design Pattern where we seperate the abstraction hierarcy and implementation hieracy into 2 different layers so that chaneg in one layer will not effect the other layer
@@ -452,46 +513,64 @@ It is a structural Design Pattern where we seperate the abstraction hierarcy and
 
 	MemoryMappedWindowsFile MemoryMappedLinuxFile DirectReadWindowsFile DirectReadLinuxFile
 
+	Adapter vs Bridge read this https://stackoverflow.com/questions/1425171/difference-between-bridge-pattern-and-adapter-pattern
+
 7.Facade Design patter is a pattern where the complexities of the system is hidden and the client is provided with the interface to access the system
 
 	Facade hides the complexities of the system and provides an interface to the client from where the client can access the system.
 
-public class Inventory {
-public String checkInventory(String OrderId) {
-    return "Inventory checked";
-}
-}
+		public class Inventory {
+		public String checkInventory(String OrderId) {
+		    return "Inventory checked";
+		}
+		}
+		
+		public class Payment {
+		public String deductPayment(String orderID) {
+		    return "Payment deducted successfully";
+		}
+		}
+		
+		
+		public class OrderFacade {
+		private Payment pymt = new Payment();
+		private Inventory inventry = new Inventory();
+		
+		public void placeOrder(String orderId) {
+		    String step1 = inventry.checkInventory(orderId);
+		    String step2 = pymt.deductPayment(orderId);
+		    System.out
+		            .println("Following steps completed:" + step1
+		                    + " & " + step2);
+		   }
+		}
+		
+		public class Client {
+		       public static void main(String args[]){
+		         OrderFacade orderFacade = new OrderFacade();
+		         orderFacade.placeOrder("OR123456");
+		         System.out.println("Order processing completed");
+		       }
+		  }
+7.Decorator Design Pattern
+		Here we add additonal responsibilities to a exisitng object in runtime by creating multiple decorators .
+		Like There is a ChristmasTree interface and ChristmasTreeImple implenents it
 
-public class Payment {
-public String deductPayment(String orderID) {
-    return "Payment deducted successfully";
-}
-}
+		now we create another Abstract class TreeDecorator which will implement ChristmasTree and also it will use compostion to 	inject the ChristmasTree within it ie
 
-
-public class OrderFacade {
-private Payment pymt = new Payment();
-private Inventory inventry = new Inventory();
-
-public void placeOrder(String orderId) {
-    String step1 = inventry.checkInventory(orderId);
-    String step2 = pymt.deductPayment(orderId);
-    System.out
-            .println("Following steps completed:" + step1
-                    + " & " + step2);
-   }
-}
-
-public class Client {
-       public static void main(String args[]){
-         OrderFacade orderFacade = new OrderFacade();
-         orderFacade.placeOrder("OR123456");
-         System.out.println("Order processing completed");
-       }
-  }
+		public abstract class TreeDecorator implements ChristmasTree {
+		    private ChristmasTree tree;
+		    
+		    // standard constructors
+		    @Override
+		    public String decorate() {
+		        return tree.decorate();
+		    }
+		}
+	Now we can decorate the Christmus tree with different decorations like BubbleLights ,Garlands etc these classes should implement 	TreeDecorator.
 
 8.Flyweight Design Pattern
-In this design pattern reuses ing the already ceated objects and resuing them and create new object when no match is found
+In this design pattern reusing the already created objects and resuing them and create new object when no match is found
 
 9.Chain of Responsibility
 A request can be handled by a chain of objects , The request is not coupled to a single object rather than a chain
@@ -502,7 +581,7 @@ Observer Design pattern
 
 Command Design pattern
 
-	A Command Pattern says that "encapsulate a request under an object as a command and pass it to invoker object. Invoker object looks for the appropriate object which can handle this command and pass the command 	to the corresponding object and that object executes the command".
+	A Command Pattern says that "encapsulate a request under an object as a command and pass it to invoker object. Invoker object looks for the appropriate object which can handle this command and pass the command to the corresponding object and that object executes the command".
 
 	Advantage of command pattern
 	It separates the object that invokes the operation from the object that actually performs the operation.
