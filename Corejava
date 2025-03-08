@@ -552,7 +552,7 @@ It is a structural Design Pattern where we seperate the abstraction hierarcy and
 		         System.out.println("Order processing completed");
 		       }
 		  }
-7.Decorator Design Pattern
+8.Decorator Design Pattern
 		Here we add additonal responsibilities to a exisitng object in runtime by creating multiple decorators .
 		Like There is a ChristmasTree interface and ChristmasTreeImple implenents it
 
@@ -569,27 +569,43 @@ It is a structural Design Pattern where we seperate the abstraction hierarcy and
 		}
 	Now we can decorate the Christmus tree with different decorations like BubbleLights ,Garlands etc these classes should implement 	TreeDecorator.
 
-8.Flyweight Design Pattern
-In this design pattern reusing the already created objects and resuing them and create new object when no match is found
+9.Flyweight Design Pattern
+In this design pattern reusing the already created objects and resuing them and create new object when no match is found.
 
-9.Chain of Responsibility
-A request can be handled by a chain of objects , The request is not coupled to a single object rather than a chain
+10.Proxy Design pattern
+You need to update
+	It provides the protection to the original object from the outside world.
+
+11.Chain of Responsibility
+A request can be handled by a chain of objects , The request is not coupled to a single object rather than a chain.
+Chain of Responsibility allows an object to send a request to other objects without knowing who is going to handle it.
+
+This pattern is frequently used in the chain of multiple objects, where each object either handles the request or passes it on to the next object in the chain if it is unable to handle that request.
+This pattern encourages loose coupling between sender and receiver, providing freedom in handling the request.
 eg catchblock
 
-Observer Design pattern
+12.Observer Design pattern
 	An Observer Pattern says that "just define a one-to-one dependency so that when one object changes state, all its dependents are notified and updated automatically".
 
-Command Design pattern
+13.Command Design pattern
 
 	A Command Pattern says that "encapsulate a request under an object as a command and pass it to invoker object. Invoker object looks for the appropriate object which can handle this command and pass the command to the corresponding object and that object executes the command".
+
+In the command design patterns , we will encapsulate all the data in a object that is required to execute a action(command) including what method to call, the method’s arguments, and the object to which the method belongs.
+
+ Command Design pattern has four components: the Command, the Receiver, the Invoker, and the Client.
+
+	Receiver: A receiver is an object that performs a set of cohesive actions.It’s the component that performs the actual action when 	the command’s execute() method is called.
+
+	An invoker is an object that knows how to execute a given command but doesn’t know how the command has been implemented. It only 	knows the command’s interface.
+
+	A client is an object that controls the command execution process by specifying what commands to execute and at what stages of 		the process to execute them
+
+	For example see this https://www.baeldung.com/java-command-pattern
 
 	Advantage of command pattern
 	It separates the object that invokes the operation from the object that actually performs the operation.
 	It makes easy to add new commands, because existing classes remain unchanged.
-
-Proxy Design pattern
-You need to update
-	It provides the protection to the original object from the outside world.
 
 ---------------------------------Java Upgrades--------------------------------------------------------------------------------------------
 
@@ -609,7 +625,7 @@ You need to update
 	}
 	}
 
-	If there are 2 interfaces which have defined a same method in them then the implementing class shoudl also define the method.
+	If there are 2 interfaces which have defined a same default method in them then the implementing class should also implement the method.
 	this is only applicable if both the interfaces have  the same method.
 
 	Class has more power than interface
@@ -627,7 +643,7 @@ You need to update
 
 	Java lambda expression is treated as a function, so compiler does not create .class file. It is usuall used to implement a functional Interface
 
-	**	@FunctionalInterface -any class marked with the above annotation can have only one abstract method and it can have any number of default methods. These are mainly added to support lambda expressions
+	**@FunctionalInterface -any class marked with the above annotation can have only one abstract method and it can have any number of default methods. These are mainly added to support lambda expressions
 	java.lang.Runnable is a example for functional Interface
 
 	eg: Adding Functiona Interface
@@ -642,20 +658,17 @@ You need to update
 					 }
 				}
 
-This is the implementation, We donot have to create a new class for the implementation instead we can
+This is the implementation, We don't have to create a new class for the implementation instead we can
 
 							public class RunLambda {
 
 					public static void main(String[] args) {
-						FunctinalLambda lambda = i ->  new Employee(i, "Thejas");
-						
-						
-						lambda.getEmployee(2);
+						FunctinalLambda lambda = i ->  new Employee(i, "Thejas");										lambda.getEmployee(2);
 					}
 				}
 
 
-	**In java we have a internal foreach loop for a list , the input parameter for the internal forEach(java.util.function.Consumer), we have to pass a consumer object
+**In java we have a internal foreach loop for a list , the input parameter for the internal forEach(java.util.function.Consumer), we have to pass a consumer object
 
 	Consume is a functional Interface it has accept method
 
@@ -665,21 +678,18 @@ This is the implementation, We donot have to create a new class for the implemen
 
 		employeeList.forEach(i -> sop(i)); //This will iterate the list
 
-
-
-	**Anonymus Innner class- A class without any name used inside a class if we use there will not be a innclasss.class file created
+**Anonymus Innner class- A class without any name used inside a class if we use there will not be a innclasss.class file created
 
 	Limitations Of Lamnda Functions
 
 	1.Variable used in lambda expression should be final or effectively final
-	2. WE can only implement one method for a reference
-
+	2. We can only implement one method for a reference.
 
 3.Stream api
 
 	A java stream is a component which provides functionality for processing the elements during iteration
 
-		Stream spi are used to method chaining
+Stream spi are used to method chaining
 
 To use stream we need to 
 	1.Obtain a stream
@@ -688,7 +698,7 @@ To use stream we need to
 
 	Intermidiate Operation
 	Intermidiate operations add element processing operations to the stream, but does not start the iteration of the elements.
-	Intermediate operation is lazy and Terminal operations is not
+	Intermediate operation is lazy and Terminal operations is not.
 	 We cannot repeat the intermidiate Operation on a stream , it will not have any compitaion error but it will throw exception.
 	 we need to call the method using the new stream returned from the previous stream
 
@@ -732,13 +742,12 @@ Terminal operations produces a non-stream (cannot be chained) result such as pri
 
 	 rt.jar- runtime jar- It has all the classes like string,system all belong to this jar
 
-	 WE are not using jar we r using modules which is required for a particulr project instead of using one big jar
+	 We are not using jar we r using modules which is required for a particulr project instead of using one big jar
 
 	2.REPL- Read Evolve Print Loop- with the help of jshell- It is helpful for learing, to write sop statemtne we dont have to create a class or method we just have to use the jshell terminal.
 
 	3.Enhancement of stream api
-	4.In java9 we can have private methods defined in interface
-	
+	4.In java9 we can have private methods defined in interface	
 
 **Java11
 
