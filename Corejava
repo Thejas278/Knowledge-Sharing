@@ -778,7 +778,20 @@ Consumer<String> consumer=(@Depriceted var i) -> sop("this is the string");
 
 Java 17 
 Record video https://www.youtube.com/watch?v=gJ9DYC-jswo&t=174s
-	we have record classes record Employee (int id,String name) {} we dont have to create a class just this one will is enough. toString, hashcode methods are by default implememted for these record classes. The record class will not have setters by default all the fields will be private final
+	we have record classes record Employee (int id,String name) {} we dont have to create a class just this one will is enough. toString, hashcode methods are by default implememted for these record classes. The record class will not have setters by default all the fields will be private final, we can have only static fields ,non static fields are not allowed. we can have both static and non static methods
+public record User(Integer userId,String userName,String address) {
+    
+    public static String field="Abs";
+    //but you cannot create a non static variable 
+   
+    public static void print(){
+        System.out.println("das");
+    }
+
+    public  void print1(){
+        System.out.println("das1");
+    }
+}
 	
 **AOP-Aspect Oriented Programming
 It is used to increase the modularity by cross cutting concerns, A cross cutting concern is a concern that effect the whole application
