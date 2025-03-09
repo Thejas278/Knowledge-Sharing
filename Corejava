@@ -793,24 +793,6 @@ public record User(Integer userId,String userName,String address) {
     }
 }
 	
-**AOP-Aspect Oriented Programming
-It is used to increase the modularity by cross cutting concerns, A cross cutting concern is a concern that effect the whole application
-and it should be centralized in a single location eg logging,transactionmanagement etc
-
-
-Steps in aspects
-1. Write Aspects using @Aspect annotation while creating a class
-2.In the same class create methods with @Before annotaion specifiying before which method it has to be executed
-
-	eg 
-	@Before("execution(public String com.tsoft.Employee.getName())")
-	public void getMessage(){
-	sop("get message")
-	}
-Also in spring.xml we have use a tag
-<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-
-
 -----------------------------
 
 2.Type script questions and variables
