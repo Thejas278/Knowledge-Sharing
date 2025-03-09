@@ -537,23 +537,6 @@ If we use @RestController then spring automatically will do the serialisation an
 		https://www.baeldung.com/java-serialization-approaches
 
 -------------------------------------------------------------------------------------------------------------------
-Using Core Java we can develop only stand alone applications.
-2 types of stand alone applications
-	1.GUI-Graphica User Interface- eg desktop applications or calculator
-	2.CUI-Character User Inerface - Applicatios which are run using the command prompt also knows as console based applications
-
-Advanced Java There are 3 things
-
-1.JDBC
-2.Servlets
-3.JSp's
-
-There are 3 editions of Java according to Sun Micro or Oracle
-
-	1. Java Standard Edition(J2SE)-JDBC
-	2.Java Enterprise Edition(J2EE)-Servlets and Jsp's,EJB,JPA etc
-	3.Java Micro Edition(J2ME)-Used for mobile,embeded applications like tv remote
-
 Java Collection
 
 https://docs.oracle.com/javase/tutorial/collections/intro/index.html
