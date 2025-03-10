@@ -1,12 +1,24 @@
  Using core java we can develp desktop applications or standalone applications
+2 types of stand alone applications
+	1.GUI-Graphica User Interface- eg desktop applications or calculator
+	2.CUI-Character User Inerface - Applicatios which are run using the command prompt also knows as console based applications.
+
 Using advanced java we can develop web applications- applications which provide service in web
+Advanced Java There are 3 things
 
+1.JDBC
+2.Servlets
+3.JSp's
+
+There are 3 editions of Java according to Sun Micro or Oracle
+
+	1. Java Standard Edition(J2SE)-JDBC
+	2.Java Enterprise Edition(J2EE)-Servlets and Jsp's,EJB,JPA etc
+	3.Java Micro Edition(J2ME)-Used for mobile,embeded applications like tv remote
 Advanced Java has
-
 	JDBC
 	Servlet
 	JSP
-
 
 	JDBC- Is used to connect to database
 
@@ -14,19 +26,17 @@ Advanced Java has
 
 		Driver are the implementations of JDBC
 
-		JDBC Driver(Transalator)- Converts the JDBC native calls to native database calls(Converts java calls into database specifc calls and vice versa)
+		JDBC Driver(Transalator)- Converts the JDBC native calls to native database calls(Converts java calls into database 			specifc calls and vice versa)
 
 		Connector- Provides the connection to database(DriverManager.getConnection or DataSource.getConnection)
 
-
 		DiverManger.getConnection will return a new connection everytime we call it
 
-		DatSource.getConnection- WE will get connection Object from  connection poll
+		DatSource.getConnection- We will get connection Object from  connection poll
 
 		StatmentObject- Which will send the query to database and bring the resut from database.
 
 		Resultset - Is the result which the database gives
-
 
 		Steps for JDBC
 
@@ -43,22 +53,22 @@ Proxies are used for
 	
 Forward Proxy vs Reverse Proxy
 
-Forward Proxy sits in between the client machine and the internet will be infront of client,when the client makes the request in the internet, forward proxy will act as a middle man and talks to webserver on bhalf of client
-Forward Proxy will protects the client's online identity only the proxies ip address is visible
-Forwatd proxy can be used to block certain websites by companies or schools as well
+Forward Proxy sits in between the client machine and the internet will be infront of client,when the client makes the request in the internet, forward proxy will act as a middle man and talks to webserver on bhalf of client.
+Forward Proxy will protects the client's online identity only the proxies ip address is visible.
+Forward proxy can be used to block certain websites by companies or schools as well.
 
-Reverse Proxy sits in between the webserver and the internet, It will intercep the client request and talks to webserver on behalf of client
+Reverse Proxy sits in between the webserver and the internet, It will intercept the client request and talks to webserver on behalf of client
 Reverse Proxy can be used to protect the webserver identity only reverse proxies ip will be visible
 It can be used for loadbalancing
 They can also be used for caching some contents
 
-Questions and answers
+TCP-Transport Control Protool or Transmission Control Protocol.
 
-TCP-Transport Control Protool is like a telephone line and germen and french are the protcols like HTTP,FTP
+	It is a standard protocol that allows data to be exchanged between devices on a network. It is a basic standard that defines how 	data is delivered over the internet.
+	It is like a telephone line and germen and french are the protcols like HTTP,FTP
 	Webserver and webclients use HTTP protocol
 
 Difference between web server and application server
-
 	Web Server is mostly designed to serve static content, though most Web Servers have plugins to support scripting languages like Perl, PHP, ASP, JSP etc. through which these servers can generate dynamic HTTP content.	
 
 	Webservers will be listening to a port which is assgned to them by the operating system, when ever that port gets any request , it will be redirected to that web server
@@ -74,8 +84,7 @@ Application server supports enterprise level application.
 
 	WebServers support static contents like Servlets,JSP,HTML it does not support EJB's
 
-	Every Application server will have webserver but if the provided web server is not enough then we need application server. 
-
+	Every Application server will have webserver but if the provided web server is not enough then we need seperare webserver server. 
 
 How a web server works
 A web server is technology that hosts a website’s code and data. When you enter a URL in your browser, the URL is actually the address identifier of the web server.
@@ -353,11 +362,14 @@ Injecting dependencies
 	This is fundamentally the inverse, hence the name Inversion of Control (IoC), of the bean itself being in control of instantiating or locating its dependencies on its own using direct construction of classes, or something like the Service Locator pattern.
 
 ** Setter Injection vs Constructor Injection
+	For mandatory dependencies use construcot injection.
+
 	Partial dependency: can be injected using setter injection but it is not possible by constructor. ...
 	Overriding: Setter injection overrides the constructor injection. 
-	If we use both constructor and setter injection, IOC container will use the setter injection. Changes: We can easily change the value by setter injection
+	If we use both constructor and setter injection, IOC container will use the setter injection. Changes: We can easily change the 	value by setter injection
 
 	Using constructor injection we cannot reconfigure a object.
+
 Circular Dependency
 	We can avoid circular dependency using setter injection by using @Lazy on the dependency.But in construcotr injection we cannot resolve circular dependency.
 	
@@ -519,8 +531,7 @@ eg:- <bean id="petrolBean" name="shimba,mamu,radhe" class="com.marvel.java.Petro
 
 **	 @Auotwired vs @Resource
 			1.@Autowired is a spring annotation and @Resource is specified by JSR-250 ie java annotation.
-			2.@Autowired + @Qualifier will work only with spring DI, if you want to use some other DI in future @Resource is good option
-
+			2.@Autowired + @Qualifier will work only with spring DI, if you want to use some other DI in future @Resource is 			good option
 
 		JSRs are Java Specification Requests, basically change requests for the Java language, libraries and other components.
 		It's all part of the Java Community Process, whereby interested parties can put forward their ideas for enhancements and (hopefully) have them taken up and acted upon
@@ -535,9 +546,7 @@ Each DispatcherServlet has its own WebApplicationContext, which inherits all the
 
 		Dispactherservlet is defined in the web.xml and it will be loaded on startup,
 		we dont have to create the context manually
-		We dont have to create or destory the webapplicationContext for the dispatcherservlet, it will be created during the server startup and destroyed during the server stop .
-
-
+		We dont have to create or destory the webapplicationContext for the dispatcherservlet, it will be created during the 			server startup and destroyed during the server stop .
 
 				Consider the following DispatcherServlet servlet configuration (in the web.xml file):
 
@@ -565,7 +574,7 @@ Each DispatcherServlet has its own WebApplicationContext, which inherits all the
 		It has some additional features which are required for web applications.
 		It knows which servlet it is linked with because of servletcontext.
 
-	The DispatcherServlet uses HandlerMapping implementations -  to route incoming requests to handler objects. By default, it uses BeanNameUrlHandlerMapping and DefaultAnnotationHandlerMapping, which is driven by @RequestMapping annotation.
+	The DispatcherServlet uses HandlerMapping implementations -  to route incoming requests to handler objects. By default, it uses 	BeanNameUrlHandlerMapping and DefaultAnnotationHandlerMapping, which is driven by @RequestMapping annotation.
 	DispatcherServlet scans the class path.
 
 	DispatcherServlet uses special beans to processRequests and render appropriate views
@@ -652,9 +661,58 @@ eg:-
 	Note that you need only a single DelegatingFilterProxy declaration in web.xml but you can have several filtering beans chained together in your application context.
 
 ** Cors- Cross Origin Resource Sharing 
+	way to manage requests from different domains
 	This cross-origin sharing standard is used to enable cross-site HTTP requests.
 
+		@CrossOrigin(maxAge = 3600)
+		@RestController
+		@RequestMapping("/account")
+		public class AccountController {
+		
+		    @CrossOrigin("http://example.com")
+		    @RequestMapping(method = RequestMethod.GET, "/{id}")
+		    public Account retrieve(@PathVariable Long id) {
+		        // ...
+		    }
+		
+		    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
+		    public void remove(@PathVariable Long id) {
+		        // ...
+		    }
+		}
+
+		Spring will combine attributes from both annotations to create a merged CORS configuration.
+
+		Here, both methods will have a maxAge of 3,600 seconds, the method remove() will allow all origins, and the method 			retrieve() will only allow origins from http://example.com.
+
+Global CORS Configuration
+
+	As an alternative to the fine-grained annotation-based configuration, Spring lets us define a global CORS configuration out of 		our controllers. This is similar to using a Filter-based solution but can be declared within Spring MVC and combined with a 		fine-grained @CrossOrigin configuration.
+
+			@Configuration
+			@EnableWebMvc
+			public class WebConfig implements WebMvcConfigurer {
+			
+			    @Override
+			    public void addCorsMappings(CorsRegistry registry) {
+			        registry.addMapping("/**");
+			    }
+			}
+
 	Also, you can add information to instruct browser to allow only certain HTTP methods (GET/PUT/POST/DELETE etc) on those domain URLs.
+
+CORS With Spring Security
+	If we use Spring Security in our project, we must take an extra step to make sure it plays well with CORS. That’s because CORS 		needs to be processed first. Otherwise, Spring Security will reject the request before it reaches Spring MVC
+	
+	Something like this
+			@EnableWebSecurity
+			public class WebSecurityConfig {
+			
+			    @Bean
+			    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+			        http.cors().and()...
+			    }
+			}
 
 ** Response Headers of CorsFilter
 		1.Access-Control-Allow-Origin:specifies the authorized domains to make cross-domain request. Use “*” as value if there is no restrictions.
@@ -664,11 +722,20 @@ eg:-
 	 response.addHeader("Access-Control-Allow-Origin", "http://127.0.0.1:9000");
 		 response.addHeader("Access-Control-Allow-Credentials", "true");
 
-		 In Orion CorsFilter extends OncePerRequestFilter
+We can configure CORS to override the default Spring Security CORS handling. For that, we need to add a CorsConfigurationSource bean that takes care of the CORS configuration using a CorsConfiguration instance. The http.cors() method uses CorsFilter if a corsFilter bean is added, else it uses CorsConfigurationSource. If neither is configured, then it uses the Spring MVC pattern inspector handler
+
+			@Bean
+			CorsConfigurationSource corsConfigurationSource() {
+			    CorsConfiguration configuration = new CorsConfiguration();
+			    configuration.setAllowedOrigins(Arrays.asList("*"));
+			    configuration.setAllowedMethods(Arrays.asList("*"));
+			    configuration.setAllowedHeaders(Arrays.asList("*"));
+			    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+			    source.registerCorsConfiguration("/**", configuration);
+			    return source;
+			}
 		
    ** OncePerRequestFilter makes sure of it that this authentication process happens only once
-
-
 
 **Microservices
 
@@ -696,16 +763,13 @@ eg:-
 ** Spring modules
 
 		1.Spring core
-			The Core is the Ioc container is reposible for Instantiating,Configuring and managing the dependencies between the objects.
+			The Core is the Ioc container is responsible for Instantiating,Configuring and managing the dependencies between 			the objects.
 			It give the features like dependency Injection and Inversion of Control.
-
-			The context module present in the spring core will make the object or beans created in the container available for our use.
-
+			The context module present in the spring core will make the object or beans created in the container available 				for our use.
 
 		2.Spring web- Spring web consists of servlets
 					Spring web has mvc framework,
 					It provides multipart file Upload functionality.
-
 
 		3.Data Access/Integration- Has JDBC and ORM -eg Hibernate.
 
@@ -730,9 +794,6 @@ eg:-
 
 and we can perform curd operations using MongoRepository creating a interface that extends MongoRepository
 
-
-
-
 ** Configuring datasource 
 
 In Tomcat context.xml
@@ -745,7 +806,7 @@ And in applicationContext.xml of orion_dao add
 		resource-ref="true" lookup-on-startup="true" />
 
 
-For using entityManager,WE had 
+For using entityManager,We had 
 <bean
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 		id="entityManagerFactory">
@@ -782,8 +843,6 @@ eg:
 	1.Remote Proxy
 	2.Virtual Proxy
 
-
-
 Database vs Schema
 	Depends on the database server. MySQL doesn't care, its basically the same thing.
 
@@ -792,10 +851,8 @@ Database vs Schema
 Hibernate
 
 **Dialect class is java class, which contains code to map between java language data type database data type.
-
 	In Hibernate-cfg.xml
-
-					<hibernate-configuration>
+		<hibernate-configuration>
 		   <session-factory>
 		       <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
 		       <property name="hibernate.connection.password">orion123</property>
@@ -822,7 +879,6 @@ SessionFactory is common for one application and it is thread Safe, it uses seco
 
 Session is used to perform curd operations and it is not thread safe , it uses first level caching
 
-
 Caching in hibernate
 we have 
 1st level caching
@@ -830,7 +886,7 @@ we have
 
 By default first level caching is enabled by hibernate
  to enable second level cache we have to download the required second level cash through pom.xml
- and set second leve cache to true and mention the provider in hibernate.cfg.xml file
+ and set second level cache to true and mention the provider in hibernate.cfg.xml file
  and use @2 anotations in the entity class
 
 Get vs load
@@ -844,87 +900,85 @@ get will hit the database and it will give us real object and if there is not ob
 
 Object Locking
 read this https://stackoverflow.com/questions/129329/optimistic-vs-pessimistic-locking
+JPA by default uses Optimistic locking
 
 When dealing with conflicts, you have two options:
 
 You can try to avoid the conflict, and that's what Pessimistic Locking does.
 Or, you could allow the conflict to occur, but you need to detect it upon committing your transactions, and that's what Optimistic Locking does.
 
-Pessimistic locking achieves this goal by taking a shared or read lock on the account so Bob is prevented from changing the account.
-both Alice and Bob will acquire a read lock on the account table row that both users have read. The database acquires these locks on SQL Server when using Repeatable Read or Serializable.
-Because both Alice and Bob have read the account with the PK value of 1, neither of them can change it until one user releases the read lock. This is because a write operation requires a write/exclusive lock acquisition, and shared/read locks prevent write/exclusive locks.
+Pessimistic locking
+	Pessimistic locking achieves this goal by taking a shared or read lock on the account so Bob is prevented from changing the 		account.
+	both Alice and Bob will acquire a read lock on the account table row that both users have read. The database acquires these 		locks on SQL Server when using Repeatable Read or Serializable.
+	Because both Alice and Bob have read the account with the PK value of 1, neither of them can change it until one user releases 		the read lock. This is because a write operation requires a write/exclusive lock acquisition, and shared/read locks prevent 		write/exclusive locks.
 
-Only after Alice has committed her transaction and the read lock was released on the account row, Bob UPDATE will resume and apply the change. Until Alice releases the read lock, Bob's UPDATE blocks.
+	Only after Alice has committed her transaction and the read lock was released on the account row, Bob UPDATE will resume and 		apply the change. Until Alice releases the read lock, Bob's UPDATE blocks.
 
-Optimistic Locking
-Optimistic Locking allows the conflict to occur but detects it upon applying Alice's UPDATE as the version has changed.
-This time, we have an additional version column. The version column is incremented every time an UPDATE or DELETE is executed, and it is also used in the WHERE clause of the UPDATE and DELETE statements. For this to work, we need to issue the SELECT and read the current version prior to executing the UPDATE or DELETE, as otherwise, we would not know what version value to pass to the WHERE clause or to increment
+	Is when you lock the record for your exclusive use until you have finished with it. It has much better integrity than optimistic 	locking but requires you to be careful with your application design to avoid Deadlocks. To use pessimistic locking you need 		either a direct connection to the database (as would typically be the case in a two tier client server application) or an 		externally available transaction ID that can be used independently of the connection.
 
-Optimistic Locking 
+	In the latter case you open the transaction with the TxID and then reconnect using that ID. The DBMS maintains the locks and 		allows you to pick the session back up through the TxID. This is how distributed transactions using two-phase commit protocols 		(such as XA or COM+ Transactions) work
 
-	Is a strategy where you read a record, take note of a version number (other methods to do this involve dates, timestamps or checksums/hashes) and check that the version hasn't changed before you write the record back. When you write the record back you filter the update on the version to make sure it's atomic. (i.e. hasn't been updated between when you check the version and write the record to the disk) and update the version in one hit.
+	Pessimistic locking assumes that concurrent transactions will conflict with each other, and requires resources to be locked 		after they are read and only unlocked after the application has finished using the data.
 
-	If the record is dirty (i.e. different version to yours) you abort the transaction and the user can re-start it.
+	When we use Pessimistic Locking in a transaction, and access an entity, it'll be locked immediately. The transaction releases 		the lock either by committing or rolling back the transaction.
 
-	This strategy is most applicable to high-volume systems and three-tier architectures where you do not necessarily maintain a connection to the database for your session. In this situation the client cannot actually maintain database locks as the connections are taken from a pool and you may not be using the same connection from one access to the next.
-
-Pessimistic Locking
-
-	Is when you lock the record for your exclusive use until you have finished with it. It has much better integrity than optimistic locking but requires you to be careful with your application design to avoid Deadlocks. To use pessimistic locking you need either a direct connection to the database (as would typically be the case in a two tier client server application) or an externally available transaction ID that can be used independently of the connection.
-
-	In the latter case you open the transaction with the TxID and then reconnect using that ID. The DBMS maintains the locks and allows you to pick the session back up through the TxID. This is how distributed transactions using two-phase commit protocols (such as XA or COM+ Transactions) work.
-	
-Optimistic
-
-Optimistic locking assumes that multiple transactions can complete without affecting each other, and that therefore transactions can proceed without locking the data resources that they affect. Before committing, each transaction verifies that no other transaction has modified its data. If the check reveals conflicting modifications, the committing transaction rolls back[1].
-
-Pessimistic
-
-Pessimistic locking assumes that concurrent transactions will conflict with each other, and requires resources to be locked after they are read and only unlocked after the application has finished using the data.
-
-Locking In JPA
-	
-	When we use Pessimistic Locking in a transaction, and access an entity, it'll be locked immediately. The transaction releases the lock either by committing or 	rolling back the transaction.
-	
-	In Optimistic Locking, the transaction doesn't lock the entity immediately. Instead, the transaction commonly saves the entity's state with a version number assigned to it.
-	
-	When we try to update the entity's state in a different transaction, the transaction compares the saved version number with the existing version number during 	the update.
-
-	At this point, if the version number differs, it means that we can't modify the entity. If there's an active transaction, then that transaction will be rolled 	back and the underlying JPA implementation will throw an OptimisticLockException.
-	
-	To specify a lock on a custom query method of a Spring Data JPA repository, we can annotate the method with @Lock and specify the required lock mode type:
-
-	@Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
-	@Query("SELECT c FROM Customer c WHERE c.orgId = ?1")
-	public List<Customer> fetchCustomersByOrgId(Long orgId);
-	
-	To enforce the lock on predefined repository methods, such as findAll or findById(id), we have to declare the method within the repository and annotate the method with the Lock annotation:
-	@Lock(LockModeType.PESSIMISTIC_READ)
-	public Optional<Customer> findById(Long customerId);
-	
-	When the lock is explicitly enabled, and there's no active transaction, the underlying JPA implementation will throw a TransactionRequiredException.
-
-	If the lock can't be granted, and the locking conflict doesn't result in a transaction rollback, JPA throws a LockTimeoutException, but it doesn't mark the active transaction for rollback.
-	
-	When using Pessimistic Locking, the database will try to lock the entity immediately. The underlying JPA implementation throws a LockTimeoutException when the 	lock can't be obtained immediately. To avoid such exceptions, we can specify the lock timeout value.
+	When using Pessimistic Locking, the database will try to lock the entity immediately. The underlying JPA implementation throws a 	LockTimeoutException when the lock can't be obtained immediately. To avoid such exceptions, we can specify the lock timeout 		value.
 	
 	In Spring Data JPA, the lock timeout can be specified using the QueryHints annotation by placing a QueryHint on query methods:
 
 	@Lock(LockModeType.PESSIMISTIC_READ)
 	@QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "3000")})
 	public Optional<Customer> findById(Long customerId);
+
+	To enforce the lock on predefined repository methods, such as findAll or findById(id), we have to declare the method within the 	repository and annotate the method with the Lock annotation:
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	public Optional<Customer> findById(Long customerId);
+
+Optimistic Locking
+	Optimistic Locking allows the conflict to occur but detects it upon applying Alice's UPDATE as the version has changed.
+	This time, we have an additional version column. The version column is incremented every time an UPDATE or DELETE is executed, 		and it is also used in the WHERE clause of the UPDATE and DELETE statements. For this to work, we need to issue the SELECT and 		read the current version prior to executing the UPDATE or DELETE, as otherwise, we would not know what version value to pass to 	the WHERE clause or to increment
+
+	Is a strategy where you read a record, take note of a version number (other methods to do this involve dates, timestamps or 		checksums/hashes) and check that the version hasn't changed before you write the record back. When you write the record back you 		filter the update on the version to make sure it's atomic. (i.e. hasn't been updated between when you check the version 	and write the record to the disk) and update the version in one hit.
+
+	If the record is dirty (i.e. different version to yours) you abort the transaction and the user can re-start it.We will get 		OptimisticLockException
+
+	This strategy is most applicable to high-volume systems and three-tier architectures where you do not necessarily maintain a 		connection to the database for your session. In this situation the client cannot actually maintain database locks as the 		connections are taken from a pool and you may not be using the same connection from one access to the next
+
+	Optimistic locking assumes that multiple transactions can complete without affecting each other, and that therefore transactions 	can proceed without locking the data resources that they affect. Before committing, each transaction verifies that no other 		transaction has modified its data. If the check reveals conflicting modifications, the committing transaction rolls back[1]. We 	will get OptimisticLockException
+
+	In Optimistic Locking, the transaction doesn't lock the entity immediately. Instead, the transaction commonly saves the entity's 	state with a version number assigned to it.
+	
+	When we try to update the entity's state in a different transaction, the transaction compares the saved version number with the 	existing version number during 	the update.
+
+	At this point, if the version number differs, it means that we can't modify the entity. If there's an active transaction, then 		that transaction will be rolled back and the underlying JPA implementation will throw an OptimisticLockException.
+
+	For Entity class we can use @Version annotation to any field and Jpa will automatically take care of optimistic locking
+	
+	To specify a lock on a custom query method of a Spring Data JPA repository, we can annotate the method with @Lock and specify 		the required lock mode type:
+
+	@Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
+	@Query("SELECT c FROM Customer c WHERE c.orgId = ?1")
+	public List<Customer> fetchCustomersByOrgId(Long orgId);
+	
+	To enforce the lock on predefined repository methods, such as findAll or findById(id), we have to declare the method within the 	repository and annotate the method with the Lock annotation:
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	public Optional<Customer> findById(Long customerId);
+	
+	When the lock is explicitly enabled, and there's no active transaction, the underlying JPA implementation will throw a 			TransactionRequiredException.
+
+	If the lock can't be granted, and the locking conflict doesn't result in a transaction rollback, JPA throws a 				LockTimeoutException, but it doesn't mark the active transaction for rollback.
 	
 	When the transaction needs to strictly adhere to ACID rules, we should use Pessimistic Locking. 
-	Optimistic Locking should be applied when we need to allow multiple concurrent reads and when eventual consistency is acceptable within the application context.
+	Optimistic Locking should be applied when we need to allow multiple concurrent reads and when eventual consistency is acceptable 	within the application context.
 
 **Transaction 
 	A transaction is a unit of work with few steps performed by a data base management system against a database
 	They are all or nothing ie either all the steps should be completed or al the steps should be rolled back
-	A transaction should take care of Acid Properties
+	Transaction should take care of Acid Properties
 	A- Atomicity- Ensure that all the steps are successful or all of them fail
 	C- Consistant-The system should be left in a consistent state if either on success or failure
-	I-Isolation- MUltiple users should be able to work without any issue ie concurent read or writes
-	D-After the sucessful operation the data shoudl be stored permentaly
+	I-Isolation- Multiple users should be able to work without any issue ie concurent read or writes
+	D-After the sucessful operation the data shoudl be stored permentaly.
 
 ACID properties: Atomicity, Consistency, Isolation, and Durability.
 **	SPRING TRANSACTION
@@ -950,18 +1004,18 @@ Spring 3.1 introduces the @EnableTransactionManagement annotation that we can us
 
  	Spring wraps your bean in the proxy, your bean has no knowledge of it. Only calls from "outside" your bean go through the proxy.
 	We are using in service layer on top of each method.
-	Spring will create a wrapper method and dat method will begin and commit the transaction
-	
-	Transaction Propagation
+	Spring will create a wrapper method and that method will begin and commit the transaction
+
+Transaction Propagation
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-		REQUIRED is the default propagation. Spring checks if there is an active transaction, and if nothing exists, it creates a new one. Otherwise, the business logic appends to the currently active transaction:
+		REQUIRED is the default propagation. Spring checks if there is an active transaction, and if nothing exists, it creates 		a new one. Otherwise, the business logic appends to the currently active transaction:
 		
 	@Transactional(propagation = Propagation.SUPPORTS)
-		For SUPPORTS, Spring first checks if an active transaction exists. If a transaction exists, then the existing transaction will be used. If there isn't 	a transaction, it is executed non-transactional:
+		For SUPPORTS, Spring first checks if an active transaction exists. If a transaction exists, then the existing 				transaction will be used. If there isn't a transaction, it is executed non-transactional:
 	
 	@Transactional(propagation = Propagation.MANDATORY)
-		When the propagation is MANDATORY, if there is an active transaction, then it will be used. If there isn't an active transaction, then Spring throws an exception:
+		When the propagation is MANDATORY, if there is an active transaction, then it will be used. If there isn't an active 			transaction, then Spring throws an exception:
 	
 	@Transactional(propagation = Propagation.NEVER)
 		For transactional logic with NEVER propagation, Spring throws an exception if there's an active transaction:
@@ -974,47 +1028,49 @@ Spring 3.1 introduces the @EnableTransactionManagement annotation that we can us
 
 Isolation Management in Spring https://www.youtube.com/watch?v=-gxyut1VLcs&t=252s
 	
-	Transaction Isolation
+Transaction Isolation and Voilations
 	
-	Isolation is one of the common ACID properties: Atomicity, Consistency, Isolation, and Durability. Isolation describes how changes applied by concurrent transactions are visible to each other.
+	Isolation is one of the common ACID properties: Atomicity, Consistency, Isolation, and Durability. Isolation describes how 		changes applied by concurrent transactions are visible to each other.
 
-Each isolation level prevents zero or more concurrency side effects on a transaction:
-	
+	Each isolation level prevents zero or more concurrency side effects on a transaction:
+
+Voilations
 READ_UNCOMMITTED(Dirty read): read the uncommitted change of a concurrent transaction
 	
-		If T1 transaction reads data from table A1 that was written by another concurrent transaction T2. If on the way T2 is rollback, the data obtained by T1 is invalid one. E.g. a=2 is original data. If T1 read a=1 that was written by T2. If T2 rollback then a=1 will be rollback to a=2 in DB. But, now, T1 has a=1 but in DB table it is changed to a=2.
+		If T1 transaction reads data from table A1 that was written by another concurrent transaction T2. If on the way T2 is 		rollback, the data obtained by T1 is invalid one. E.g. a=2 is original data. If T1 read a=1 that was written by T2. If T2 		rollback then a=1 will be rollback to a=2 in DB. But, now, T1 has a=1 but in DB table it is changed to a=2.
 		
-		Postgres does not support READ_UNCOMMITTED isolation and falls back to READ_COMMITED instead. Also, Oracle does not support or allow READ_UNCOMMITTED.
+		Postgres does not support READ_UNCOMMITTED isolation and falls back to READ_COMMITED instead. Also, Oracle does not 			support or allow READ_UNCOMMITTED.
 
-Nonrepeatable read: get different value on re-read of a row if a concurrent transaction updates the same row and commits
+Nonrepeatable read: If Transaction T1 reads a value from a field and after reading if another Transaction T2 updates the field with different value , then if again Transaction T1 reads the same value , it gets different value on re-read of a field. 
 	
-		 If T1 transaction reads data from table A1. If another concurrent transaction (T2) update data on table A1. Then the data that T1 has read is different from table A1. Because T2 has updated the data on 	table A1. E.g. if T1 read a=1 and T2 updated a=2. Then a!=b.
+		 If T1 transaction reads data from table A1. If another concurrent transaction (T2) update data on table A1. Then the 			data that T1 has read is different from table A1. Because T2 has updated the data on table A1. 
+		E.g. if T1 read a=1 and T2 updated a=2. Then a!=b.
 		 
 		 READ_COMMITTED is the default level with Postgres, SQL Server, and Oracle.
 		 REPEATABLE_READ does not allow simultaneous access to a row at all. Hence the lost update can't happen
 	
 Phantom read: get different rows after re-execution of a range query if another transaction adds or removes some rows in the range and commits
 	
-		 If T1 transaction reads data from table A1 with certain number of rows. If another concurrent transaction (T2) inserts more rows on table A1. The number of rows read by T1 is different from rows on 	table A1.
-	
+		 If T1 transaction reads data from table A1 with certain number of rows. If another concurrent transaction (T2) inserts 		more rows on table A1. The number of rows read by T1 is different from rows on 	table A1.
+
+Isolation Levels	
 We can set the isolation level of a transaction by @Transactional::isolation. It has these five enumerations in Spring: DEFAULT, READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE.
 	
-	DEFAULT: The default isolation level is DEFAULT. As a result, when Spring creates a new transaction, the isolation level will be the default isolation of our RDBMS
+DEFAULT: The default isolation level is DEFAULT. As a result, when Spring creates a new transaction, the isolation level will be 		the default isolation of our RDBMS
 
-	ReadUncommitted: Transaction B can read uncommitted data from Transaction A and it could see different rows based on B writing. No lock at all
+ReadUncommitted: Transaction B can read uncommitted data from Transaction A and it could see different rows based on B writing. 			No lock at all- This will have all the 3 Voilations (READ_UNCOMMITTED,Nonrepeatable read, Phanton Read)
 	
-	ReadCommitted: Transaction B can read ONLY committed data from Transaction A and it could see different rows based on COMMITTED only B writing. could we call it Simple Lock?
+ReadCommitted: Transaction B can read ONLY committed data from Transaction A and it could see different rows based on COMMITTED 			only B writing. could we call it Simple Lock?- This will have 2 Voilations (Nonrepeatable read, Phanton Read)
 
-	RepeatableRead: Transaction B will read the same data (rows) whatever Transaction A is doing. But Transaction A can change other rows. Rows level Block
+RepeatableRead: Transaction B will read the same data (rows) whatever Transaction A is doing. But Transaction A can change other 			rows. Rows level Block- This will have 1 Voilations ( Phanton Read)
 	
-	Serialisable: Transaction B will read the same rows as before and Transaction A cannot read or write in the table. Table-level Block
+ISOLATION_SERIALIZABLE : Transaction B will read the same rows as before and Transaction A cannot read or write in the table. 					 Table-level Block-This will have no Voilations (Nonrepeatable read, Phanton Read)
 	 
-	ISOLATION_SERIALIZABLE: Scenario 1, Scenario 2, Scenario 3 never happen. It is complete isolation. It involves full locking. It affects performace because of locking.
+	ISOLATION_SERIALIZABLE: Scenario 1, Scenario 2, Scenario 3 never happen. It is complete isolation. It involves full locking. It 	affects performace because of locking.
 		
-		SERIALIZABLE is the highest level of isolation. It prevents all mentioned concurrency side effects, but can lead to the lowest concurrent access rate because it executes concurrent calls sequentially.
+	SERIALIZABLE is the highest level of isolation. It prevents all mentioned concurrency side effects, but can lead to the 			lowest concurrent access rate because it executes concurrent calls sequentially.
 
-		In other words, concurrent execution of a group of serializable transactions has the same result as executing them in serial.
-
+In other words, concurrent execution of a group of serializable transactions has the same result as executing them in serial.
 
 RollBack
 	By Default transaction will be rolled back for runtime exceptions, For Unchecked exceptions we can use rollBackfor or rollBackForClass attribute,
@@ -1025,7 +1081,6 @@ RollBack
 	}
 
 	In the above case transaction will be rolledback even for checked exceptions
-
 
 **	EntityManager
 	 is used to interact with Database we can add,update or delete a record in database
@@ -1073,19 +1128,18 @@ JPA is a specification it is not a implementation
 
 Hibernate vs Soring Data jpa
 
-	Hibernate is a JPA implementation, while Spring Data JPA is a JPA data access abstraction. Spring Data JPA cannot work without a JPA provider.
+	Hibernate is a JPA implementation.
+	Spring Data JPA is a JPA data access abstraction. Spring Data JPA cannot work without a JPA provider.
 
-	Spring Data offers a solution to the DDD Repository pattern or the legacy GenericDao custom implementations. It can also generate JPA queries on your behalf through method name conventions.
+	Spring Data offers a solution to the DDD Repository pattern or the legacy GenericDao custom implementations. It can also 		generate JPA queries on your behalf through method name conventions.
 
-	With Spring Data, you may use Hibernate, EclipseLink, or any other JPA provider. A very interesting benefit of using Spring or Java EE is that you can control transaction boundaries declaratively using the @Transactional annotation.
+	With Spring Data, you may use Hibernate, EclipseLink, or any other JPA provider. A very interesting benefit of using Spring or 		Java EE is that you can control transaction boundaries declaratively using the @Transactional annotation.
 
-	Spring JDBC is much more lightweight, and it's intended for native querying, and if you only intend to use JDBC alone, then you are better off using Spring JDBC to deal with the JDBC verbosity.
+	Spring JDBC is much more lightweight, and it's intended for native querying, and if you only intend to use JDBC alone, then you 	are better off using Spring JDBC to deal with the JDBC verbosity.
 
 	Therefore, Hibernate and Spring Data are complementary rather than competitors.
 
-		Let's say you are using spring + hibernate for your application. Now you need to have dao interface and implementation where you will be writing crud operation using SessionFactory of hibernate. Let say you are writing dao class for Employee class, tomorrow in your application you might need to write similiar crud operation for any other entity. So there is lot of boilerplate code we can see here.
-
-		Now Spring data jpa allow us to define dao interfaces by extending its repositories(crudrepository, jparepository) so it provide you dao implementation at runtime. You don't need to write dao implementation anymore.Thats how spring data jpa makes your life easy.
+Let's say you are using spring + hibernate for your application. Now you need to have dao interface and implementation where you will be writing crud operation using SessionFactory of hibernate. Let say you are writing dao class for Employee class, tomorrow in your application you might need to write similiar crud operation for any other entity. So there is lot of boilerplate code we can see here.Now Spring data jpa allow us to define dao interfaces by extending its repositories(crudrepository, jparepository) so it provide you dao implementation at runtime. You don't need to write dao implementation anymore.Thats how spring data jpa makes your life easy.
 
 JpaRepository vs CrudRepository
 
@@ -1102,11 +1156,15 @@ JpaRepository vs CrudRepository
 
 postgres vs MYSQL
 Postgres is an object-relational database, while MySQL is a purely relational database. This means that Postgres includes features like table inheritance and function overloading, which can be important to certain applications. Postgres also adheres more closely to SQL standards.
-
+Postgres has better performance and scalability
+MVCC enables simultanious Read and write operations in case of postgres
 Postgres handles concurrency better than MySQL for multiple reasons:
 	Postgres implements Multiversion Concurrency Control (MVCC) without read locks Postgres supports parallel query plans that can use multiple CPUs/cores Postgres can create indexes in a non-blocking way (through the CREATE INDEX CONCURRENTLY syntax).
 	
+	
 Postgres is known for protecting data integrity at the transaction level. This makes it less vulnerable to data corruption.
+
+MYSQL can be used for small webapplications
 
 -----------------------------------------------------------------------------------------------------------------------------------
 Sql vs Nosql database
@@ -1114,12 +1172,12 @@ Sql vs Nosql database
 Nosql database
 1.Insertion and retrieval is eifficient since there are no joins required
 2.Schema is easily changable- We alter the schema without effecting the exisiting records ie its easier
-3.Built for scalability or sharding or horizonatl partition
+3.Built for scalability or sharding or horizontal partition
 4.These systems are build for aggregation ie to get the intelligent data
 
 Disadvantage
 1.update=delete+insert ie updates are not nice or easy means ACID is not guarented
-2.RElationa constraint is not possible
+2.Relational constraint is not possible
 3.Joining is also not efficient
 
 Mongodb stores the data in BSON format- Binary JSON
