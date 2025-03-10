@@ -65,7 +65,7 @@ How it works
 
 When we add spring security dependency in our project, GET request's will be allowed without the csrf token but for post requests crsf token is mandatory
 
-We need CSRF is we use cookies for Authentication and Authorization
+We need CSRF when we use cookies for Authentication and Authorization
 
 	No cookies = No CSRF
 
@@ -73,29 +73,26 @@ We need CSRF is we use cookies for Authentication and Authorization
 		
 Sprig Security workflow
 
-	The client sends a request to the application  and the container creates a FilterChain which contains the Filters and Servlet that should process the HttpServletRequest based on the path of the request URI.
+	The client sends a request to the application  and the container creates a FilterChain which contains the Filters and Servlet 		that should process the HttpServletRequest based on the path of the request URI.
 	
-	In a Spring MVC application the Servlet is an instance of DispatcherServlet. At most one Servlet can handle a single HttpServletRequest and HttpServletResponse. However, more than one Filter can be used to:
+	In a Spring MVC application the Servlet is an instance of DispatcherServlet. At most one Servlet can handle a single 			HttpServletRequest and HttpServletResponse. However, more than one Filter can be used to:
 
-			a:Prevent downstream Filters or the Servlet from being invoked. In this instance the Filter will typically write the HttpServletResponse.
+	a:Prevent downstream Filters or the Servlet from being invoked. In this instance the Filter will typically write the 			HttpServletResponse.
+	b:Modify the HttpServletRequest or HttpServletResponse used by the downstream Filters and Servlet
 
-			b:Modify the HttpServletRequest or HttpServletResponse used by the downstream Filters and Servlet
+DelegatingFilterProxy	
+	Spring provides a Filter implementation named DelegatingFilterProxy that allows bridging between the Servlet container’s lifecycle and Spring’s ApplicationContext. 	
+	The Servlet container allows registering Filters using its own standards, but it is not aware of Spring defined Beans. DelegatingFilterProxy can be registered via standard Servlet container mechanisms, but delegate all the work to a Spring Bean that implements Filter.
+	For non spring boot application we have to add the DelegatingFilterProxy manually in the web.xml with url patter as /**.	
+	When we add the spring security dependency there are around 4-5 spring security fileters and The delegating filter proxy will 		delegate the request to these security filters.Among the 4-5 filters one the filter is a authorisation filter.
 
-DelegatingFilterProxy
-	
-	Spring provides a Filter implementation named DelegatingFilterProxy that allows bridging between the Servlet container’s lifecycle and Spring’s ApplicationContext. 
-	
-	The Servlet container allows registering Filters using its own standards, but it is not aware of Spring defined Beans. DelegatingFilterProxy can be registered 	via standard Servlet container mechanisms, but delegate all the work to a Spring Bean that implements Filter.
-	For non spring boot application we have to add the DelegatingFilterProxy manually in the web.xml with url patter as /**.
-	
-	When we add the spring security dependency there are around 4-5 spring security fileters and The delegating filter proxy will delegate the request to these security filters.Among the 4-5 filters one the filter is a authorisation filter
-	
 FilterChainProxy
 	Spring Security’s Servlet support is contained within FilterChainProxy.
-	FilterChainProxy is a special Filter provided by Spring Security that allows delegating to many Filter instances through SecurityFilterChain.
+	FilterChainProxy is a special Filter provided by Spring Security that allows delegating to many Filter instances through 		SecurityFilterChain.
 	Since FilterChainProxy is a Bean, it is typically wrapped in a DelegatingFilterProxy.
 	
-SecurityFilterChain is used by FilterChainProxy to determine which Spring Security Filter instances should be invoked for the current request.We can have multiple SecurityFilterChains
+SecurityFilterChain
+	is used by FilterChainProxy to determine which Spring Security Filter instances should be invoked for the current request.We can 	have multiple SecurityFilterChains
 
 SecurityContextHolder - The SecurityContextHolder is where Spring Security stores the details of who is authenticated.
 
@@ -114,11 +111,10 @@ AuthenticationProvider - used by ProviderManager to perform a specific type of a
 Request Credentials with AuthenticationEntryPoint - used for requesting credentials from a client (i.e. redirecting to a log in page, sending a WWW-Authenticate response, etc.)
 
 AbstractAuthenticationProcessingFilter - a base Filter used for authentication. This also gives a good idea of the high level flow of authentication and how pieces work together.
-
 	
 	There is a Interface AuthenticationProvider which has some implementations which do the actual Authentication, It has a method called authenticate().
 	
-Authenticaition Objetc is like a DTO which will have crediatial and once the crediantial is validated the same Authentication object will return the principal user info as well.
+Authenticaition Object is like a DTO which will have crediatial and once the crediantial is validated the same Authentication object will return the principal user info as well.
 
 This Authentication object will be stored in the security context which will be saved in the local thread so that we can get the info about current logged in user any where.
 
@@ -135,26 +131,23 @@ UsernamePasswordAuthenticationToken is the standard which spring mvc uses for us
 
 Spring security flow
 
-Delegating filter proxy --> FilterChainProxy ---> SecurityFilterChain --> ...AuthenticationFilter.. ---> AutenticationManager(Imp ProviderManager) --> AUthenticationProvider --> UserName authentication --> Set the security Context
+Delegating filter proxy --> FilterChainProxy ---> SecurityFilterChain --> ...AuthenticationFilter.. ---> AutenticationManager(Imp ProviderManager) --> AuthenticationProvider --> UserName authentication --> Set the security Context
 
-	When we add the spring security dependency, when the user sends any request, the Delegating filter proxy will delegate the request to FilterChainProxy,
-	FilterChainProxy will send the request to a filter called SecurityFilterChain which can delegate the request to series of filters one of the filter is AuthenticationFilter,from here the request is sent to AutenticationManager which is a interface which has a most common used implementation called ProviderManager
-	ProviderManager will find the appropriate provider implementation and then we have to Implement UserDetailsService which will give have the method load by username
+	When we add the spring security dependency, when the user sends any request, the Delegating filter proxy will delegate the 		request to FilterChainProxy,
+	FilterChainProxy will send the request to a filter called SecurityFilterChain which can delegate the request to series of filters 	one of the filter is AuthenticationFilter,from here the request is sent to AutenticationManager which is a interface which has a 	most common used implementation called ProviderManager
+	ProviderManager will find the appropriate provider implementation and then we have to Implement UserDetailsService which will 		give have the method load by username
 	We have to extend the User class privoded by the spring
 	Once the authentication is performed , we get the Authentication Object which will have the principal,
 	Once the filter receives this Authentication object it will be set in the spring security context as principal 
-	This Authentication object will be stored in the security context which will be saved in the local thread so that we can get the info about current logged in user any where.
-
-
-	AuthenticationProvider is responsible for the authentication, each provider has a method called authenticate() which will return the principal user.
+	This Authentication object will be stored in the security context which will be saved in the local thread so that we can get the 	info about current logged in user any where.
+	AuthenticationProvider is responsible for the authentication, each provider has a method called authenticate() which will return 	the principal user.
 			There can be a provider for pwd auth
 			there can be a provider for ldap auth
 			there can be a provider for Ldap auth
 
-		AutheticationManager helps in co-ordination of multiple authenticationProviders,It too has the autenticate method,
+	AutheticationManager helps in co-ordination of multiple authenticationProviders,It too has the autenticate method,
 
-		UserDetailService is a service provided by spring which will take a user name and return the user info
-
+	UserDetailService is a service provided by spring which will take a user name and return the user info
 
 AuthenticationFilter will create a Autentication Object using the crediaitials and send it to AutenticationManager,
 AutenticationManager will find the right provider using the support methods and will send the AutenticationObject to the provider, 
@@ -165,24 +158,23 @@ Autenticate filter will get the authentication Objetc along with principal and i
 
 There is another filter which manages the user session, It will take the Autenticate Object and will associate with the user session and save it to local thread for evry request, dats y we do not need to autenticate every request,
 
-
 Read the  document for proper understanding : https://docs.spring.io/spring-security/reference/servlet/getting-started.html
 		
-		Spring Boot automatically:
+Spring Boot automatically:
 
-				Enables Spring Security’s default configuration, which creates a servlet Filter as a bean named SecurityFilterChain. This bean is responsible for all the security (protecting 	the application URLs, validating submitted username and passwords, redirecting to the log in form, and so on) within your application.
+Enables Spring Security’s default configuration, which creates a servlet Filter as a bean named SecurityFilterChain. This bean is responsible for all the security (protecting the application URLs, validating submitted username and passwords, redirecting to the log in form, and so on) within your application.
 
-				Creates a UserDetailsService bean with a username of user and a randomly generated password that is logged to the console.
+Creates a UserDetailsService bean with a username of user and a randomly generated password that is logged to the console.
 
-				Registers the Filter with a bean named springSecurityFilterChain with the Servlet container for every request.
+Registers the Filter with a bean named springSecurityFilterChain with the Servlet container for every request.
 
-				Spring Boot is not configuring much, but it does a lot. A summary of the features follows:
+Spring Boot is not configuring much, but it does a lot. A summary of the features follows:
 
 				Require an authenticated user for any interaction with the application
 
 				Generate a default login form for you
 
-				Let the user with a username of user and a password that is logged to the console to authenticate with form-based authentication 
+				Let the user with a username of user and a password that is logged to the console to authenticate with 					form-based authentication 
 				Protects the password storage with BCrypt
 
 				Lets the user log out
@@ -214,18 +206,16 @@ Read the  document for proper understanding : https://docs.spring.io/spring-secu
 				HttpServletRequest.html#login(java.lang.String, java.lang.String)
 
 				HttpServletRequest.html#logout()
-
-
 				
 In Webapplications we dont have to send user information for every request because we have the user information stored either in
 		1.session token
 		2.JWT	
 Cookies
-	Cookies are used to personalise the user experience , once the user logs in, the next time his preferance will be saved in the cookies
+	Cookies are used to personalise the user experience , once the user logs in, the next time his preferance will be saved in the 		cookies
 	When we make a first request to the server , the server will send a response, server will send some information in the response header which the browser will store in its cookies and for the next request it will send the same information back to the server.
 	
 In browser we see JSessionId
-			JSESSIONID is a cookie generated by Servlet containers and used for session management in J2EE web applications for HTTP protocol. If a Web server is using a cookie for session management, it creates and sends JSESSIONID cookie to the client and then the client sends it back to the server in subsequent HTTP requests.
+JSESSIONID is a cookie generated by Servlet containers and used for session management in J2EE web applications for HTTP protocol. If a Web server is using a cookie for session management, it creates and sends JSESSIONID cookie to the client and then the client sends it back to the server in subsequent HTTP requests.
 
 SessionId + COOKies vs JWT
 
@@ -243,8 +233,6 @@ Immediate control
 Session-based authentication is good for traditional applications where immediate control over sessions is important. 
 Vulnerable to XSS
 Session-based authentication is vulnerable to cross-site scripting (XSS) attacks. 
-
-
  XSS allows attackers to run JavaScript in a victim's browser, while CSRF tricks victims into performing actions they didn't intend. 
 
 Cross-site scripting (XSS)
@@ -253,11 +241,19 @@ Cross-site scripting (XSS)
 	XSS can be stored in a website's database, embedded in a URL, or manipulated in the document object model (DOM) 
 	XSS can affect many systems at once and impact databases 
 
+	Imagine there is a webiste and it has a comment section, a attacker will inject his code in the comment section in the form of 		link or any other text when other user hovers or clicks the link then it will execute the malicious code added by the attacker.
+	Attacker can get the user info like banck account details etc , he can even run a software secretly in the clients machine.
+
+	Solutions for XSS
+	1.Validate the user input like if it is a comment section then only plain testx should be allowed.
+	2.We can encode special characters like < can be encoded to &lt; > can be encoded to &gt;
+
 Cross-site request forgery (CSRF)
 	An attacker tricks a victim into performing an action on a website where they are already authenticated 
 	Attackers often use social engineering to trick victims into clicking a link in an email or chat message 
-	The attacker's goal is to perform an action on behalf of the victim without their knowledge or consent 
-	
+	The attacker's goal is to perform an action on behalf of the victim without their knowledge or consent.	
+
+	Solution for CSRF- we can use csrf token
 
 JWT-JSON Web Token It is a value token
 
@@ -265,14 +261,13 @@ JWT-JSON Web Token It is a value token
 	JWT only comes into picture only after authorization is complete
 
 	Once the authorization is complete,server sends the jwt token to the client and the client will send it back for next subscquent request by setting it in HTTP Header (which is a key value pair)
-			key used will be Authorization and value will be Bearer:jwt token
+	key used will be Authorization and value will be Bearer:jwt token
 	Server signs the jwt and sends it to the client in the header, 
 	The client can hold it in cookie or local storage, It has to pass it in every request
 	as per jwt standard,
 		In the httpHeaders we pass jwt with key as Authorization: Bearer{jwt} and send it to server
 
 JWT will have 3 parts
-
 
 	Header.Payload.Signature
 
@@ -282,26 +277,21 @@ JWT will have 3 parts
 
 	Signature=base64(Header).+base64(Payload)+.secret
 
-	Header and payload are base64 encoded, but the signature can only be autenticated by the server which has generated it
-
-	
+	Header and payload are base64 encoded, but the signature can only be autenticated by the server which has generated it.	
 JWT
 		While configuring the urls for permission
 		permit all should be first
 		specific permission next
-		anyrequest.authenticated() last
-
-		
+		anyrequest.authenticated() last		
 
 		https://www.youtube.com/watch?v=VVn9OG9nfH0
 
 DrwaBacks of JWT
-
 	1.You can logoff and end the session or session can expire but for jwt u cannot do that, you can set expire for jwt as well.
-	2.Someone can use my jwt and access so we have to be careful when using it because jwt will validate if the token is valid and it is not tied to a user(we can also black list if jwt is misused)
+	2.Someone can use my jwt and access so we have to be careful when using it because jwt will validate if the token is valid and it 	is not tied to a user(we can also black list if jwt is misused)
 
 Limitations or Disadvantages of JWT
-	
+
 	Someone can steal and use the JWT
 
 	In session based token if someone steals our token we can log off the session , but in JWT we cannot end the session ,alternately we can add the JWT to the blacklist so that it becomes invalid or we can also set expire time for JWT 
@@ -327,13 +317,11 @@ OAuth is used for Authorisation and not for Autentication
 			Using this access token, the client makes a call to the google drive
 			google drive will verify the access token either with itself or with the  authorisation server and then it provides the resource to the client
 
-
 	2.Implicit flow
 
 		 Everything will be same except here the authorisaction server will directly send the access token there is no Authorisation token(Flow 1 is more secured and flow 2 can be used to javascript related applications)
 
 	3.Client Crediantial Flow
-
 		Usually for micro services we use this where we trust the client
 
 	OAuth means Open Authorisation, 
@@ -343,14 +331,12 @@ OAuth is used for Authorisation and not for Autentication
 	
 	Risk of OAuth
 	If you dont trust the app then giving access to your google account is not a good idea.
-	If user deletes is facebook account then we have to again authenticate the user
-	
+	If user deletes is facebook account then we have to again authenticate the user	
 	
 	API Gateway Pattern-
 		ZUUL-It is the open source api gateway provided by Netflix
 		
 	To implements api gateway we have to add gateway starter and starter eureka client
-	In application.yml we have to list the services (id,url,predicates) to that for out different microservices this service will act as the gateway
-
+	In application.yml we have to list the services (id,url,predicates) to that for out different microservices this service will act as the gateway.
 
 https://www.youtube.com/watch?v=X80nJ5T7YpE
