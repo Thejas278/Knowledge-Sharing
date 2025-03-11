@@ -4,24 +4,11 @@ Readmore here https://docs.spring.io/spring-framework/reference/core/aop/introdu
 It is used to increase the modularity by cross cutting concerns, A cross cutting concern is a concern that effect the whole application
 and it should be centralized in a single location eg logging,transactionmanagement etc
 
-
-Steps in aspects
-1. Write Aspects using @Aspect annotation while creating a class
-2.In the same class create methods with @Before annotaion specifiying before which method it has to be executed
-
-	eg 
-	@Before("execution(public String com.tsoft.Employee.getName())")
-	public void getMessage(){
-	sop("get message")
-	}
-Also in spring.xml we have use a tag
-<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-
 Key Concepts
 
-		Cross cutting concern- Something which is across multiple objects
+		Cross cutting concern- Something which is across multiple objects.
 
-		Aspect- It is a modularization of a cross cutting concern eg Transaction,logging etc
+		Aspect- It is a modularization of a cross cutting concern eg Transaction,logging etc.
 
 		Join Point- A point during the execution of a program, such as the execution of a method or the handling of an 	 			exception.In Spring AOP, a join point always represents a method execution.					
 
@@ -37,84 +24,74 @@ Named Point cut
 		@Pointcut("execution(* * getName()")  
 		Pointcut defines rules saying, advice should be applied on getName() method present in any class in any package and 			joinpoints will be a list of all getName() method present in classes so that advice can be applied on these methods.
 
-		Introduction: (Also known as an inter-type declaration). Declaring additional methods or fields on behalf of a type. Spring AOP allows you to introduce new interfaces (and a corresponding implementation) to any proxied object. For example, you could use an introduction to make a bean implement an IsModified interface, to simplify caching.
+		Introduction: (Also known as an inter-type declaration). Declaring additional methods or fields on behalf of a type. 		Spring AOP allows you to introduce new interfaces (and a corresponding implementation) to any proxied object. For example, you 		could use an introduction to make a bean implement an IsModified interface, to simplify caching.
 
-		Target object: object being advised by one or more aspects. Also referred to as the advised object. Since Spring AOP is implemented using runtime proxies, this object will always be a proxied object.
+		Target object: object being advised by one or more aspects. Also referred to as the advised object. Since Spring AOP is 		implemented using runtime proxies, this object will always be a proxied object.
 
-		AOP proxy: an object created by the AOP framework in order to implement the aspect contracts (advise method executions and so on). In the Spring Framework, an AOP proxy will be a JDK dynamic proxy or a CGLIB proxy.
+		AOP proxy: an object created by the AOP framework in order to implement the aspect contracts (advise method executions 			and so on). In the Spring Framework, an AOP proxy will be a JDK dynamic proxy or a CGLIB proxy.
 
 		Weaving: Process of linking a aspect into the application code. 
-		This can be done at compile time (using the AspectJ compiler, for example), load time, or at runtime. Spring AOP, like other pure Java AOP frameworks, performs weaving at runtime.	
+		This can be done at compile time (using the AspectJ compiler, for example), load time, or at runtime. Spring AOP, like 			other pure Java AOP frameworks, performs weaving at runtime.	
 
 
 	Types of advice:
 
-			1.Before advice: Advice that executes before a join point, but which does not have the ability to prevent execution flow proceeding to the join point (unless it throws an exception).
+		1.Before advice: Advice that executes before a join point, but which does not have the ability to prevent 				execution flow proceeding to the join point (unless it throws an exception).
 
 					@Before("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
 												or
 					 @Before("execution(* com.xyz.myapp.dao.*.*(..))") //here * is the return type(any return type)
 
-			2.After returning advice: Advice to be executed after a join point completes normally: for example, if a method returns without throwing an exception.
+		2.After returning advice: Advice to be executed after a join point completes normally: for example, if a method 			returns without throwing an exception.
+																				@AfterReturning("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
 
-									@AfterReturning("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
+			Sometimes you need access in the advice body to the actual value that was returned. You can use the form of 				@AfterReturning that binds the return value for this:
 
-								Sometimes you need access in the advice body to the actual value that was returned. You can use the form of @AfterReturning that binds the return value for this:
-
-										@AfterReturning(
-									    pointcut="com.xyz.myapp.SystemArchitecture.dataAccessOperation()",
-									    returning="retVal")
-									  public void doAccessCheck(Object retVal) {
+				@AfterReturning(pointcut="com.xyz.myapp.SystemArchitecture.dataAccessOperation()",
+				returning="retVal")
+			public void doAccessCheck(Object retVal) {
 									    // ...
-									  }
+				 }
+
+		The name used in the returning attribute must correspond to the name of a parameter in the advice method. When a method 		execution returns, the return value will be passed to the advice method as the corresponding argument value. A returning 		clause also restricts matching to only those method executions that return a value of the specified type (Object in this 		case, which will match any return value).
+
+	3.After throwing advice: Advice to be executed if a method exits by throwing an exception.
+																			@AfterThrowing("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
+
+	4.After (finally) advice: Advice to be executed regardless of the means by which a join point exits (normal or 	exceptional 			return).
+	After (finally) advice runs however a matched method execution exits. It is declared using the @After annotation. 
+
+		After advice must be prepared to handle both normal and exception return conditions. It is typically used for releasing 		resources, etc
+																		@After("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
+
+5.Around advice: Advice that surrounds a join point such as a method invocation. This is the most powerful kind of advice. Around advice can perform custom behavior before and after the method invocation. It is also responsible for choosing whether to proceed to the join point or to shortcut the advised method execution by returning its own return value or throwing an exception.
 
 
-									  The name used in the returning attribute must correspond to the name of a parameter in the advice method. When a method execution returns, the return value will be passed to the advice method as the corresponding argument value. A returning clause also restricts matching to only those method executions that return a value of the specified type (Object in this case, which will match any return value).
+	Around advice runs "around" a matched method execution. It has the opportunity to do work both before and after the method 		executes, and to determine when, how, and even if, the method actually gets to execute at all. Around advice is often used if you 	need to share state before and after a method execution in a thread-safe manner (starting and stopping a timer for example). 
 
-			3.After throwing advice: Advice to be executed if a method exits by throwing an exception.
-
-									@AfterThrowing("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
-
-			4.After (finally) advice: Advice to be executed regardless of the means by which a join point exits (normal or 	exceptional return).
-
-									After (finally) advice runs however a matched method execution exits. It is declared using the @After annotation. 
-
-									After advice must be prepared to handle both normal and exception return conditions. It is typically used for releasing resources, etc
-
-											@After("com.xyz.myapp.SystemArchitecture.dataAccessOperation()")
-
-			5.Around advice: Advice that surrounds a join point such as a method invocation. This is the most powerful kind of advice. Around advice can perform custom behavior before and after the method invocation. It is also responsible for choosing whether to proceed to the join point or to shortcut the advised method execution by returning its own return value or throwing an exception.
-
-
-					Around advice runs "around" a matched method execution. It has the opportunity to do work both before and after the method executes, and to determine when, how, and even if, the method actually gets to execute at all. Around advice is often used if you need to share state before and after a method execution in a thread-safe manner (starting and stopping a timer for example). 
-
-
-
-											@Around("com.xyz.myapp.SystemArchitecture.businessService()")
-				  						public Object doBasicProfiling(ProceedingJoinPoint pjp) throws Throwable {
+		@Around("com.xyz.myapp.SystemArchitecture.businessService()")
+			public Object doBasicProfiling(ProceedingJoinPoint pjp) throws Throwable {
 				    					// start stopwatch
 				    					Object retVal = pjp.proceed();
 				    						// stop stopwatch
 				   						 return retVal;
 				 						 }
 
-				 			* The first parameter of the advice method must be of type ProceedingJoinPoint.
+		* The first parameter of the advice method must be of type ProceedingJoinPoint.
 
-				 			 *Within the body of the advice, calling proceed() on the ProceedingJoinPoint causes the underlying method to execute.
+		 *Within the body of the advice, calling proceed() on the ProceedingJoinPoint causes the underlying method to execute.
 
-				 			 *The proceed method may also be called passing in an Object[] - the values in the array will be used as the arguments to the method execution when it proceeds
+		*The proceed method may also be called passing in an Object[] - the values in the array will be used as the arguments to 		the method execution when it proceeds
 
-				 			 The value returned by the adivce will be the value which the caller of the method receives.
+		 The value returned by the adivce will be the value which the caller of the method receives.
 
-				 			 A simple caching aspect for example could return a value from a cache if it has one, and invoke proceed() if it does not.
+		A simple caching aspect for example could return a value from a cache if it has one, and invoke proceed() if it does not.
 
-				 			 Note that proceed may be invoked once, many times, or not at all within the body of the around advice, all of these are quite legal.
-
+		 Note that proceed may be invoked once, many times, or not at all within the body of the around advice, all of these are 		quite legal.
 
 *It is recomended to use the least powerful advice which satisfy our requirement.
 
 Spring AOP currently supports only method execution join points (advising the execution of methods on Spring beans). 
-
 
 @AspectJ Support for non spring boot application
 			
@@ -138,38 +115,36 @@ Spring AOP currently supports only method execution join points (advising the ex
 
 Declaring a aspect for Spring boot
 
-			With @AspectJ support enabled any bean defined in the application context will become a aspect if it has @Aspect annotation.
-
-			Spring will automatically detect this annotation and will use it to configure spring AOP.
+	With @AspectJ support enabled any bean defined in the application context will become a aspect if it has @Aspect 			annotation.Spring will automatically detect this annotation and will use it to configure spring AOP.
 
 
 	**	In Spring AOP, it is not possible to have aspects themselves be the target of advice from other aspects.Because  @Aspect 			annotation on a class marks it as an aspect, and hence excludes it from auto-proxying.
 
 	Declaring a Pointcut
 
-			A pointcut has 2 parts
+		A pointcut has 2 parts
 
-					1.PointCut signature- method signature and it should have a void return type
-					2.Pointcut expression-pointcut expression that determines exactly which method executions we are interested in.
+			1.PointCut signature- method signature and it should have a void return type
+			2.Pointcut expression-pointcut expression that determines exactly which method executions we are interested in.
 
 					eg
 					@Pointcut("execution(* transfer(..))")// the pointcut expression
 					private void anyOldTransfer() {}// the pointcut signature
 
-					we can use pointcut expression on a method and that can be passed inside annotations like execution,before etc
+			we can use pointcut expression on a method and that can be passed inside annotations like execution,before etc
 
 
-								eg
-									@Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
-								    public void requestMapping() {}
+		eg
+																		@Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
+	 public void requestMapping() {}
 
-								    @Pointcut("within(blah.blah.controller.*) || within(blah.blah.aspect.*)")
-								    public void myController() {}
+	 @Pointcut("within(blah.blah.controller.*) || within(blah.blah.aspect.*)")
+	 public void myController() {}
 
-								    @Around("requestMapping() && myController()")
-								    public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-								      ...............
-								   }  
+	 @Around("requestMapping() && myController()")
+	 public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
+		 ...............
+		}  
 
 Supported Pointcut Designators
 
@@ -206,11 +181,11 @@ Field interception is not implemented, although support for field interception c
 
 JDK dynamic proxy and CGLIB proxy
 
-		If the target object to be proxied implements at least one interface then a JDK dynamic proxy will be used. All of the interfaces implemented by the target type will be proxied. 
+		If the target object to be proxied implements at least one interface then a JDK dynamic proxy will be used. All of the 			interfaces implemented by the target type will be proxied. 
 
 		If the target object does not implement any interfaces then a CGLIB proxy will be created.
 
-		If you want to force the use of CGLIB proxying (for example, to proxy every method defined for the target object, not just those implemented by its interfaces) you can do so. However, there are some issues to consider:
+		If you want to force the use of CGLIB proxying (for example, to proxy every method defined for the target object, not 			just those implemented by its interfaces) you can do so. However, there are some issues to consider:
 
 
 			1.Final methods cannot be advised as they cannot be overriden.
@@ -234,12 +209,11 @@ Order of Aspects
 
 		"on the way in" (so given two pieces of before advice, the one with highest precedence runs first).
 
-		"On the way out" from a join point, the highest precedence advice runs last (so given two pieces of after advice, the one with the highest precedence will run second).
+		"On the way out" from a join point, the highest precedence advice runs last (so given two pieces of after advice, the one 		with the highest precedence will run second).
 
-		When two pieces of advice defined in different aspects both need to run at the same join point,WE can specify the order by using @Ordered Anotation , the one with the lowest value is considered as the highest precedance.
+		When two pieces of advice defined in different aspects both need to run at the same join point,WE can specify the order 		by using @Ordered Anotation , the one with the lowest value is considered as the highest precedance.
 
-		When two pieces of advice defined in the same aspect both need to run at the same join point, the ordering is undefined (since there is no way to retrieve the declaration order via reflection for javac-compiled classes). Consider collapsing such advice methods into one advice method per join point in each aspect class, or refactor the pieces of advice into separate aspect classes - which can be ordered at the aspect level.
-
+		When two pieces of advice defined in the same aspect both need to run at the same join point, the ordering is undefined 		(since there is no way to retrieve the declaration order via reflection for javac-compiled classes). Consider collapsing 		such 	advice methods into one advice method per join point in each aspect class, or refactor the pieces of 				advice into separate aspect classes - which can be ordered at the aspect level.
 
 Introductions
 
