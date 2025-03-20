@@ -103,7 +103,7 @@ Kubernetes Architecture
 
 		Scheduler decides on which node the new po should be scheduled
 
-		ETCD key value storage- it any time holds the current state of Kubernetes cluster, all the confoguration data, all the backups which happens is because of the snap shot this storage maintains. It will always have the current status of any Kubernetes component so when the actual state example number of replicas donot match with the desired state a new pod will be created.
+		ETCD key value storage- it any time holds the current state of Kubernetes cluster, all the configuration data, all the backups which happens is because of the snap shot this storage maintains. It will always have the current status of any Kubernetes component so when the actual state example number of replicas donot match with the desired state a new pod will be created.
 
 
 	Virtual Network - It connects all the nodes to the master node so that all these work as one component
@@ -127,8 +127,7 @@ Pod
 
 	Pods will have there own ip which will help them to communicate with other pods like dp pod with the application pod.
 
-	Pods are ephemeral - That means they can die very easily . They die if the pods crash or if the resource to run the application inside the pod is not enough.Now when the new pod is created , it will have the new ip and this will cause inconvinence right so we have to use the serviece component.
-
+	Pods are ephemeral - That means they can die very easily . They die if the pods crash or if the resource to run the application inside the pod is not enough.Now when the new pod is created , it will have the new ip and this will cause inconvinence right so we have to use the service component.
 
 Service
 	
@@ -140,22 +139,15 @@ Service
 
 	Service also works as a loadbalancer
 
-
 Ingress
 
 Displaying the pod ip for the application will look wierd, https://my-app.com right so Ingress will make sure the request goes through it from the browser
-
-
-
 
 ConfigMap
 
 		Usually the database url or any other properties will be in the property file of the application , any change in these properties will end up doing the redeployment which is not efficient so ConfigMap will help us externalise configuration of our application so that for such changes we dont have to rebuild the services.
 
-
-
 Secret
-
 		It is similar to ConfigMap but it will have secret data like username and password which will be stored in base64 format. Kubernetes does not do it for us we have 3rd party tools to achieve this
 
 
