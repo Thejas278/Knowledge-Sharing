@@ -207,14 +207,18 @@ Synchronized Block
 
 	When a thread releases an intrinsic lock, a happens-before relationship is established between that action and any subsequent 		acquisition of the same lock.
 
-		You might wonder what happens when a static synchronized method is invoked, since a static method is associated with a 			class, not an object. In this case, the thread acquires the intrinsic lock for the Class object associated with the 			class. Thus access to class's static fields is controlled by a lock that's distinct from the lock for any instance of the 		class.
-		
+	Object level locking:
+	Object level locking is mechanism when you want to synchronize a non-static method or non-static code block such that only one 		thread will be able to execute the code block on given instance of the class. This should always be done to make instance level 	data thread safe. 
+
+	Class level locking	
+	Class level locking prevents multiple threads to enter in synchronized block in any of all available instances on runtime. This 	means if in runtime there are 100 instances of DemoClass, then only one thread will be able to execute demoMethod() in any one of 	instance at a time, and all other instances will be locked for other threads. This should always be done to make static data 		thread safe
+
 Reentratnt lock
 
 		https://www.youtube.com/watch?v=ahBC69_iyk4
 
 	Suppose 4 threads are trying to book a same seat in the movie theater then only 1 thread must be allowed , We can achieven this using Reentratnt lock. 
-	When 1 thread has the lock all the other threads go to waiting state and once the unlock method is called by the thread then again all the waiting threads becomes runnable and again they try to acquire the lock 	and the process repeats
+	When 1 thread has the lock all the other threads go to waiting state and once the unlock method is called by the thread then again all the waiting threads becomes runnable and again they try to acquire the lock and the process repeats
 
 	Unlike synchronised block we can use Reentratnt.lock(); in 1 method  and Reentratnt.unlock(); in another method
 	
@@ -280,7 +284,6 @@ Atomicity
  	AtomicInteger, AtomicReference are based on the Compare and swap instruction. 
 	CAS has three operands: a memory location V on which to operate, the expected old value A, and the new value B. CAS atomically 		updates V to the new value B, but only if the value in V matches the expected old value A; otherwise, it does nothing. In either 	case, it returns the value currently in V. 
 	The compareAndSet() methods of AtomicInteger and AtomicReference take advantage of this functionality, if it is supported by the 	underlying processor; if it is not, then the JVM implements it via spin lock.
-
 
 	Atomic Operations https://www.youtube.com/watch?v=WH5UvQJizH0&list=PLhfHPmPYPPRk6yMrcbfafFGSbE2EPK_A6&index=1
 	These are the operations which cannot stop in the middle, either they suceed or they fail,there is no in between.
@@ -396,8 +399,6 @@ Solution for LiveLock
 		A thread has to stop repeating the same actions if no progress has been detected.
 
 		Obviously real life scenarios will be more elaborate, but detecting zero progress and acting differently than normally is 		crucial
-
-
 Guarded Blocks
 Threads often have to coordinate their actions. The most common coordination idiom is the guarded block. Such a block begins by polling a condition that must be true before the block can proceed. There are a number of steps to follow in order to do this correctly.
 
@@ -475,29 +476,39 @@ whenever we use wait() and notify() inside the method,the method needs to be syn
 Wait can also throw InterruptedException
 when wait is invoked it will release the lock and suspend exectution.At some future time, another thread will acquire the same lock and invoke Object.notifyAll, informing all threads waiting on that lock that something important has happened:
 
-There is a second notification method, notify, which wakes up a single thread
+There is a second notification method, notify, which wakes up a single arbitrary thread
 
-sleep(100) vs t1.wait()
-
-			wait() method releases the lock   -  sleep() method doesn't release the lock.
-			wait is the method of Object class -  sleep is the method of Thread class
-			wait is non static Method 			- sleep is static method
+	notify():
+	Wakes up one thread that is waiting on the same object's monitor. 
+	The specific thread that is awakened is not guaranteed and depends on the thread scheduler. 
+	The awakened thread will then compete with other threads for the lock on the object. 
+	notifyAll():
+	Wakes up all threads that are waiting on the same object's monitor. 
+	All awakened threads will compete for the lock on the object. 
+	This ensures that at least one of the waiting threads will be able to proceed. 
 
 **wait() and notify()
 wait() will causes the current thread to wait untill another thread invokes notify() or notifyAll() method
 notify() wakes up a single thread that is waiting to accept to use the resource (should be the first thread which used wait())
 notifyAll() will wake up that are waiting to access the resource.
 
+sleep(100) vs t1.wait()
+
+			wait() method releases the lock   -  sleep() method doesn't release the lock.
+			wait is the method of Object class -  sleep is the method of Thread class
+			wait is non static Method 	- sleep is static method
+
 Immutable design
 
 		Dont provide setters which modify the fields
 		Create all fields private and final. (By making fields private and final, you are making sure that no one will able to 			change the field value once an object is created).
 		All fields are initialized using a constructor, so values can be assigned at the time of object creation.
-		Don't allow subclasses to override methods. The simplest way to do this is to declare the class as final. A more 			sophisticated approach is to make the 	constructor private and construct instances in 	factory methods.
+		Don't allow subclasses to override methods. The simplest way to do this is to declare the class as final. A more 			sophisticated approach is to make the constructor private and construct instances in factory methods.
 
 		If the instance fields include references to mutable objects, don't allow those objects to be changed:
 		Don't provide methods that modify the mutable objects.
 		Don't share references to the mutable objects. Never store references to external, mutable objects passed to the 			constructor; if necessary, create copies, and store references to the copies. Similarly, create copies of your internal 		mutable objects when necessary to avoid returning the originals in your methods.
+
 Executor Service
 	Removes the overhead of creating threads explicitly in the code. Instead, it reuses the threads in the pool for executing tasks asynchronously
 
@@ -644,9 +655,7 @@ Runnable vs collable
 	A Callable can throw checked exception but a Runnable cannot.
 	A Callable can be used with ExecutorService methods but a Runnable can be used only with ExecutorService and Thread .
 
-
 Advanced Thread Concepts
-
 	1.Lock Objects
 		Synchronized blocks use re entrant locks, this kind of lock is easy to use but has limitations.
 		More sophisticated locking idioms are supported by the java.util.concurrent.locks package
