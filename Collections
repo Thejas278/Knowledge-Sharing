@@ -19,8 +19,18 @@
 			insert at front       O(N)         O(1)
 			insert at back        O(1)         O(1)
 			insert after an item  O(N)         O(1)
-**Set Collection
 
+ArrayList is faster to retrive based on index compared to LinedList
+LinkedList is faster to inserting an element.
+**ArrayList vs Linked List
+
+	ArrayList uses dynamice resiazable array, ArrayList is faster to retrival of data
+	LinkedList uses doubly linked List, LinkedList is faster for manupulation
+
+	Manipulation with ArrayList is slow because it internally uses an array. If any element is removed from the array, all the other elements are shifted in memory.
+	Manipulation with LinkedList is faster than ArrayList because it uses a doubly linked list, so no bit shifting is required in memory.
+
+**Set Collection
 		Duplicates are not allowed, It has only those methods from collection interface
 
 		HashSet -Stores elements in hashtable, insertion order is not maintained(performance is good)
@@ -35,7 +45,7 @@ eg in the documentation
 		public boolean add(E e) {
   		 return map.put(e, PRESENT)==null;
 		}
-	Now as you can see that whenever we create a HashSet, it internally creates a HashMap and if we insert an element into this HashSet using add() method, it actually calls put() method on internally created HashMap object with element you have specified as it’s key and constant Object called “PRESENT” as it’s value. 	So we can say that a Set achieves uniqueness internally through HashMap and when we call put(Key, Value) method, it returns the previous value associated with key, or null if there was no mapping for key. So in add() method we check the return value of map.put(key, value) method with null value.
+	Now as you can see that whenever we create a HashSet, it internally creates a HashMap and if we insert an element into this HashSet using add() method, it actually calls put() method on internally created HashMap object with element you have specified as it’s key and constant Object called “PRESENT” as it’s value. So we can say that a Set achieves uniqueness internally through HashMap and when we call put(Key, Value) method, it returns the previous value associated with key, or null if there was no mapping for key. So in add() method we check the return value of map.put(key, value) method with null value.
 	
 	As LinkedHashSet extends HashSet, so it internally calls constructors of HashSet using super(). Similarly creating an object of TreeSet class internally creates object of Navigable Map as backing map.
 
@@ -145,7 +155,7 @@ InnerWorking of HashMap
 	whatever index we get we will insert the keyvalue pair in that node.If there are 2 keys with the same index then there will be hash colission
 	Then we will check if both the key are same or equal
 	if they are different then
-		the first inserted record in that node, the  "next" poniter will be pointing to this new record.
+		the first inserted record in that node, the  "next" pointer will be pointing to this new record.
 	else if the keys are same
 		if will replace the first record with the new record
 
@@ -172,9 +182,9 @@ In java 8
  *ConcurrentHashMap mainitains the lock at bucket level read operation doesn't require a lock. So any number of threads can perform a get operation on it.If thread1 wants to perform put operation in segment 2 and thread2 wants to perform put operation on segment 4 then it is allowed here
 
 	when to use
-	We should favor Collections.synchronizedMap() when data consistency is of utmost importance, and we should choose ConcurrentHashMap for performance-critical applications where there are far more write operations 	than there are read operations.
+	We should favor Collections.synchronizedMap() when data consistency is of utmost importance, and we should choose ConcurrentHashMap for performance-critical applications where there are far more write operations than there are read operations.
 
-	This is because the Collections.synchronizedMap() requires each thread to acquire a lock on the entire object for both read/write operations. By comparison, the ConcurrentHashMap allows threads to acquire locks 	on separate segments of the collection, and make modifications at the same time
+	This is because the Collections.synchronizedMap() requires each thread to acquire a lock on the entire object for both read/write operations. By comparison, the ConcurrentHashMap allows threads to acquire locks on separate segments of the collection, and make modifications at the same time
 
 Difference btw HashMap and HashTable
 
@@ -257,7 +267,6 @@ Advantages of Data Structure
 	Poll will return null if the list is empty and Poll is also used to remove the head element.
 	Pop will throw java.util.NoSuchElementException and Pop is used to remove and return the head element.
 	
-
 	Other methods are 
 	peek()
 	peekFirst()
@@ -275,7 +284,6 @@ Array is faster for adding,deleting, Linked list is slower for these operations.
 Array consumes more memory, In linked List the memory can be redumped to heap.
 
 *Tree
-	
 	This data structure uses a concept of Node
 
 	TopNode is root node
@@ -297,15 +305,4 @@ Array consumes more memory, In linked List the memory can be redumped to heap.
 
 	Height of the tree = height of root node
 
-
-
-
 Read more: https://javarevisited.blogspot.com/2015/10/how-to-implement-binary-search-tree-in-java-example.html#ixzz5vtwsQjZh
-
-**ArrayList vs Linked List
-
-	ArrayList uses dynamice resiazable array, ArrayList is faster to retrival of data
-	LinkedList uses doubly linked List, LinkedList is faster for manupulation
-
-	Manipulation with ArrayList is slow because it internally uses an array. If any element is removed from the array, all the other elements are shifted in memory.
-	Manipulation with LinkedList is faster than ArrayList because it uses a doubly linked list, so no bit shifting is required in memory.
