@@ -247,15 +247,28 @@ call by reference means calling the function with paramater as reference
 Association
 	It is a relation between 2 independent classes establised through their objects
 
-	Composition(has a) and Aggregation(Is a) are the 2 forms of Association.
+Composition(has a) and Aggregation(part of) are the 2 forms of Association.
 
-	Aggregation is a has a relationship(Inheritance - method overriding)
+	Consider a simple example of a LinkedList class. A LinkedList is made up of Nodes. Here LinkedList class is the owning object. 		When it is destroyed, all the Nodes contained in it are wiped off. If a Node object is deleted from the list, the LinkedList 		object will still exist.
+
+	Composition is implemented such that an object contains another object.
+
+				class LinkedList {
+				
+				 Node head;
+				 int size; 
+				}
+				This is composition
+
+Aggregation is a has a relationship(Inheritance - method overriding)
+
+	Aggregation is also a type of Object Composition but not as strong as Composition. It defines "HAS A" relationship. Put 		in very simple words if Class A has a reference of Class B and removing B doesn't affect the existence of A then it is 				aggregation. You must have used it at some point.
 
 		It is a unidirectional association eg department has students but vicecersa is not possible
 
 		In Aggregation, both the entries can survive individually which means ending one entity will not effect the other entity
 
-	Composition is a restricted form of Association in which two entities are highly dependent on each other.
+Composition is a restricted form of Association in which two entities are highly dependent on each other.
 				It represent parts of relationship, when one is destroyed the dependent object is also destroyed
 
 	Composition is a strong Association whereas Aggregation is a weak Association.
@@ -290,7 +303,6 @@ Interface
         Default methods can be overridden
 
         https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html
-
  
  * Comparable - compareTo(Object o)
 
@@ -308,7 +320,7 @@ Interface
          Arrays.sort or Collections.sort will take one more argument which take Comparator as argument.
 
          NullPointerException - if the specified object is null
-		ClassCastException - if the specified object's type prevents it from being compared to this object.
+	ClassCastException - if the specified object's type prevents it from being compared to this object.
 
 			First object with Second object will be ascending
 			reverse will be descending
@@ -323,9 +335,12 @@ Interface
 	comparable has compareTo method
 
 	Comparator is used to compare more than one field
-	comparable is used to  one field
+	comparable is used to compare one field
 	Implemented in the seperate class ,Comparator- Actual class is not effectedate class
 	comparable- Actual class is effected
+
+	Comparable should be used when you compare instances of the same class.
+	Comparator can be used to compare instances of different classes
 
 	Comparable is used to default sorting,Comparator is used for custom sorting
 
@@ -340,7 +355,6 @@ Interface
 
 		Comparator ch4=	Comparator.comparing(Chair::getName).reversed();
 		Collections.sort( cl,ch4);
-
 
 Design Patterns
 
@@ -411,7 +425,7 @@ Imagine you have to make a meal combo
 				    Food createFood();
 				    Drink createDrinks();
 				}
-
+		benefits- Ensures Consistency,Loose coupling ie adding new impls will not effect the client
 
 3.ProtoType Design Pattern
 
@@ -505,7 +519,7 @@ An Adapter pattern acts as a connector between two incompatible interfaces that 
 	A phone(Interface) needs a Specific Charger(Interface) , if u dont have company charger then Some other Hardware will implemenet Specific Charger and that will act as Adapter which will connect Phone interface and Specific Charger interface. 
 
 6.Brdige Design Pattern
-It is a structural Design Pattern where we seperate the abstraction hierarcy and implementation hieracy into 2 different layers so that chaneg in one layer will not effect the other layer
+It is a structural Design Pattern where we seperate the abstraction hierarcy and implementation hieracy into 2 different layers so that change in one layer will not effect the other layer.
 
 	The Bridge pattern is something you implement up front - if you know you have two orthogonal hierarchies, it provides a way to decouple the interface and the implementation in such a way that you don't get an insane number of classes. Let's say you have:
 
@@ -514,6 +528,7 @@ It is a structural Design Pattern where we seperate the abstraction hierarcy and
 	MemoryMappedWindowsFile MemoryMappedLinuxFile DirectReadWindowsFile DirectReadLinuxFile
 
 	Adapter vs Bridge read this https://stackoverflow.com/questions/1425171/difference-between-bridge-pattern-and-adapter-pattern
+	https://www.youtube.com/watch?v=F1YQ7YRjttI
 
 7.Facade Design patter is a pattern where the complexities of the system is hidden and the client is provided with the interface to access the system
 
@@ -554,7 +569,7 @@ It is a structural Design Pattern where we seperate the abstraction hierarcy and
 		  }
 8.Decorator Design Pattern
 		Here we add additonal responsibilities to a exisitng object in runtime by creating multiple decorators .
-		Like There is a ChristmasTree interface and ChristmasTreeImple implenents it
+		Like There is a ChristmasTree interface and ChristmasTreeImple implements it
 
 		now we create another Abstract class TreeDecorator which will implement ChristmasTree and also it will use compostion to 	inject the ChristmasTree within it ie
 
@@ -609,8 +624,22 @@ In the command design patterns , we will encapsulate all the data in a object th
 
 ---------------------------------Java Upgrades--------------------------------------------------------------------------------------------
 
-**In java 8 
+Abstract classes versus interfaces in Java 8
 
+Abstract class can define constructor. They are more structured and can have a state associated with them. While in contrast, default method can be implemented only in the terms of invoking other interface methods, with no reference to a particular implementation's state. Hence, both use for different purposes and choosing between two really depends on the scenario context.
+
+why Interface Default methods?
+The default methods were introduced to provide backward comparability so that existing interfaces can use the lambda expressions without implementing the methods in the implementation class. Default methods are also known as defender methods or virtual extension methods.
+	 eg ForEach method would not have been default method, every collection implementing class had to implement it. 
+		or List.replaceAll have dafault implementations.
+
+Differences between static and default methods in Java 8:
+
+1) Default methods can be overriden in implementing class, while static cannot.
+
+2) Static method belongs only to Interface class, so you can only invoke static method on Interface class, not on class implementing this Interface, see:
+
+**In java 8 
 1.we can create methods in interface
 
 	Inside interface you can define a method with a default keyword and for defining static methods we dont have to use default keyword
@@ -626,18 +655,11 @@ In the command design patterns , we will encapsulate all the data in a object th
 	}
 
 	If there are 2 interfaces which have defined a same default method in them then the implementing class should also implement the method.
-	this is only applicable if both the interfaces have  the same method.
+	this is only applicable if both the interfaces have the same method.
 
 	Class has more power than interface
 
 	**while using default methods we cannot override the methods present in the object class
-
-	**Differences between static and default methods in Java 8:
-
-	1) Default methods can be overriden in implementing class, while static cannot.
-
-	2) Static method belongs only to Interface class, so you can only invoke static method on Interface class, not on class implementing this Interface
-
 
 2.We got lambda functions
 
@@ -714,21 +736,18 @@ To use stream we need to
 Terminal operations produces a non-stream (cannot be chained) result such as primitive value, a collection or no value at all.
 
 **Terminal Operations are:
-
 	forEach
 	forEachOrdered
 	toArray
-
 
 **Call by Method or Method Reference  in java 
 	eg
 	List<String> name=Arrays.asList("Naven","manoj","Raju");
 
-	name.forEach(System.out :: println); // WE are not using lambda here , we are using method reference here
+	name.forEach(System.out :: println); // We are not using lambda here , we are using method reference here
 
 	the above line is called function programming , here we are passing the method inside a method and we should use class name followed by 2 double colns followed by method name.
 	When passing the method the class should be a functional Interface
-
 
 **Java 9
 	
