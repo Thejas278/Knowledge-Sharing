@@ -57,6 +57,13 @@ Zookeeper
 	ZooKeeper helps brokers determine which broker is the leader of a given partition and topic.
 	ZooKeeper stores configurations for topics and permissions. 
 
+Kafka Raft Metadata mode
+	
+	Kafka uses the Raft consensus algorithm for leader election in its Kafka Raft Metadata mode, which eliminates the dependency on ZooKeeper for managing cluster metadata. The Raft algorithm is a consensus protocol designed to ensure fault-tolerant replication of state machines in a distributed system
+	
+	Read more about in https://medium.com/javarevisited/running-kafka-without-zookeeper-66b685db4991#:~:text=Kafka%20uses%20the%20Raft%20consensus%20algorithm%20for%20leader%20election%20in,machines%20in%20a%20distributed%20system.
+	After Kakfa 2.8 onwards we can store the server information as a topics partion instead of zookeeper
+
 Producer configurations
 	key value serilizers
 ack
@@ -75,12 +82,6 @@ retires and timeouts can also be configured in producer
 Kafka producers are thread safe for multithreading
 
 kafka admin dependency is required to create kafka topics programatically or we can use Confluent 
-
-Kafka Raft Metadata mode
-	
-	Kafka uses the Raft consensus algorithm for leader election in its Kafka Raft Metadata mode, which eliminates the dependency on ZooKeeper for managing cluster metadata. The Raft algorithm is a consensus protocol designed to ensure fault-tolerant replication of state machines in a distributed system
-	
-	Read more about in https://medium.com/javarevisited/running-kafka-without-zookeeper-66b685db4991#:~:text=Kafka%20uses%20the%20Raft%20consensus%20algorithm%20for%20leader%20election%20in,machines%20in%20a%20distributed%20system.
 
 Schema-registry 
 	
