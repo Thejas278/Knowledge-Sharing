@@ -141,10 +141,8 @@ Serialization of inner classes, including local and anonymous classes, is strong
 
 When the Java compiler compiles certain constructs, such as inner classes, it creates synthetic constructs; these are classes, methods, fields, and other constructs that do not have a corresponding construct in the source code. 
 synthetic constructs can vary among different Java compiler implementations, which means that .class files can vary among different implementations as well. Consequently, you may have compatibility issues if you serialize an inner class and then deserialize it with a different JRE implementation.
-						
-
-						
-			2.Anonymous class- it is an expression
+							
+	2.Anonymous class- it is an expression
 					Class which are declared and instantiated in the same time which do not have name
 
 					Create a anonymous class if you want to use a local class only once
@@ -204,17 +202,18 @@ like local classes and annonymous classes , Lambda expressions can only access m
 
 	when to use
 
-	Nested class: Use it if your requirements are similar to those of a local class, you want to make the type more widely available, and you don't require access to local variables or method parameters.
+	Nested class: Use it if your requirements are similar to those of a local class, you want to make the type more widely available, 	and you don't require access to local variables or method parameters.
+	If you want to create a Builder.Linked list Node is a private static class
 
-	Use a non-static nested class (or inner class) if you require access to an enclosing instance's non-public fields and methods. Use a static nested class if you don't require this access.
+	Use a non-static nested class (or inner class) if you require access to an enclosing instance's non-public fields and methods. 		Use a static nested class if you don't require this access.
 
 			Local Classes-
 					If you need to create more than once instance of a class 
 					Invoke additional methods later or access its constructor(Similar to normal class).
-					
-
+	
 			Anonymous class
-					If you need to add additional fields or methods , (you cannot have parametrized constructors here)
+				If you want to use a class only once.	
+				you cannot have parametrized constructors here
 
 			Lambda Expressions
 					If you need to implement a functional interface,or
@@ -223,6 +222,7 @@ like local classes and annonymous classes , Lambda expressions can only access m
 
 
 METHOD REFERENCE
+
 	If you are using lambda expressions to call a method then use method reference
 
 	Are easy to read lambda expressions for methods that already have a name. 
@@ -242,6 +242,10 @@ METHOD REFERENCE
 
 		Set<Person> rosterSet = transferElements(roster, HashSet::new);
 			The Java compiler infers that you want to create a HashSet collection that contains elements of type Person. 
+
+	Method definition (particular body, signature and a return type) exists; why shall I create a new lambda expression if I can 		reuse existing code? let's refer to the already defined method and reuse it.
+
+	you can replace (x, y) -> x.compareToIgnoreCase(y) with String::compareToIgnoreCase method reference
 Streams
 
 	Pipeline is a sequence of aggregate operations
@@ -262,6 +266,13 @@ Streams
 Reduce and Collect
 	Reduce is used for immutable reduction  and Collect is used as mutable reduction 
 	that means-if you have immutable values such as ints, doubles, Strings then normal reduction works just fine. However, if you 		have to reduce your values into say a List (mutable data structure) then you need to use mutable reduction with the collect 		method.
+
+	Reduce is a "fold" operation, it applies a binary operator to each element in the stream where the first argument to the operator 	is the return value of the previous application and the second argument is the current stream element.
+
+	If we wanted to take a stream of strings and concatenate them into a single long string, we could achieve this with ordinary 		reduction:
+			String concatenated = strings.reduce("", String::concat)  
+
+	Collect is an aggregation operation where a "collection" is created and each element is "added" to that collection. Collections 	in different parts of the stream are then added together
 
 	 Reduction Operations:The JDK contains many terminal operations such as average that return one value by combining the contents 	of a stream.
 	 	eg:average,getAsDouble() etc
@@ -339,7 +350,6 @@ They process elements from a stream: Aggregate operations process elements from 
 
 They support behavior as parameters: You can specify lambda expressions as parameters for most aggregate operations. This enables you to customize the behavior of a particular aggregate operation.
 
-
 Collection.forEach() uses the collection iterator and the processing order is defined
 
 Collection.stream().forEach() ignores the iretaror and take the element one by one hence the processing order is not defined.
@@ -380,8 +390,6 @@ Iterable Interface
 
 		comparator
 		https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html
-
-
 
 Interface
 
@@ -446,13 +454,10 @@ We can also achieve deep copying using a copy constructor.
 	// Getters and setters for the instance variables
 }
 
-
-
 Serilization is a concept where we can maintian the state of an object, we can either convert the state of object into file supported form or network supported form
 	
 	Transient vairables- It can be used only on global variables, It cannot be used on methods nor on local variables
 		When we use transient variable jvm will ignore the value and will use the default value depending on the data type.
-
 
 		By default Java provides ObjectOutputStream-> writeObject method and ObjectInputStream-> readObject method for serializing and deserializing respectively
 
@@ -523,7 +528,6 @@ Meanwhile, the Serializable interface doesn't have that requirement.
 Custom Serialization
 		We can achieve custom serialization with the Serializable interface by marking the field with transient keyword. The JVM won't serialize the particular field but it'll add up the field to file storage with the default value. That's why it's a good practice to use Externalizable in case of custom serialization.
 
-
 	Gson and Jackson are the 2 libraries to convert a object to and from json
 
 Spring internally uses Jackson as the default Seriliser .
@@ -546,7 +550,6 @@ https://docs.oracle.com/javase/tutorial/collections/streams/index.html
 
 Time complexity
 https://www.bigocheatsheet.com/
-
 
 https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html#approach8
 
