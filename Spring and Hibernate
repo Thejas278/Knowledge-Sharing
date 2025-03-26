@@ -536,6 +536,8 @@ eg:- <bean id="petrolBean" name="shimba,mamu,radhe" class="com.marvel.java.Petro
 		JSRs are Java Specification Requests, basically change requests for the Java language, libraries and other components.
 		It's all part of the Java Community Process, whereby interested parties can put forward their ideas for enhancements and (hopefully) have them taken up and acted upon
 
+Spring MVC
+	Request goes to dispatcher servlet using HandlerMapping implementations like BeanNameUrlHandlermapping , the dispatcher servlet will redirect the request to appropritae controllers, controller will send it to Model(service,Dblayer) to get the data, along with the view name, using view name,Dispatcher servlet will resolve the view using view resolver.
 
 	*********************************	Dispacther Servlet (it extends HttpServlet )   *************************************
 
@@ -621,7 +623,7 @@ DispatcherServlet uses Spring configuration classes to discover the delegate com
 
 A Front Controller is a common pattern in web application and used to receive request and delegate to other components in the application for actual processing. 
 eg:-
-<servlet>
+		<servlet>
 		<servlet-name>mvc-dispatcher</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 
@@ -642,124 +644,6 @@ eg:-
 	ie <context:component-scan base-package="com.infomatics.orion.web" />
 	and Under servlet-mapping we give a url patter so that al the url will go through dispatecher servlet which is the front controller of spring application
 	
-** What are Servlet Filters?
-	Servlet filters are, in general, a Java WebApp concept. You can have servlet filters in any webapp, whether or not you use Spring framework in your application.
-
-	These filters can intercept requests before they reach the target servlet. You can implement common functionality, like authorization, in servlet filters. Once implemented, you can configure the filter in your web.xml to be applied to a specific servlet, specific request url patterns or all url patterns.
-
-** Where servlet filters are used?
-	Modern web-apps can have dozens of such filters. Things like authorization, caching, ORM session management, and dependency injection are often implemented with the aid of servlet filter. All of these filters need to be registered in web.xml.
-
-** Instantiating Servlet Filters - without Spring Framework
-	Your servlet container creates instances of Filters declared in web.xml and calls them at appropriate times (i.e., when servicing servlet requests). 
-	DelegatingFilterProxy, so that Spring creates your filter instances,This is where DelegatingFilterProxy steps in.
-
- 	DelegatingFilterProxy is an implementation of the javax.servlet.Filter interface provided by Spring Framework.
-
-  	Once you configure DelegatingFilterProxy in web.xml, you can declare the actual beans that do the filtering in your spring configuration. This way, Spring creates the instances of beans that do the actual filtering, and you can use DI to configure these beans.
-
-	Note that you need only a single DelegatingFilterProxy declaration in web.xml but you can have several filtering beans chained together in your application context.
-
-** Cors- Cross Origin Resource Sharing 
-	way to manage requests from different domains
-	This cross-origin sharing standard is used to enable cross-site HTTP requests.
-
-		@CrossOrigin(maxAge = 3600)
-		@RestController
-		@RequestMapping("/account")
-		public class AccountController {
-		
-		    @CrossOrigin("http://example.com")
-		    @RequestMapping(method = RequestMethod.GET, "/{id}")
-		    public Account retrieve(@PathVariable Long id) {
-		        // ...
-		    }
-		
-		    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
-		    public void remove(@PathVariable Long id) {
-		        // ...
-		    }
-		}
-
-		Spring will combine attributes from both annotations to create a merged CORS configuration.
-
-		Here, both methods will have a maxAge of 3,600 seconds, the method remove() will allow all origins, and the method 			retrieve() will only allow origins from http://example.com.
-
-Global CORS Configuration
-
-	As an alternative to the fine-grained annotation-based configuration, Spring lets us define a global CORS configuration out of 		our controllers. This is similar to using a Filter-based solution but can be declared within Spring MVC and combined with a 		fine-grained @CrossOrigin configuration.
-
-			@Configuration
-			@EnableWebMvc
-			public class WebConfig implements WebMvcConfigurer {
-			
-			    @Override
-			    public void addCorsMappings(CorsRegistry registry) {
-			        registry.addMapping("/**");
-			    }
-			}
-
-	Also, you can add information to instruct browser to allow only certain HTTP methods (GET/PUT/POST/DELETE etc) on those domain URLs.
-
-CORS With Spring Security
-	If we use Spring Security in our project, we must take an extra step to make sure it plays well with CORS. That’s because CORS 		needs to be processed first. Otherwise, Spring Security will reject the request before it reaches Spring MVC
-	
-	Something like this
-			@EnableWebSecurity
-			public class WebSecurityConfig {
-			
-			    @Bean
-			    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-			        http.cors().and()...
-			    }
-			}
-
-** Response Headers of CorsFilter
-		1.Access-Control-Allow-Origin:specifies the authorized domains to make cross-domain request. Use “*” as value if there is no restrictions.
-		2.Access-Control-Allow-Credentials : specifies if cross-domain requests can have authorization credentials or not.
-		Access-Control-Allow-Methods : indicates the methods allowed when accessing the resource.
-
-	 response.addHeader("Access-Control-Allow-Origin", "http://127.0.0.1:9000");
-		 response.addHeader("Access-Control-Allow-Credentials", "true");
-
-We can configure CORS to override the default Spring Security CORS handling. For that, we need to add a CorsConfigurationSource bean that takes care of the CORS configuration using a CorsConfiguration instance. The http.cors() method uses CorsFilter if a corsFilter bean is added, else it uses CorsConfigurationSource. If neither is configured, then it uses the Spring MVC pattern inspector handler
-
-			@Bean
-			CorsConfigurationSource corsConfigurationSource() {
-			    CorsConfiguration configuration = new CorsConfiguration();
-			    configuration.setAllowedOrigins(Arrays.asList("*"));
-			    configuration.setAllowedMethods(Arrays.asList("*"));
-			    configuration.setAllowedHeaders(Arrays.asList("*"));
-			    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-			    source.registerCorsConfiguration("/**", configuration);
-			    return source;
-			}
-		
-   ** OncePerRequestFilter makes sure of it that this authentication process happens only once
-
-**Microservices
-
-	They are independent spring boot applications which run to achive a task
-
-	Using RestTemplate we can make a api call to another spring boot in order to achieve micro services.
-	In futhure RestTemplate will be depricated and we have to use webclient which is from Reactive web.
-
-	RestTemplate is thread safe
-	RestTemplate restTemplate = new RestTemplate();
-	Movie movie=restTemplate.getForObject("http://localhost:8081/movies"+movieId,Movies.class);
-
-	WebClient.Builder builder=WebClient.builder();
-	Movie movie=builder.build().get().uri("http://localhost:8081/movies"+movieId).retrieve().bodyToMono(Movie.class).block();
-
-	bodyToMono is like a promise , You will not get it now but u have to wait. It is a Reactive web concept.
-
-	we use block() because we are blocking the execution until the value is received.
-
-	For post request use post() 
-
-	** To change the port number if tomcat in  spring boot 
-	go to application.properties of ser/resource folder and type server.port=8081
-
 ** Spring modules
 
 		1.Spring core
@@ -805,7 +689,6 @@ And in applicationContext.xml of orion_dao add
 <jee:jndi-lookup id="dataSource" jndi-name="jdbc/orionDataSource"
 		resource-ref="true" lookup-on-startup="true" />
 
-
 For using entityManager,We had 
 <bean
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
@@ -829,19 +712,6 @@ eg:
 
 		return q1.getResultList();
 	}
-
-**	Design Pattern
-
-	Proxy Design Pattern - Proxy means 'on behalf of' or 'representing'
-	Proxy is a object used by the client to access the real Object 
-	This is mainly done for security reasons
-	eg: 1.Role based Access
-		2.Proxy server are used to check block certain sites in companies.
-		3. @Transactional also creates Proxy object of Transaction
-
-	Type Of Proxy
-	1.Remote Proxy
-	2.Virtual Proxy
 
 Database vs Schema
 	Depends on the database server. MySQL doesn't care, its basically the same thing.
@@ -907,38 +777,11 @@ When dealing with conflicts, you have two options:
 You can try to avoid the conflict, and that's what Pessimistic Locking does.
 Or, you could allow the conflict to occur, but you need to detect it upon committing your transactions, and that's what Optimistic Locking does.
 
-Pessimistic locking
-	Pessimistic locking achieves this goal by taking a shared or read lock on the account so Bob is prevented from changing the 		account.
-	both Alice and Bob will acquire a read lock on the account table row that both users have read. The database acquires these 		locks on SQL Server when using Repeatable Read or Serializable.
-	Because both Alice and Bob have read the account with the PK value of 1, neither of them can change it until one user releases 		the read lock. This is because a write operation requires a write/exclusive lock acquisition, and shared/read locks prevent 		write/exclusive locks.
-
-	Only after Alice has committed her transaction and the read lock was released on the account row, Bob UPDATE will resume and 		apply the change. Until Alice releases the read lock, Bob's UPDATE blocks.
-
-	Is when you lock the record for your exclusive use until you have finished with it. It has much better integrity than optimistic 	locking but requires you to be careful with your application design to avoid Deadlocks. To use pessimistic locking you need 		either a direct connection to the database (as would typically be the case in a two tier client server application) or an 		externally available transaction ID that can be used independently of the connection.
-
-	In the latter case you open the transaction with the TxID and then reconnect using that ID. The DBMS maintains the locks and 		allows you to pick the session back up through the TxID. This is how distributed transactions using two-phase commit protocols 		(such as XA or COM+ Transactions) work
-
-	Pessimistic locking assumes that concurrent transactions will conflict with each other, and requires resources to be locked 		after they are read and only unlocked after the application has finished using the data.
-
-	When we use Pessimistic Locking in a transaction, and access an entity, it'll be locked immediately. The transaction releases 		the lock either by committing or rolling back the transaction.
-
-	When using Pessimistic Locking, the database will try to lock the entity immediately. The underlying JPA implementation throws a 	LockTimeoutException when the lock can't be obtained immediately. To avoid such exceptions, we can specify the lock timeout 		value.
-	
-	In Spring Data JPA, the lock timeout can be specified using the QueryHints annotation by placing a QueryHint on query methods:
-
-	@Lock(LockModeType.PESSIMISTIC_READ)
-	@QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "3000")})
-	public Optional<Customer> findById(Long customerId);
-
-	To enforce the lock on predefined repository methods, such as findAll or findById(id), we have to declare the method within the 	repository and annotate the method with the Lock annotation:
-	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	public Optional<Customer> findById(Long customerId);
-
 Optimistic Locking
 	Optimistic Locking allows the conflict to occur but detects it upon applying Alice's UPDATE as the version has changed.
 	This time, we have an additional version column. The version column is incremented every time an UPDATE or DELETE is executed, 		and it is also used in the WHERE clause of the UPDATE and DELETE statements. For this to work, we need to issue the SELECT and 		read the current version prior to executing the UPDATE or DELETE, as otherwise, we would not know what version value to pass to 	the WHERE clause or to increment
 
-	Is a strategy where you read a record, take note of a version number (other methods to do this involve dates, timestamps or 		checksums/hashes) and check that the version hasn't changed before you write the record back. When you write the record back you 		filter the update on the version to make sure it's atomic. (i.e. hasn't been updated between when you check the version 	and write the record to the disk) and update the version in one hit.
+	Optimistic Locking a strategy where you read a record, take note of a version number (other methods to do this involve dates, 		timestamps or checksums/hashes) and check that the version hasn't changed before you write the record back. When you write the 		record back you filter the update on the version to make sure it's atomic. (i.e. hasn't been updated between when you check the 	version and write the record to the disk) and update the version in one hit.
 
 	If the record is dirty (i.e. different version to yours) you abort the transaction and the user can re-start it.We will get 		OptimisticLockException
 
@@ -970,6 +813,33 @@ Optimistic Locking
 	
 	When the transaction needs to strictly adhere to ACID rules, we should use Pessimistic Locking. 
 	Optimistic Locking should be applied when we need to allow multiple concurrent reads and when eventual consistency is acceptable 	within the application context.
+
+Pessimistic locking
+	Pessimistic locking achieves this goal by taking a shared or read lock on the account so Bob is prevented from changing the 		account.
+	both Alice and Bob will acquire a read lock on the account table row that both users have read. The database acquires these 		locks on SQL Server when using Repeatable Read or Serializable.
+	Because both Alice and Bob have read the account with the PK value of 1, neither of them can change it until one user releases 		the read lock. This is because a write operation requires a write/exclusive lock acquisition, and shared/read locks prevent 		write/exclusive locks.
+
+	Only after Alice has committed her transaction and the read lock was released on the account row, Bob UPDATE will resume and 		apply the change. Until Alice releases the read lock, Bob's UPDATE blocks.
+
+	Is when you lock the record for your exclusive use until you have finished with it. It has much better integrity than optimistic 	locking but requires you to be careful with your application design to avoid Deadlocks. To use pessimistic locking you need 		either a direct connection to the database (as would typically be the case in a two tier client server application) or an 		externally available transaction ID that can be used independently of the connection.
+
+	In the latter case you open the transaction with the TxID and then reconnect using that ID. The DBMS maintains the locks and 		allows you to pick the session back up through the TxID. This is how distributed transactions using two-phase commit protocols 		(such as XA or COM+ Transactions) work
+
+	Pessimistic locking assumes that concurrent transactions will conflict with each other, and requires resources to be locked 		after they are read and only unlocked after the application has finished using the data.
+
+	When we use Pessimistic Locking in a transaction, and access an entity, it'll be locked immediately. The transaction releases 		the lock either by committing or rolling back the transaction.
+
+	When using Pessimistic Locking, the database will try to lock the entity immediately. The underlying JPA implementation throws a 	LockTimeoutException when the lock can't be obtained immediately. To avoid such exceptions, we can specify the lock timeout 		value.
+	
+	In Spring Data JPA, the lock timeout can be specified using the QueryHints annotation by placing a QueryHint on query methods:
+
+	@Lock(LockModeType.PESSIMISTIC_READ)
+	@QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "3000")})
+	public Optional<Customer> findById(Long customerId);
+
+	To enforce the lock on predefined repository methods, such as findAll or findById(id), we have to declare the method within the 	repository and annotate the method with the Lock annotation:
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	public Optional<Customer> findById(Long customerId);
 
 **Transaction 
 	A transaction is a unit of work with few steps performed by a data base management system against a database
@@ -1126,7 +996,7 @@ RollBack
 
 JPA is a specification it is not a implementation 
 
-Hibernate vs Soring Data jpa
+Hibernate vs Spring Data jpa
 
 	Hibernate is a JPA implementation.
 	Spring Data JPA is a JPA data access abstraction. Spring Data JPA cannot work without a JPA provider.
@@ -1160,7 +1030,6 @@ Postgres has better performance and scalability
 MVCC enables simultanious Read and write operations in case of postgres
 Postgres handles concurrency better than MySQL for multiple reasons:
 	Postgres implements Multiversion Concurrency Control (MVCC) without read locks Postgres supports parallel query plans that can use multiple CPUs/cores Postgres can create indexes in a non-blocking way (through the CREATE INDEX CONCURRENTLY syntax).
-	
 	
 Postgres is known for protecting data integrity at the transaction level. This makes it less vulnerable to data corruption.
 
