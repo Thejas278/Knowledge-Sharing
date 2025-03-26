@@ -1,14 +1,105 @@
 Spring Filters
 
+** What are Servlet Filters?
+	Servlet filters are, in general, a Java WebApp concept. You can have servlet filters in any webapp, whether or not you use Spring framework in your application.
+
+	These filters can intercept requests before they reach the target servlet. You can implement common functionality, like authorization, in servlet filters. Once implemented, you can configure the filter in your web.xml to be applied to a specific servlet, specific request url patterns or all url patterns.
+
+** Where servlet filters are used?
+	Modern web-apps can have dozens of such filters. Things like authorization, caching, ORM session management, and dependency injection are often implemented with the aid of servlet filter. All of these filters need to be registered in web.xml.
+
+** Instantiating Servlet Filters - without Spring Framework
+	Your servlet container creates instances of Filters declared in web.xml and calls them at appropriate times (i.e., when servicing servlet requests). 
+	DelegatingFilterProxy, so that Spring creates your filter instances,This is where DelegatingFilterProxy steps in.
+
+ 	DelegatingFilterProxy is an implementation of the javax.servlet.Filter interface provided by Spring Framework.
+
+  	Once you configure DelegatingFilterProxy in web.xml, you can declare the actual beans that do the filtering in your spring configuration. This way, Spring creates the instances of beans that do the actual filtering, and you can use DI to configure these beans.
+
+	Note that you need only a single DelegatingFilterProxy declaration in web.xml but you can have several filtering beans chained together in your application context.
+
+** Cors- Cross Origin Resource Sharing 
+	way to manage requests from different domains
+	This cross-origin sharing standard is used to enable cross-site HTTP requests.
+
+		@CrossOrigin(maxAge = 3600)
+		@RestController
+		@RequestMapping("/account")
+		public class AccountController {
+		
+		    @CrossOrigin("http://example.com")
+		    @RequestMapping(method = RequestMethod.GET, "/{id}")
+		    public Account retrieve(@PathVariable Long id) {
+		        // ...
+		    }
+		
+		    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
+		    public void remove(@PathVariable Long id) {
+		        // ...
+		    }
+		}
+
+		Spring will combine attributes from both annotations to create a merged CORS configuration.
+
+		Here, both methods will have a maxAge of 3,600 seconds, the method remove() will allow all origins, and the method 			retrieve() will only allow origins from http://example.com.
+
+Global CORS Configuration
+
+	As an alternative to the fine-grained annotation-based configuration, Spring lets us define a global CORS configuration out of 		our controllers. This is similar to using a Filter-based solution but can be declared within Spring MVC and combined with a 		fine-grained @CrossOrigin configuration.
+
+			@Configuration
+			@EnableWebMvc
+			public class WebConfig implements WebMvcConfigurer {
+			
+			    @Override
+			    public void addCorsMappings(CorsRegistry registry) {
+			        registry.addMapping("/**");
+			    }
+			}
+
+	Also, you can add information to instruct browser to allow only certain HTTP methods (GET/PUT/POST/DELETE etc) on those domain URLs.
+
+CORS With Spring Security
+	If we use Spring Security in our project, we must take an extra step to make sure it plays well with CORS. That’s because CORS 		needs to be processed first. Otherwise, Spring Security will reject the request before it reaches Spring MVC
+	
+	Something like this
+			@EnableWebSecurity
+			public class WebSecurityConfig {
+			
+			    @Bean
+			    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+			        http.cors().and()...
+			    }
+			}
+
+** Response Headers of CorsFilter
+		1.Access-Control-Allow-Origin:specifies the authorized domains to make cross-domain request. Use “*” as value if there is no restrictions.
+		2.Access-Control-Allow-Credentials : specifies if cross-domain requests can have authorization credentials or not.
+		Access-Control-Allow-Methods : indicates the methods allowed when accessing the resource.
+
+	 response.addHeader("Access-Control-Allow-Origin", "http://127.0.0.1:9000");
+		 response.addHeader("Access-Control-Allow-Credentials", "true");
+
+We can configure CORS to override the default Spring Security CORS handling. For that, we need to add a CorsConfigurationSource bean that takes care of the CORS configuration using a CorsConfiguration instance. The http.cors() method uses CorsFilter if a corsFilter bean is added, else it uses CorsConfigurationSource. If neither is configured, then it uses the Spring MVC pattern inspector handler
+
+			@Bean
+			CorsConfigurationSource corsConfigurationSource() {
+			    CorsConfiguration configuration = new CorsConfiguration();
+			    configuration.setAllowedOrigins(Arrays.asList("*"));
+			    configuration.setAllowedMethods(Arrays.asList("*"));
+			    configuration.setAllowedHeaders(Arrays.asList("*"));
+			    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+			    source.registerCorsConfiguration("/**", configuration);
+			    return source;
+			}
+		
+   ** OncePerRequestFilter makes sure of it that this authentication process happens only once
+
 	Delegating Filter Proxy
 
 	Spring provides a Filter implementation named DelegatingFilterProxy that allows bridging between the Servlet container’s lifecycle and Spring’s ApplicationContext. The Servlet container allows registering Filters using its own standards, but it is not aware of Spring defined Beans. DelegatingFilterProxy can be registered via standard Servlet container mechanisms, but delegate all the work to a Spring Bean that implements Filter
 
 	Another benefit of DelegatingFilterProxy is that it allows delaying looking Filter bean instances. This is important because the container needs to register the Filter instances before the container can startup. However, Spring typically uses a ContextLoaderListener to load the Spring Beans which will not be done until after the Filter instances need to be registered.
-
-
-
-
 GIT
 
 git pull tries to automatically merge after fetching commits. It is context sensitive, so all pulled commits will be merged into your currently active branch.
