@@ -1,3 +1,26 @@
+**Microservices
+
+	They are independent spring boot applications which run to achive a task
+
+	Using RestTemplate we can make a api call to another spring boot in order to achieve micro services.
+	In futhure RestTemplate will be depricated and we have to use webclient which is from Reactive web.
+
+	RestTemplate is thread safe
+	RestTemplate restTemplate = new RestTemplate();
+	Movie movie=restTemplate.getForObject("http://localhost:8081/movies"+movieId,Movies.class);
+
+	WebClient.Builder builder=WebClient.builder();
+	Movie movie=builder.build().get().uri("http://localhost:8081/movies"+movieId).retrieve().bodyToMono(Movie.class).block();
+
+	bodyToMono is like a promise , You will not get it now but u have to wait. It is a Reactive web concept.
+
+	we use block() because we are blocking the execution until the value is received.
+
+	For post request use post() 
+
+	** To change the port number if tomcat in  spring boot 
+	go to application.properties of ser/resource folder and type server.port=8081
+
 System Design
 
 Vertical Scaling- Buying Big Machine or increasing the power of exisiting machine
