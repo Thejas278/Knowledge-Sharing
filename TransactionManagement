@@ -208,6 +208,18 @@ Example on How to add transaction and make certain db calls read-only
 
 						</beans>
 
+**	Design Pattern
+
+	Proxy Design Pattern - Proxy means 'on behalf of' or 'representing'
+	Proxy is a object used by the client to access the real Object 
+	This is mainly done for security reasons
+	eg: 1.Role based Access
+		2.Proxy server are used to check block certain sites in companies.
+		3. @Transactional also creates Proxy object of Transaction
+
+	Type Of Proxy
+	1.Remote Proxy
+	2.Virtual Proxy
 
 
 https://docs.spring.io/spring-framework/docs/3.0.0.M3/reference/html/pt01.html
