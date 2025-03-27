@@ -1,3 +1,12 @@
+Spring boot 3 is compatibel with Java 17 (LTS) and above and spring version is 6.0+ and even spring security got upgraded to 6
+
+	java EE packages got migrated to Jakarta EE APIS 
+		import jakarta.persistence.Entity;
+		httpservletRequest httpservletResponse have been moved to jakarta
+
+ProblemDetail- For HTTPerrors we dont have to create a seperate Error class.
+Spring 6 has introduced HTTPExchange ie define declarative HTTP services using Java interfaces.The approach is inspired by popular HTTP client libraries like Feign and is similar to how we define repositories in Spring Data.
+
 **Microservices
 
 	They are independent spring boot applications which run to achive a task
@@ -331,6 +340,9 @@ API Gateway
 
 	Zuul is a ApiGateway provided by netflix
 
+ Deploy Spring Boot to ECS Using CodeBuild & CodePipeline
+	Once you create a spring boot application you need to create a docker image  and publish it to Elastic Container Registry and 		from there Elastic ContainerService will pull the image.
+	We can use AWS code build for Continous integration and deploying so that docker image and publishing to the Registry can be 		automated
 
 The Bootstrap Application Context
 A Spring Cloud application operates by creating a "bootstrap" context, which is a parent context for the main application. Out of the box it is responsible for loading configuration properties from the external sources, and also decrypting properties in the local external configuration files. The two contexts share an Environment which is the source of external properties for any Spring application. Bootstrap properties are added with high precedence, so they cannot be overridden by local configuration, by default.
