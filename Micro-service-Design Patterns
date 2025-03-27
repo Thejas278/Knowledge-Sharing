@@ -7,6 +7,23 @@ Spring boot 3 is compatibel with Java 17 (LTS) and above and spring version is 6
 ProblemDetail- For HTTPerrors we dont have to create a seperate Error class.
 Spring 6 has introduced HTTPExchange ie define declarative HTTP services using Java interfaces.The approach is inspired by popular HTTP client libraries like Feign and is similar to how we define repositories in Spring Data.
 
+Spring Native- A native image is a technology to build Java code to a standalone executable.
+the JVM uses a JIT compiler to convert bytecode into machine code when the application runs.
+Ahead-of-Time (AOT) compilation is a technique that pre-compiles bytecode into native machine code before the application runs
+Graal VM
+	The General Recursive Applicative and Algorithmic Language Virtual Machine (Graal VM) is a high-performance JDK distribution 		written for Java and other JVM languages.
+	It provides a Native Image builder –  a tool to build native code from Java applications and package it together with the VM into 	a standalone executable
+	Native images provide various advantages, like an instant startup and reduced memory consumption.
+
+Observability
+	We can publish our metircs into 3rd party tools like Prmetheus ,zipkin etc by adding the actuator dependency.
+	we have to autowire observationRegistry
+	and return Observation.createNotStarted("metricsName",registry)
+				.observer(()->customer);  //observer(supplier) here we can pass the return from our controller.
+
+HTTPExchange- Declarative Rest Client
+	
+
 **Microservices
 
 	They are independent spring boot applications which run to achive a task
@@ -252,6 +269,19 @@ Feign Client
 Feign Client vs RestTemplate
 			One of the advantages of using Feign over RestTemplate is that, we do not need to write any implementation to call the other services. So there is no need to write any unit test as there is no code to test in the first place. However, it is advised that we write Integration tests.
 
+@HttpExchange
+	Declarative Rest Client.
+	You define an interface and annotate it with @HttpExchange and related annotations, similar to how you define REST controllers 		with @RequestMapping.
+	We have to inject our Exhange interface to the webclient.
+
+Feign vs HttpExhange
+
+	HttpExhange-Fully integrated into the Spring ecosystem, no external dependencies. 
+	Requires adding the Spring Cloud OpenFeign dependency to your project. 
+
+	You're using Spring Framework 6 or higher use Exchange.
+	You're building microservices and using Spring Cloud use Feign.
+	You want to take advantage of the features of Spring Cloud OpenFeign, such as service discovery and resilience. 
 
 HTTP Status Codes
 
@@ -293,18 +323,41 @@ HTTP Status Codes
 		503 Service Unavailable
 		The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded.
 
+Circuit Breaker spring boot 3
+		Imagine you have a orderservice which makes a call to paymentservice. OrderService has a servlet Threadpool from which 			each thread makes a request to payment service and once it gets the response, the thread becomes free.
 
-Circuit Breaker
+	here there can be 2 types of failures
+			1.Immediate Failure where immediately we will get exception.We can deal easlily in this situation and the thread 			becomes free immediately but if the service is down then, if we make 10 repeated calls to the payment service, 				the request will always fail so there is no point doing 11th call.
 
-		Imagine you have a orderservice which makes a call to paymentservice. OrderService has a Threadpool from which each thread makes a request to payment service here there can be 2 types of failures
-			1.Immediate Failure where immediately we will get exception and after that even if we make 10 repeated calls to the payment service, the request will always fail so there is no point doing 11th call.
+			2.TimeOut Failure- Here there is no immediate failure so Imagine if there are 10 threads in Orderservice , 			because of somme issue will Paymentservice all the threads of Orderservice will be stuck and Orderservice will not be 			able to process any other request from other service also,ie failure in PaymentService has caused Failure in OrderService 		this might have a cascading effect as well ie if Paymentservice is used by other service say 						EmployeeService,StorageService both will be stuck similar to Orderservice because of Paymentservice 
 
-			2.TimeOut Failure- Here there is no immediate failure so Imagine if there are 10 threads in Orderservice , because of somme issue will Paymentservice all the threads of Orderservice will be stuck and Orderservice will not be able to process any other request from other service also,ie failire in PaymentService has caused Failure in OrderService this might have a cascading effect as well ie if Paymentservice is used by other service say EmployeeService,StorageService both will be stcuk similar to Orderservice because of Paymentservice 
+		To avoid the above problem we should stop sending request to the failed service and give it time to recover from 			overloading and also for every request we should send a default response. 
 
-				watch this vide for more info https://www.youtube.com/watch?v=ADHcBxEXvFA
+		This can be achieved by adding a interceptor between the service so that if the service is giving proper response then we 		allow further requests but if request are failing then we set the status of interceptor as stop so that it will stop 			accepting new requests. 
+
+		If 1 request fails then we should not stop because sometimes this might not be a actual issue so we have to set a 			threashold and 	if the failures crosses the threshold then we should fail.
+		like out of 100 calls if 30 percent calls are failing then we stop accepting new requests.
+		Depending on the recovery time of a service we can set a timer so that after certain time it can again start accepting 			the requests. Even after the recovery time we might not be sure if the service has actually come up so we can set accept 		partial status so that only few request goes to the service and for most of the requests we still send the default 			response.
+		3 status
+		closed- can call microservice
+		Open- no calls 
+		Half-open- partial allow
+
+	Using Circuit breakers we can
+	1.Limit the calls to a service
+	2.WE can have a fallback method incase of failures
+
+	To use resilliance4j we need to add spring aop and resilliance4j dependency
+	@CircuitBreaker annotation of the method where u want to implement this 
+	@CircuitBreaker(name="EmployeeCB", fallBackMethod="GetMessage()")
+
+	we have to implement a fallback method
+	public String getMessage(Throwable th){
+			}
+	referer this doc for all the options u can configure in yml file https://resilience4j.readme.io/docs/circuitbreaker
+	watch this vide for more info https://www.youtube.com/watch?v=ADHcBxEXvFA
 
 	Hystrix implements Circuit Breaker pattern but it is in maitainance mode so we should use resilliance4j
-
 
 ZipKin and Sleuth
 	It is used for distributed log tracing to find out for which instance of which microservice failed.
@@ -343,6 +396,30 @@ API Gateway
  Deploy Spring Boot to ECS Using CodeBuild & CodePipeline
 	Once you create a spring boot application you need to create a docker image  and publish it to Elastic Container Registry and 		from there Elastic ContainerService will pull the image.
 	We can use AWS code build for Continous integration and deploying so that docker image and publishing to the Registry can be 		automated
+
+Distributed Transaction
+	In a distributed system like database per service it is difficlut to guarentee ACID .
+
+	2 phase commit
+
+	Here there will be a co-ordinator who will send  prepare phase message , if all the services are okay to commit then the co-		ordinator will send a commit message they then permanently apply the change. 
+	We can use Zookeeper by apache
+	Drawbacks
+	Latency is high and reduce performance
+	dependenct of co-ordinator decision before prodeecing so till then the service have to wait.
+	Single point of failure for co-ordinator
+
+	Saga Patterns
+	
+	Choreography
+	Service communicates through events from other service.
+	Service can be independent as more services increase it can get complicated.
+	There will not be any http calls we wil use events
+
+	Orchestration
+	There will be a central orchestrator who will send what actions needs to taken by each service.
+	Here all the services needs to communicate with the orchestrator.
+	Easier to Debug but can be single point of failure
 
 The Bootstrap Application Context
 A Spring Cloud application operates by creating a "bootstrap" context, which is a parent context for the main application. Out of the box it is responsible for loading configuration properties from the external sources, and also decrypting properties in the local external configuration files. The two contexts share an Environment which is the source of external properties for any Spring application. Bootstrap properties are added with high precedence, so they cannot be overridden by local configuration, by default.
