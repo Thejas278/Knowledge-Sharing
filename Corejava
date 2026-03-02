@@ -113,6 +113,10 @@ Before Java 7, the JVM placed the Java String Pool in the Permanent Generation (
 	The risk of interning Strings in the PermGen (instead of the Heap) is that we can get an OutOfMemory error from the JVM if we intern too many Strings.
 	From Java 7 onwards, the Java String Pool is stored in the Heap space, which is garbage collected by the JVM. The advantage of this approach is the reduced risk of OutOfMemory error because unreferenced Strings will be removed from the pool, thereby releasing memory.
 
+Removal of PermGen: Java 8 completely removed PermGen to address frequent sizing issues and the lack of concurrent deallocation.
+Introduction of Metaspace: This area now handles class metadata using native memory. While it scales automatically, it can lead to higher overall system memory usage if not capped via -XX:MaxMetaspaceSize.
+String Pool Placement: In Java 7, the String Intern Pool was moved from PermGen to the main Heap. This remains true in Java 8, ensuring interned strings are managed by standard GC.
+
 String s1="thejas"
 String s2="thejas"// String pool does not allow duplicated objects so only one object gets created and so s1==s2
 
